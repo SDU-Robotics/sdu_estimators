@@ -19,11 +19,14 @@ set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 option(BUILD_PYTHON "Enable building of Python bindings" ON)
 option(BUILD_DOCS "Enable building of documentation" ON)
 
+# find dependencies
+find_package (Eigen3 3.3 REQUIRED NO_MODULE)
+
 # compile the library
 add_subdirectory(src)
 
-# compile the application
-add_subdirectory(app)
+# compile the examples
+add_subdirectory(examples)
 
 # compile the tests
 include(CTest)
@@ -38,11 +41,19 @@ if(BUILD_DOCS)
   add_subdirectory(doc)
 endif()
 if(BUILD_PYTHON)
-  # Add Python bindings
-  add_subdirectory(ext/pybind11)
+  if (CMAKE_VERSION VERSION_LESS 3.18)
+    set(DEV_MODULE Development)
+  else()
+    set(DEV_MODULE Development.Module)
+  endif()
 
-  # Compile the Pybind11 module
-  pybind11_add_module(_sdu_estimators python/sdu_estimators/_sdu_estimators.cpp)
+  find_package(Python 3.8 COMPONENTS Interpreter ${DEV_MODULE} REQUIRED)
+
+  # Add Python bindings
+  add_subdirectory(ext/nanobind)
+
+  # Compile the nanobind module
+  nanobind_add_module(_sdu_estimators python/sdu_estimators/_sdu_estimators.cpp)
   target_link_libraries(_sdu_estimators PUBLIC sdu_estimators)
 
   # Install the Python module shared library

@@ -1,5 +1,5 @@
-#include "catch2/catch.hpp"
-#include "sdu_estimators/sdu_estimators.hpp"
+#include <catch2/catch.hpp>
+#include <sdu_estimators/sdu_estimators.hpp>
 
 using namespace sdu_estimators;
 

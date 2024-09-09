@@ -1,11 +1,10 @@
 #include "sdu_estimators/sdu_estimators.hpp"
 
-namespace sdu_estimators {
-
-int
-add_one(int x)
+namespace sdu_estimators
 {
-  return x + 1;
-}
+  int add_one(int x)
+  {
+    return x + 1;
+  }
 
-} // namespace sdu_estimators
+}  // namespace sdu_estimators
