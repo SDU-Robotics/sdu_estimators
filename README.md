@@ -3,7 +3,7 @@
 <div align="center">
     <div>
     <img width=25% src="doc/_static/sdu_estimators_logo.png" style="vertical-align:top;margin-bottom:-20px">
-    <h2>sdu_estimators</h2>
+    <h1>sdu_estimators</h1>
     <p>A C++ library containing estimators developed at University of Southern Denmark (SDU).</p>
     </div>
 </div>
