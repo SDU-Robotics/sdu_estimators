@@ -1,9 +1,9 @@
 add_library(sdu_estimators
             sdu_estimators.cpp
+            estimators/gradient_estimator.cpp
             ../include/sdu_estimators/sdu_estimators.hpp
             ../include/sdu_estimators/estimators/estimator.hpp
             ../include/sdu_estimators/estimators/gradient_estimator.hpp
-            estimators/gradient_estimator.cpp
 )
 
 target_link_libraries(sdu_estimators Eigen3::Eigen)

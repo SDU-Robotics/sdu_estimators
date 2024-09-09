@@ -21,23 +21,23 @@ namespace sdu_estimators::estimators
 class Estimator
 {
 public:
+  virtual ~Estimator() = default;
+
   /**
    * @brief Step the execution of the estimator (must be called in a loop externally)
    */
   virtual void step(const Eigen::VectorXd &y,
-                    const Eigen::MatrixXd &phi);
+                    const Eigen::MatrixXd &phi) = 0;
 
   /**
    * @brief Get the current estimate of the parameter. Updates when the step function is called.
    */
-  virtual Eigen::VectorXd get_estimate();
+  virtual Eigen::VectorXd get_estimate() = 0;
 
   /**
    * @brief Reset internal estimator variables
    */
-  virtual void reset();
-
-  virtual ~Estimator() = default;
+  virtual void reset() = 0;
 };
 
 } //namespace sdu_estimators::estimators

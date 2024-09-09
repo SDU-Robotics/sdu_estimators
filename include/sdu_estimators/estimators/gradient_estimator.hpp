@@ -23,8 +23,8 @@ namespace sdu_estimators::estimators
   class GradientEstimator : public Estimator
   {
   public:
-    explicit GradientEstimator();
-    explicit GradientEstimator(const float dt, const float gamma, const Eigen::VectorXd & theta_init);
+    GradientEstimator();
+    GradientEstimator(float dt, float gamma, const Eigen::VectorXd & theta_init);
     ~GradientEstimator() override;
 
     /**
@@ -43,10 +43,10 @@ namespace sdu_estimators::estimators
     void reset() override;
 
   private:
-    float dt;
-    float gamma;
+    float dt{};
+    float gamma{};
     Eigen::VectorXd theta_est, theta_init, dtheta;
-    int p; // number of parameters
+    int p{}; // number of parameters
   };
 }
 
