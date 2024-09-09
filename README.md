@@ -1,19 +1,31 @@
-# Welcome to sdu_estimators
+<p>
+</p>
+<div align="center">
+    <div>
+    <img width=25% src="doc/_static/sdu_estimators_logo.png" style="vertical-align:top;margin-bottom:-20px">
+    <h1>sdu_estimators</h1>
+    <p>A C++ library containing estimators developed at University of Southern Denmark (SDU).</p>
+    </div>
+</div>
+<div align="center">
+<p>
+</p>
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/SDU-Robotics/sdu_estimators/ci.yml?branch=main)](https://github.com/SDU-Robotics/sdu_estimators/actions/workflows/ci.yml)
 [![PyPI Release](https://img.shields.io/pypi/v/sdu_estimators.svg)](https://pypi.org/project/sdu_estimators)
 [![Documentation Status](https://readthedocs.org/projects/sdu_estimators/badge/)](https://sdu_estimators.readthedocs.io/)
-
-[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=SDU-Robotics_sdu_estimators&metric=alert_status)](https://sonarcloud.io/dashboard?id=SDU-Robotics_sdu_estimators)
+<!-- [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=SDU-Robotics_sdu_estimators&metric=alert_status)](https://sonarcloud.io/dashboard?id=SDU-Robotics_sdu_estimators) !-->
+</div>
 
 # Prerequisites
-
 Building sdu_estimators requires the following software installed:
 
 * A C++17-compliant compiler
 * CMake `>= 3.9`
-* Doxygen (optional, documentation building is skipped if missing)* Python `>= 3.8` for building Python bindings
+* Eigen3 `>= 3.3` for linear algebra.
+* Doxygen (optional, documentation building is skipped if missing)
+* Python `>= 3.8` for building Python bindings
 
 # Building sdu_estimators
 
