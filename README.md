@@ -13,9 +13,10 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/SDU-Robotics/sdu_estimators/ci.yml?branch=main)](https://github.com/SDU-Robotics/sdu_estimators/actions/workflows/ci.yml)
-[![PyPI Release](https://img.shields.io/pypi/v/sdu_estimators.svg)](https://pypi.org/project/sdu_estimators)
 [![Documentation Status](https://readthedocs.org/projects/sdu_estimators/badge/)](https://sdu-estimators.readthedocs.io/)
-<!-- [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=SDU-Robotics_sdu_estimators&metric=alert_status)](https://sonarcloud.io/dashboard?id=SDU-Robotics_sdu_estimators) !-->
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=SDU-Robotics_sdu_estimators&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=SDU-Robotics_sdu_estimators)
+[![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=SDU-Robotics_sdu_estimators&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=SDU-Robotics_sdu_estimators)
+<!-- ![PyPI Release](https://img.shields.io/pypi/v/sdu_estimators.svg)](https://pypi.org/project/sdu_estimators) -->
 </div>
 
 # Prerequisites
