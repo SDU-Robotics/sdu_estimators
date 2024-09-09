@@ -1,0 +1,2 @@
+add_executable(sdu_estimators_app sdu_estimators_app.cpp)
+target_link_libraries(sdu_estimators_app PRIVATE sdu_estimators)
