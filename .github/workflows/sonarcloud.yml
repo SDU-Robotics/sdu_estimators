@@ -32,7 +32,7 @@ jobs:
           unzip -o $HOME/.sonar/build-wrapper-linux-x86.zip -d $HOME/.sonar/
 
       - name: Cache SonarCloud analysis results across runs
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: $HOME/.sonarcache
           key: sonar-${{ github.job }}-${{ runner.os }}-${{ github.sha }}
