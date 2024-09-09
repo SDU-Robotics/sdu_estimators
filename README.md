@@ -14,7 +14,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/SDU-Robotics/sdu_estimators/ci.yml?branch=main)](https://github.com/SDU-Robotics/sdu_estimators/actions/workflows/ci.yml)
 [![PyPI Release](https://img.shields.io/pypi/v/sdu_estimators.svg)](https://pypi.org/project/sdu_estimators)
-[![Documentation Status](https://readthedocs.org/projects/sdu_estimators/badge/)](https://sdu_estimators.readthedocs.io/)
+[![Documentation Status](https://readthedocs.org/projects/sdu_estimators/badge/)](https://sdu-estimators.readthedocs.io/)
 <!-- [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=SDU-Robotics_sdu_estimators&metric=alert_status)](https://sonarcloud.io/dashboard?id=SDU-Robotics_sdu_estimators) !-->
 </div>
 
@@ -78,7 +78,7 @@ pytest
 # Documentation
 
 sdu_estimators provides a Sphinx-based documentation, that can
-be browsed [online at readthedocs.org](https://sdu_estimators.readthedocs.io).
+be browsed [online at readthedocs.org](https://sdu-estimators.readthedocs.io).
 To build it locally, first ensure the requirements are installed by running this command from the top-level source directory:
 
 ```
