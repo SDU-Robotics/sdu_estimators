@@ -6,5 +6,5 @@ namespace sdu_estimators
   {
     return x + 1;
   }
-
+  
 }  // namespace sdu_estimators

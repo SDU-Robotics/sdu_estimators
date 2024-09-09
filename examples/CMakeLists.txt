@@ -1,2 +1,5 @@
 add_executable(sdu_estimators_app sdu_estimators_app.cpp)
 target_link_libraries(sdu_estimators_app PRIVATE sdu_estimators)
+
+add_executable(example_gradient_estimator example_gradient_estimator.cpp)
+target_link_libraries(example_gradient_estimator PRIVATE sdu_estimators)
