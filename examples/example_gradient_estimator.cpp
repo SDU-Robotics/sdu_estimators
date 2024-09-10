@@ -1,5 +1,6 @@
 #include <cmath>
 #include <iostream>
+#include <fstream>
 #include <Eigen/Dense>
 #include <sdu_estimators/sdu_estimators.hpp>
 #include <sdu_estimators/estimators/gradient_estimator.hpp>
@@ -9,7 +10,7 @@
 int main()
 {
   float dt = 0.002;
-  float tend = 10 / dt; // 10s
+  float tend = 50 / dt; // 10s
   float gamma = 1;
   Eigen::VectorXd theta_init, theta_true;
   theta_init.resize(2);
@@ -40,6 +41,20 @@ int main()
 
     // save data
     all_theta_est.push_back(tmp);
-    std::cout << tmp << std::endl;
+    std::cout << tmp.transpose() << std::endl;
   }
+
+  // Write all_theta_est to file
+  std::ofstream outfile;
+  outfile.open ("data_gradient.csv");
+
+  outfile << "timestamp,theta_est_1,theta_est_2,theta_act_1,theta_act_2" << std::endl;
+
+  for (int i = 0; i < tend; ++i)
+  {
+    outfile << i * dt << "," << all_theta_est[i][0] << "," << all_theta_est[i][1]
+            << "," << theta_true[0] << "," << theta_true[1] << std::endl;
+  }
+
+  outfile.close();
 }
