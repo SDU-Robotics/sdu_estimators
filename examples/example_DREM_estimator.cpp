@@ -3,7 +3,6 @@
 #include <iostream>
 #include <fstream>
 #include <Eigen/Dense>
-#include <sdu_estimators/sdu_estimators.hpp>
 #include <sdu_estimators/estimators/drem.hpp>
 
 #include <vector>
@@ -19,7 +18,7 @@ int main()
            10;
 
   float ell = 1;
-  float r = 0.5;
+  float r = 1;
   Eigen::VectorXd theta_init, theta_true;
   theta_init.resize(2);
   theta_true.resize(2);
