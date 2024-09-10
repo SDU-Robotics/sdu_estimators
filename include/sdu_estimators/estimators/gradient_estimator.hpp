@@ -2,7 +2,6 @@
 #ifndef GRADIENT_ESTIMATOR_HPP
 #define GRADIENT_ESTIMATOR_HPP
 
-#include <Eigen/Dense>
 #include <sdu_estimators/estimators/estimator.hpp>
 
 namespace sdu_estimators::estimators
@@ -23,8 +22,8 @@ namespace sdu_estimators::estimators
   class GradientEstimator : public Estimator
   {
   public:
-    GradientEstimator();
     GradientEstimator(float dt, float gamma, const Eigen::VectorXd & theta_init);
+    GradientEstimator(float dt, float gamma, const Eigen::VectorXd & theta_init, float r);
     ~GradientEstimator() override;
 
     /**
@@ -45,7 +44,8 @@ namespace sdu_estimators::estimators
   private:
     float dt{};
     float gamma{};
-    Eigen::VectorXd theta_est, theta_init, dtheta;
+    float r{};
+    Eigen::VectorXd theta_est, theta_init, dtheta, y_err;
     int p{}; // number of parameters
   };
 }

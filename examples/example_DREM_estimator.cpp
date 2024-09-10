@@ -4,7 +4,7 @@
 #include <fstream>
 #include <Eigen/Dense>
 #include <sdu_estimators/sdu_estimators.hpp>
-#include <sdu_estimators/estimators/gradient_estimator.hpp>
+#include <sdu_estimators/estimators/drem.hpp>
 
 #include <vector>
 
@@ -12,7 +12,13 @@ int main()
 {
   float dt = 0.002;
   float tend = 50 / dt; // 10s
-  float gamma = 1;
+
+  Eigen::VectorXd gamma;
+  gamma.resize(2);
+  gamma << 10,
+           10;
+
+  float ell = 1;
   float r = 0.5;
   Eigen::VectorXd theta_init, theta_true;
   theta_init.resize(2);
@@ -23,7 +29,7 @@ int main()
   theta_true << 1,
                 2;
 
-  sdu_estimators::estimators::GradientEstimator grad_est(dt, gamma, theta_init, r);
+  sdu_estimators::estimators::DREM DREM(dt, gamma, theta_init, ell, r);
   // sdu_estimators::estimators::GradientEstimator grad_est(dt, gamma, theta_init);
   std::vector<Eigen::VectorXd> all_theta_est;
   Eigen::VectorXd y;
@@ -42,12 +48,12 @@ int main()
            std::cos(t);
     y << phi.transpose() * theta_true;
 
-    grad_est.step(y, phi);
-    Eigen::VectorXd tmp = grad_est.get_estimate();
+    DREM.step(y, phi);
+    Eigen::VectorXd tmp = DREM.get_estimate();
 
     // save data
     all_theta_est.push_back(tmp);
-    // std::cout << tmp.transpose() << std::endl;
+    std::cout << tmp.transpose() << std::endl;
   }
 
   std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
@@ -57,7 +63,7 @@ int main()
 
   // Write all_theta_est to file
   std::ofstream outfile;
-  outfile.open ("data_gradient.csv");
+  outfile.open ("data_DREM.csv");
 
   outfile << "timestamp,theta_est_1,theta_est_2,theta_act_1,theta_act_2" << std::endl;
 

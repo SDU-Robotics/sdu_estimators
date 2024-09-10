@@ -8,3 +8,5 @@ sdu_estimators
 This is an example function:
 
 .. doxygenfunction:: sdu_estimators::add_one
+
+.. doxygenfunction:: sdu_estimators::estimators::gradient_estimator
