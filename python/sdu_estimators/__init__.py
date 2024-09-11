@@ -1,4 +1,5 @@
 from sdu_estimators._sdu_estimators import add_one
+from sdu_estimators._sdu_estimators import DREM
 
 # Export the version given in project metadata
 from importlib import metadata

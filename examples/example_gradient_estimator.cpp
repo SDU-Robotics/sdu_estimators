@@ -1,11 +1,10 @@
-#include <cmath>
-#include <chrono>
-#include <iostream>
-#include <fstream>
 #include <Eigen/Dense>
+#include <chrono>
+#include <cmath>
+#include <fstream>
+#include <iostream>
+#include <sdu_estimators/parameter_estimators/gradient_estimator.hpp>
 #include <sdu_estimators/sdu_estimators.hpp>
-#include <sdu_estimators/estimators/gradient_estimator.hpp>
-
 #include <vector>
 
 int main()
@@ -23,8 +22,8 @@ int main()
   theta_true << 1,
                 2;
 
-  sdu_estimators::estimators::GradientEstimator grad_est(dt, gamma, theta_init, r);
-  // sdu_estimators::estimators::GradientEstimator grad_est(dt, gamma, theta_init);
+  sdu_estimators::parameter_estimators::GradientEstimator grad_est(dt, gamma, theta_init, r);
+  // sdu_estimators::parameter_estimators::GradientEstimator grad_est(dt, gamma, theta_init);
   std::vector<Eigen::VectorXd> all_theta_est;
   Eigen::VectorXd y;
   Eigen::VectorXd phi;

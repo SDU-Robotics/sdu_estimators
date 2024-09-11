@@ -2,10 +2,11 @@
 #ifndef DREM_HPP
 #define DREM_HPP
 
-#include <sdu_estimators/estimators/estimator.hpp>
+#include <sdu_estimators/parameter_estimators/parameter_estimator.hpp>
 #include <sdu_estimators/regressor_extensions/kreisselmeier.hpp>
+#include <type_traits>
 
-namespace sdu_estimators::estimators
+namespace sdu_estimators::parameter_estimators
 {
   /**
    * An implementation of dynamic regressor extension and mixing (DREM) as described in e.g.,
@@ -16,7 +17,7 @@ namespace sdu_estimators::estimators
    *
    */
 
-  class DREM : public Estimator
+  class DREM : public ParameterEstimator
   {
   public:
     DREM(float dt, const Eigen::VectorXd & gamma, const Eigen::VectorXd & theta_init, float ell);

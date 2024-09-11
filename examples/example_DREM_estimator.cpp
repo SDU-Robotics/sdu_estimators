@@ -1,10 +1,9 @@
-#include <cmath>
-#include <chrono>
-#include <iostream>
-#include <fstream>
 #include <Eigen/Dense>
-#include <sdu_estimators/estimators/drem.hpp>
-
+#include <chrono>
+#include <cmath>
+#include <fstream>
+#include <iostream>
+#include <sdu_estimators/parameter_estimators/drem.hpp>
 #include <vector>
 
 int main()
@@ -28,8 +27,8 @@ int main()
   theta_true << 1,
                 2;
 
-  sdu_estimators::estimators::DREM DREM(dt, gamma, theta_init, ell, r);
-  // sdu_estimators::estimators::GradientEstimator grad_est(dt, gamma, theta_init);
+  sdu_estimators::parameter_estimators::DREM DREM(dt, gamma, theta_init, ell, r);
+  // sdu_estimators::parameter_estimators::GradientEstimator grad_est(dt, gamma, theta_init);
   std::vector<Eigen::VectorXd> all_theta_est;
   Eigen::VectorXd y;
   Eigen::VectorXd phi;

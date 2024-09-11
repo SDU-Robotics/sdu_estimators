@@ -1,8 +1,7 @@
-#include <iostream>
 #include <Eigen/Dense>
+#include <iostream>
+#include <sdu_estimators/parameter_estimators/gradient_estimator.hpp>
 #include <sdu_estimators/sdu_estimators.hpp>
-#include <sdu_estimators/estimators/gradient_estimator.hpp>
-
 #include <vector>
 
 using Eigen::MatrixXd;

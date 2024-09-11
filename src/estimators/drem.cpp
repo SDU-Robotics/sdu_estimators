@@ -1,9 +1,8 @@
-#include <sdu_estimators/estimators/drem.hpp>
+#include <iostream>
+#include <sdu_estimators/parameter_estimators/drem.hpp>
 #include <sdu_estimators/regressor_extensions/kreisselmeier.hpp>
 
-#include <iostream>
-
-namespace sdu_estimators::estimators
+namespace sdu_estimators::parameter_estimators
 {
   DREM::~DREM() = default;
 

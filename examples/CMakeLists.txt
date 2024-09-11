@@ -6,3 +6,6 @@ target_link_libraries(example_gradient_estimator PRIVATE sdu_estimators)
 
 add_executable(example_DREM_estimator example_DREM_estimator.cpp)
 target_link_libraries(example_DREM_estimator PRIVATE sdu_estimators)
+
+add_executable(example_SS example_SS.cpp)
+target_link_libraries(example_SS PRIVATE sdu_estimators)

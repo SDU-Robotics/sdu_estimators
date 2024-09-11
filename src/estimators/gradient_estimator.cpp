@@ -1,7 +1,7 @@
-#include <sdu_estimators/estimators/gradient_estimator.hpp>
 #include <iostream>
+#include <sdu_estimators/parameter_estimators/gradient_estimator.hpp>
 
-namespace sdu_estimators::estimators
+namespace sdu_estimators::parameter_estimators
 {
   GradientEstimator::~GradientEstimator() = default;
 
