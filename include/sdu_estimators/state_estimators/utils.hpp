@@ -1,17 +1,48 @@
 #pragma once
-#include <Eigen/Dense>
 
 #ifndef UTIL_HPP
 #define UTIL_HPP
 
+#include <Eigen/Dense>
+#include <unsupported/Eigen/MatrixFunctions>
+
 namespace sdu_estimators::state_estimators::utils
 {
-  void c2d(Eigen::MatrixXd & A, Eigen::MatrixXd & B,
-           float Ts,
-           Eigen::MatrixXd & Ad, Eigen::MatrixXd & Bd)
+  enum IntegrationMethod
   {
-    Ad = A;
-    Bd = B;
+    Euler,
+    EulerBackwards,
+    Bilinear,
+    Exact
+  };
+
+  inline void c2d(Eigen::MatrixXd & A, Eigen::MatrixXd & B,
+           float Ts,
+           Eigen::MatrixXd & Ad, Eigen::MatrixXd & Bd,
+           IntegrationMethod method)
+  {
+    // Ad = A;
+    // Bd = B;
+    auto I = Eigen::MatrixXd::Identity(A.rows(), A.rows());
+
+    switch (method)
+    {
+      case Euler:
+        Ad = I + Ts * A;
+        Bd = Ts * B;
+
+      case EulerBackwards:
+        Ad = (I - Ts * A).inverse();
+        Bd = Ts * B;
+
+      case Bilinear:  // Tustin method
+        Ad = (I + Ts * A / 2.f) * (I - Ts * A / 2.f).inverse();
+        Bd = Ts * B;
+
+      case Exact:
+        Ad = (Ts * A).exp();
+        Bd = A.completeOrthogonalDecomposition().pseudoInverse() * (Ad - I) * B;
+    }
   }
 }
 

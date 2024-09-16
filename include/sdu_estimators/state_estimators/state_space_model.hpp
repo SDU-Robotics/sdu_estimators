@@ -1,7 +1,8 @@
-#include <Eigen/Dense>
-
 #ifndef STATE_SPACE_MODEL_HPP
 #define STATE_SPACE_MODEL_HPP
+
+#include <Eigen/Dense>
+#include "utils.hpp"
 
 namespace sdu_estimators::state_estimators
 {
@@ -12,7 +13,8 @@ namespace sdu_estimators::state_estimators
                     Eigen::MatrixXd & B,
                     Eigen::MatrixXd & C,
                     Eigen::MatrixXd & D,
-                    float Ts);
+                    float Ts,
+                    utils::IntegrationMethod method);
 
     void update(Eigen::VectorXd & u);
 

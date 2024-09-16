@@ -6,6 +6,7 @@
 #include <sdu_estimators/state_estimators/state_space_model.hpp>
 #include <sdu_estimators/sdu_estimators.hpp>
 #include <vector>
+#include <sdu_estimators/state_estimators/utils.hpp>
 
 int main()
 {
@@ -25,9 +26,14 @@ int main()
   D.resize(1, 1);
   D << 0;
 
-  float Ts = 0.5;
+  float Ts = 0.002;
 
-  sdu_estimators::state_estimators::StateSpaceModel SS(A, B, C, D, Ts);
+  // sdu_estimators::state_estimators::utils::IntegrationMethod method = sdu_estimators::state_estimators::utils::Euler;
+  // sdu_estimators::state_estimators::utils::IntegrationMethod method = sdu_estimators::state_estimators::utils::EulerBackwards;
+  sdu_estimators::state_estimators::utils::IntegrationMethod method = sdu_estimators::state_estimators::utils::Bilinear;
+
+  sdu_estimators::state_estimators::StateSpaceModel SS(A, B, C, D, Ts, method);
 
   std::cout << SS.getAd() << std::endl;
+  std::cout << SS.getBd() << std::endl;
 }
