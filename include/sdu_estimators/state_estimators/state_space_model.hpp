@@ -16,6 +16,11 @@ namespace sdu_estimators::state_estimators
                     float Ts,
                     utils::IntegrationMethod method);
 
+    StateSpaceModel(Eigen::MatrixXd & Ad,
+                    Eigen::MatrixXd & Bd,
+                    Eigen::MatrixXd & C,
+                    Eigen::MatrixXd & D);
+
     void update(Eigen::VectorXd & u);
 
     Eigen::VectorXd get_output();
@@ -25,6 +30,8 @@ namespace sdu_estimators::state_estimators
     Eigen::MatrixXd getAd();
 
     Eigen::MatrixXd getBd();
+
+    void reset();
 
     ~StateSpaceModel();
 

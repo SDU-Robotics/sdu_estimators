@@ -13,7 +13,13 @@ add_library(sdu_estimators
     ../include/sdu_estimators/state_estimators/state_estimator.hpp
     ../include/sdu_estimators/state_estimators/state_space_model.hpp
     ../include/sdu_estimators/state_estimators/utils.hpp
+#    ../include/sdu_estimators/state_estimators/greet_fortran.f
+
     state_estimators/state_space_model.cpp
+    ../include/sdu_estimators/state_estimators/luenberger_observer.hpp
+    state_estimators/luenberger_observer.cpp
+
+
 )
 
 target_link_libraries(sdu_estimators Eigen3::Eigen)
@@ -21,3 +27,5 @@ target_link_libraries(sdu_estimators Eigen3::Eigen)
 target_include_directories(
   sdu_estimators PUBLIC $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/include/>
                         $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
+
+#set_property(TARGET sdu_estimators PROPERTY LINKER_LANGUAGE Fortran)
