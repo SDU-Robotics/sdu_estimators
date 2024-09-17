@@ -10,7 +10,6 @@ add_library(sdu_estimators
     regressor_extensions/kreisselmeier.cpp
     ../include/sdu_estimators/regressor_extensions/kreisselmeier.hpp
 
-    ../include/sdu_estimators/state_estimators/state_estimator.hpp
     ../include/sdu_estimators/state_estimators/state_space_model.hpp
     ../include/sdu_estimators/state_estimators/utils.hpp
 #    ../include/sdu_estimators/state_estimators/greet_fortran.f
@@ -18,6 +17,7 @@ add_library(sdu_estimators
     state_estimators/state_space_model.cpp
     ../include/sdu_estimators/state_estimators/luenberger_observer.hpp
     state_estimators/luenberger_observer.cpp
+        state_estimators/unknown_input_observer.cpp
 )
 
 target_link_libraries(sdu_estimators Eigen3::Eigen)

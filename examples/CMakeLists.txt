@@ -12,3 +12,6 @@ target_link_libraries(example_SS PRIVATE sdu_estimators)
 
 add_executable(example_luenberger state_estimators/example_luenberger.cpp)
 target_link_libraries(example_luenberger PRIVATE sdu_estimators)
+
+add_executable(example_utils state_estimators/example_utils.cpp)
+target_link_libraries(example_utils PRIVATE sdu_estimators)
