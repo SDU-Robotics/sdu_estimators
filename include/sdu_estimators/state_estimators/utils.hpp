@@ -29,19 +29,23 @@ namespace sdu_estimators::state_estimators::utils
     {
       case Euler:
         Ad = I + Ts * A;
-      Bd = Ts * B;
+        Bd = Ts * B;
+        break;
 
       case EulerBackwards:
         Ad = (I - Ts * A).inverse();
-      Bd = Ts * B;
+        Bd = Ts * B;
+        break;
 
       case Bilinear:  // Tustin method
         Ad = (I + Ts * A / 2.f) * (I - Ts * A / 2.f).inverse();
-      Bd = Ts * B;
+        Bd = Ts * B;
+        break;
 
       case Exact:
         Ad = (Ts * A).exp();
-      Bd = A.completeOrthogonalDecomposition().pseudoInverse() * (Ad - I) * B;
+        Bd = A.completeOrthogonalDecomposition().pseudoInverse() * (Ad - I) * B;
+        break;
     }
   }
   //

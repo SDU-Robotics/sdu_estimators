@@ -4,6 +4,10 @@
 namespace sdu_estimators::state_estimators
 {
 
+  StateSpaceModel::StateSpaceModel()
+  {
+  }
+
   /**
    * @brief Constructor for continouos time model.
    *
@@ -43,8 +47,8 @@ namespace sdu_estimators::state_estimators
     input_size = Bd.cols();
     output_size = C.rows();
 
-    A.setZero(Ad.rows(), Ad.cols());
-    B.setZero(Bd.rows(), Bd.cols());
+    this->A.setZero(Ad.rows(), Ad.cols());
+    this->B.setZero(Bd.rows(), Bd.cols());
 
     x.resize(state_size);
     x.setZero();

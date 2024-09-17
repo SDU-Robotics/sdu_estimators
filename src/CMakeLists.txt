@@ -18,8 +18,6 @@ add_library(sdu_estimators
     state_estimators/state_space_model.cpp
     ../include/sdu_estimators/state_estimators/luenberger_observer.hpp
     state_estimators/luenberger_observer.cpp
-
-
 )
 
 target_link_libraries(sdu_estimators Eigen3::Eigen)

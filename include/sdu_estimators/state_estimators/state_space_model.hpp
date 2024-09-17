@@ -9,6 +9,8 @@ namespace sdu_estimators::state_estimators
   class StateSpaceModel
   {
   public:
+    StateSpaceModel();
+
     StateSpaceModel(Eigen::MatrixXd & A,
                     Eigen::MatrixXd & B,
                     Eigen::MatrixXd & C,
