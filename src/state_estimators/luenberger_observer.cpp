@@ -13,6 +13,15 @@ namespace sdu_estimators::state_estimators
   // {
   // }
 
+  /**
+   *
+   * @param A Continuous A-matrix.
+   * @param B
+   * @param C
+   * @param L Discrete time gain matrix.
+   * @param Ts
+   * @param method
+   */
   LuenbergerObserver::LuenbergerObserver(
       Eigen::MatrixXd& A,
       Eigen::MatrixXd& B,
@@ -22,22 +31,19 @@ namespace sdu_estimators::state_estimators
       utils::IntegrationMethod method)
       : StateSpaceModel()
   {
-    Eigen::MatrixXd Ad, Bd;
-    utils::c2d(A, B, Ts, Ad, Bd, method);
-
-    // std::cout << "STOP\n" << Ad << std::endl;
+    Eigen::MatrixXd newA = A - L * C;
 
     Eigen::MatrixXd newB(B.rows(), B.cols() + L.cols()), newD;
-    newB << Bd, L;
+    newB << B, L;
 
-    std::cout << "newB\n" << newB << std::endl;
+    // std::cout << "newB\n" << newB << std::endl;
 
     newD = newB.replicate(1, 1);
     newD.setZero();
 
     this->StateSpaceModel::~StateSpaceModel();                 // destroy the base class
-    // new (this) StateSpaceModel(A, newB, C, newD, Ts, method);  // overwrites the base class storage with a new instance
-    new (this) StateSpaceModel(Ad, newB, C, newD);  // overwrites the base class storage with a new instance
+    new (this) StateSpaceModel(newA, newB, C, newD, Ts, method);  // overwrites the base class storage with a new instance
+    // new (this) StateSpaceModel(newA, newB, C, newD);  // overwrites the base class storage with a new instance
     // std::cout << "Bd\n" << this->getBd() << std::endl;
     StateSpaceModel::reset();
 
@@ -47,12 +53,12 @@ namespace sdu_estimators::state_estimators
 
   void LuenbergerObserver::update(Eigen::VectorXd& y, Eigen::VectorXd& u)
   {
-    Eigen::VectorXd err = y - yhat_old;
+    // Eigen::VectorXd err = y - yhat_old;
 
     // std::cout << "err" << err << std::endl;
 
-    Eigen::VectorXd uu(u.size() + err.size());
-    uu << u, err;
+    Eigen::VectorXd uu(u.size() + y.size());
+    uu << u, y;
 
     // std::cout << uu << std::endl;
 

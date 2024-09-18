@@ -7,12 +7,16 @@ namespace sdu_estimators::state_estimators
   class LuenbergerObserver : public StateSpaceModel
   {
   public:
-    // LuenbergerObserver(Eigen::MatrixXd & A,
-    //                    Eigen::MatrixXd & B,
-    //                    Eigen::MatrixXd & C,
-    //                    Eigen::VectorXd & poles,
-    //                    float Ts,
-    //                    utils::IntegrationMethod method);
+    /**
+     * @brief Continous
+     *
+     * @param A
+     * @param B
+     * @param C
+     * @param L
+     * @param Ts
+     * @param method
+     */
     LuenbergerObserver(Eigen::MatrixXd & A,
                        Eigen::MatrixXd & B,
                        Eigen::MatrixXd & C,
