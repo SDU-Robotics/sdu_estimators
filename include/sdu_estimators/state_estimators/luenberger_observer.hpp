@@ -26,6 +26,11 @@ namespace sdu_estimators::state_estimators
 
     void update(Eigen::VectorXd & y, Eigen::VectorXd & u);
 
+    Eigen::VectorXd get_state_estimate()
+    {
+      return StateSpaceModel::get_state();
+    }
+
   private:
     Eigen::VectorXd yhat_old;
   };

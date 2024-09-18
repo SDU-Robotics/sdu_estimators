@@ -8,11 +8,12 @@
 #include <sdu_estimators/state_estimators/utils.hpp>
 #include <vector>
 
-#include "sdu_estimators/state_estimators/luenberger_observer.hpp"
+#include "sdu_estimators/state_estimators/unknown_input_observer.hpp"
 
 int main()
 {
-  Eigen::MatrixXd A, B, C, D, E, B_alt, D_alt, L;
+  Eigen::MatrixXd A, B, C, D, E, B_alt, D_alt;
+  Eigen::MatrixXd F, T, K, H; // UIO matrices
 
   A.resize(2, 2);
   A << 0, 1,
@@ -49,14 +50,24 @@ int main()
   D_alt.leftCols(D.cols()) = D;
   std::cout << "D_alt\n" << D_alt << std::endl;
 
-  L.resize(2, 2);
-  L << 2, 1,
-       0, -9;
-  // L << 1.5,  0.00198013,
-  //       -0., 1.48019867;
-  std::cout << "L\n" << L << std::endl;
+  // UIO matrices
+  F.resize(2, 2);
+  F << -2,  0,
+        0, -1;
 
-  float Ts = 0.0001;
+  T.resize(2, 2);
+  T << 1, 0,
+       0, 0;
+
+  K.resize(2, 2);
+  K << 2, 1,
+       0, 0;
+
+  H.resize(2, 2);
+  H << 0, 0,
+       0, 1;
+
+  float Ts = 0.001;
   float tstart = 0;
   float tstop = 25;
   int N = (tstop - tstart) / Ts;
@@ -72,7 +83,7 @@ int main()
   std::cout << "Ad\n" << sys.getAd() << std::endl;
   std::cout << "Bd\n" << sys.getBd() << std::endl;
 
-  sdu_estimators::state_estimators::LuenbergerObserver obs(A, B, C, L, Ts, method);
+  sdu_estimators::state_estimators::UnknownInputObserver obs(F, T, B, K, H, Ts, method);
 
   std::cout << "obs Ad \n" << obs.getAd() << std::endl;
   std::cout << "obs Bd \n" << obs.getBd() << std::endl;
@@ -109,6 +120,7 @@ int main()
 
     obs.update(y, u);
 
+    // tmp2 = obs.get_state();
     tmp2 = obs.get_state_estimate();
     all_est_states.push_back(tmp2);
 
@@ -117,7 +129,7 @@ int main()
 
   // Write all_theta_est to file
   std::ofstream outfile;
-  outfile.open ("data_luenberger.csv");
+  outfile.open ("data_UIO.csv");
 
   outfile << "timestamp,actual_x_1,actual_x_2,estimated_x_1,estimated_x_2,x_err_1,x_err_2" << std::endl;
 

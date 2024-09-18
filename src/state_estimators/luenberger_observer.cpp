@@ -37,7 +37,6 @@ namespace sdu_estimators::state_estimators
     newB << B, L;
 
     // std::cout << "newB\n" << newB << std::endl;
-
     newD = newB.replicate(1, 1);
     newD.setZero();
 
@@ -65,7 +64,7 @@ namespace sdu_estimators::state_estimators
     StateSpaceModel::update(uu);
 
     // Eigen::VectorXd yhat = StateSpaceModel::get_output();
-    yhat_old = StateSpaceModel::get_output();
+    // yhat_old = get_output();
   }
 
 }  // namespace sdu_estimators::state_estimators
