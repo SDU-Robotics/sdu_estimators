@@ -22,8 +22,13 @@ namespace sdu_estimators::state_estimators
       utils::IntegrationMethod method)
       : StateSpaceModel()
   {
+    Eigen::MatrixXd Ad, Bd;
+    utils::c2d(A, B, Ts, Ad, Bd, method);
+
+    // std::cout << "STOP\n" << Ad << std::endl;
+
     Eigen::MatrixXd newB(B.rows(), B.cols() + L.cols()), newD;
-    newB << B, L;
+    newB << Bd, L;
 
     std::cout << "newB\n" << newB << std::endl;
 
@@ -31,7 +36,8 @@ namespace sdu_estimators::state_estimators
     newD.setZero();
 
     this->StateSpaceModel::~StateSpaceModel();                 // destroy the base class
-    new (this) StateSpaceModel(A, newB, C, newD, Ts, method);  // overwrites the base class storage with a new instance
+    // new (this) StateSpaceModel(A, newB, C, newD, Ts, method);  // overwrites the base class storage with a new instance
+    new (this) StateSpaceModel(Ad, newB, C, newD);  // overwrites the base class storage with a new instance
     // std::cout << "Bd\n" << this->getBd() << std::endl;
     StateSpaceModel::reset();
 

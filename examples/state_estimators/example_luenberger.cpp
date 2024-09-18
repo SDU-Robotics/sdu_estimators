@@ -50,8 +50,10 @@ int main()
   std::cout << "D_alt\n" << D_alt << std::endl;
 
   L.resize(2, 2);
-  L << 2, 1,
-       0, -9;
+  // L << 2, 1,
+  //      0, -9;
+  L << 1.5,  0.00198013,
+        -0., 1.48019867;
   std::cout << "L\n" << L << std::endl;
 
   float Ts = 0.002;
@@ -61,8 +63,8 @@ int main()
 
   // sdu_estimators::state_estimators::utils::IntegrationMethod method = sdu_estimators::state_estimators::utils::Euler;
   // sdu_estimators::state_estimators::utils::IntegrationMethod method = sdu_estimators::state_estimators::utils::EulerBackwards;
-  sdu_estimators::state_estimators::utils::IntegrationMethod method = sdu_estimators::state_estimators::utils::Bilinear;
-  // sdu_estimators::state_estimators::utils::IntegrationMethod method = sdu_estimators::state_estimators::utils::Exact;
+  // sdu_estimators::state_estimators::utils::IntegrationMethod method = sdu_estimators::state_estimators::utils::Bilinear;
+  sdu_estimators::state_estimators::utils::IntegrationMethod method = sdu_estimators::state_estimators::utils::Exact;
 
   sdu_estimators::state_estimators::StateSpaceModel sys(A, B_alt, C, D_alt, Ts, method);
   sys.reset();
