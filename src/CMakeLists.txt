@@ -10,6 +10,7 @@ add_library(sdu_estimators
 
 #    regressor_extensions/kreisselmeier.cpp
     ../include/sdu_estimators/regressor_extensions/kreisselmeier.hpp
+    ../include/sdu_estimators/regressor_extensions/lti.hpp
 
     ../include/sdu_estimators/state_estimators/state_space_model.hpp
     ../include/sdu_estimators/state_estimators/utils.hpp

@@ -27,14 +27,15 @@ namespace sdu_estimators::parameter_estimators
   //   "T_REG_EXT must derive from regressor_extensions::RegressorExtension");
 
   public:
-    DREM(float dt, const Eigen::Matrix<T, DIM_P, 1> & gamma, const Eigen::Matrix<T, DIM_P, 1> & theta_init, float ell)
-      : DREM(dt, gamma, theta_init, ell, 1.0f)
+    DREM(float dt, const Eigen::Matrix<T, DIM_P, 1> & gamma, const Eigen::Matrix<T, DIM_P, 1> & theta_init,
+      regressor_extensions::RegressorExtension<T, DIM_N, DIM_P> * reg_ext)
+      : DREM(dt, gamma, theta_init, 1.0f, reg_ext)
     {
     }
 
 
-    DREM(float dt, const Eigen::Matrix<T, DIM_P, 1> & gamma, const Eigen::Matrix<T, DIM_P, 1> & theta_init, float ell, float r)
-      : reg_ext(dt, ell)
+    DREM(float dt, const Eigen::Matrix<T, DIM_P, 1> & gamma, const Eigen::Matrix<T, DIM_P, 1> & theta_init, float r,
+      regressor_extensions::RegressorExtension<T, DIM_N, DIM_P> * reg_ext)
     {
       this->dt = dt;
       this->gamma = gamma;
@@ -43,6 +44,7 @@ namespace sdu_estimators::parameter_estimators
       this->dtheta = theta_init * 0;
       this->p = theta_init.size();
       this->r = r;
+      this->reg_ext = reg_ext;
     }
 
     ~DREM()
@@ -54,10 +56,10 @@ namespace sdu_estimators::parameter_estimators
      */
     void step(const Eigen::Matrix<T, DIM_N, 1> &y, const Eigen::Matrix<T, DIM_P, DIM_N> &phi)
     {
-      reg_ext.step(y, phi);
+      reg_ext->step(y, phi);
 
-      Eigen::Matrix<T, DIM_P, 1> y_f = reg_ext.getY();
-      Eigen::Matrix<T, DIM_P, DIM_P> phi_f = reg_ext.getPhi();
+      Eigen::Matrix<T, DIM_P, 1> y_f = reg_ext->getY();
+      Eigen::Matrix<T, DIM_P, DIM_P> phi_f = reg_ext->getPhi();
 
       double Delta = phi_f.determinant();
 
@@ -93,7 +95,7 @@ namespace sdu_estimators::parameter_estimators
     void reset()
     {
       theta_est = theta_init;
-      reg_ext.reset();
+      reg_ext->reset();
     }
 
   private:
@@ -108,7 +110,8 @@ namespace sdu_estimators::parameter_estimators
 
     // T_REG_EXT<T, DIM_N, DIM_P> reg_ext;
     // T_REG_EXT reg_ext;
-    regressor_extensions::Kreisselmeier<T, DIM_N, DIM_P> reg_ext;
+    // regressor_extensions::Kreisselmeier<T, DIM_N, DIM_P> reg_ext;
+    regressor_extensions::RegressorExtension<T, DIM_N, DIM_P> * reg_ext;
   };
 }
 
