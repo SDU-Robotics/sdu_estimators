@@ -3,12 +3,17 @@
 
 namespace sdu_estimators::parameter_estimators
 {
-  GradientEstimator::~GradientEstimator() = default;
+  template <typename T, int32_t DIM_N, int32_t DIM_P>
+  GradientEstimator<T, DIM_N, DIM_P>::~GradientEstimator() = default;
 
-  GradientEstimator::GradientEstimator(const float dt, const float gamma, const Eigen::VectorXd& theta_init)
+  template <typename T, int32_t DIM_N, int32_t DIM_P>
+  GradientEstimator<T, DIM_N, DIM_P>::GradientEstimator(const float dt, const float gamma,
+                                                        const Eigen::Matrix<T, DIM_P, 1> & theta_init)
     : GradientEstimator(dt, gamma, theta_init, 1.0f) {}
 
-  GradientEstimator::GradientEstimator(const float dt, const float gamma, const Eigen::VectorXd& theta_init, const float r)
+  template <typename T, int32_t DIM_N, int32_t DIM_P>
+  GradientEstimator<T, DIM_N, DIM_P>::GradientEstimator(const float dt, const float gamma,
+                                                        const Eigen::Matrix<T, DIM_P, 1> & theta_init, const float r)
   {
     this->dt = dt;
     this->gamma = gamma;
@@ -18,7 +23,9 @@ namespace sdu_estimators::parameter_estimators
     this->r = r;
   }
 
-  void GradientEstimator::step(const Eigen::VectorXd& y, const Eigen::MatrixXd& phi)
+  template <typename T, int32_t DIM_N, int32_t DIM_P>
+  void GradientEstimator<T, DIM_N, DIM_P>::step(const Eigen::Matrix<T, DIM_N, 1> &y,
+                                                const Eigen::Matrix<T, DIM_P, DIM_N> &phi)
   {
     // const int n = phi.cols();
     // const int m = phi.rows();
@@ -39,12 +46,14 @@ namespace sdu_estimators::parameter_estimators
     theta_est += dt * dtheta;
   }
 
-  Eigen::VectorXd GradientEstimator::get_estimate()
+  template <typename T, int32_t DIM_N, int32_t DIM_P>
+  Eigen::Vector<T, DIM_P> GradientEstimator<T, DIM_N, DIM_P>::get_estimate()
   {
     return theta_est.reshaped(p, 1);
   }
 
-  void GradientEstimator::reset()
+  template <typename T, int32_t DIM_N, int32_t DIM_P>
+  void GradientEstimator<T, DIM_N, DIM_P>::reset()
   {
     theta_est = theta_init;
   }

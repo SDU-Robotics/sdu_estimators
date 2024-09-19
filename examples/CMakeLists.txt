@@ -4,8 +4,8 @@ target_link_libraries(sdu_estimators_app PRIVATE sdu_estimators)
 add_executable(example_gradient_estimator example_gradient_estimator.cpp)
 target_link_libraries(example_gradient_estimator PRIVATE sdu_estimators)
 
-add_executable(example_DREM_estimator example_DREM_estimator.cpp)
-target_link_libraries(example_DREM_estimator PRIVATE sdu_estimators)
+#add_executable(example_DREM_estimator example_DREM_estimator.cpp)
+#target_link_libraries(example_DREM_estimator PRIVATE sdu_estimators)
 
 add_executable(example_SS state_estimators/example_SS.cpp)
 target_link_libraries(example_SS PRIVATE sdu_estimators)
@@ -13,8 +13,7 @@ target_link_libraries(example_SS PRIVATE sdu_estimators)
 add_executable(example_luenberger state_estimators/example_luenberger.cpp)
 target_link_libraries(example_luenberger PRIVATE sdu_estimators)
 
-add_executable(example_UIO state_estimators/example_UIO.cpp
-        state_estimators/example_UIO.cpp)
+add_executable(example_UIO state_estimators/example_UIO.cpp)
 target_link_libraries(example_UIO PRIVATE sdu_estimators)
 
 #add_executable(example_utils state_estimators/example_utils.cpp)

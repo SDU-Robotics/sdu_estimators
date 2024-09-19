@@ -11,18 +11,18 @@ int main()
 {
   float dt = 0.002;
   float tend = 50 / dt; // 10s
-  float gamma = 1;
+  float gamma = 0.5;
   float r = 0.5;
-  Eigen::VectorXd theta_init, theta_true;
-  theta_init.resize(2);
-  theta_true.resize(2);
+  Eigen::Matrix<double, 2, 1> theta_init, theta_true;
+  // theta_init.resize(2);
+  // theta_true.resize(2);
 
   theta_init << 0,
                 0;
   theta_true << 1,
                 2;
 
-  sdu_estimators::parameter_estimators::GradientEstimator grad_est(dt, gamma, theta_init, r);
+  sdu_estimators::parameter_estimators::GradientEstimator<double, 1, 2> grad_est(dt, gamma, theta_init, r);
   // sdu_estimators::parameter_estimators::GradientEstimator grad_est(dt, gamma, theta_init);
   std::vector<Eigen::VectorXd> all_theta_est;
   Eigen::VectorXd y;

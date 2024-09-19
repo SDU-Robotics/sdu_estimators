@@ -18,34 +18,73 @@ namespace sdu_estimators::parameter_estimators
    * where \f$ \gamma > 0 \f$ is a tuning parameter, \f$ y : \mathbb{R}_+ \to \mathbb{R}^n \f$ is the output, \f$ \phi : \mathbb{R}_+ \to \mathbb{R}^{m \times n} \f$ is,
    * the regressor matrix and \f$ \theta : \mathbb{R}_+ \to \mathbb{R}^m \f$ is the parameter vector.
    */
-
-  class GradientEstimator : public ParameterEstimator
+  template <typename T, int32_t DIM_N, int32_t DIM_P>
+  class GradientEstimator : public ParameterEstimator<T, DIM_N, DIM_P>
   {
   public:
-    GradientEstimator(float dt, float gamma, const Eigen::VectorXd & theta_init);
-    GradientEstimator(float dt, float gamma, const Eigen::VectorXd & theta_init, float r);
-    ~GradientEstimator() override;
+    GradientEstimator(float dt, float gamma, const Eigen::Matrix<T, DIM_P, 1> & theta_init)
+      : GradientEstimator(dt, gamma, theta_init, 1.0f)
+    {
+    }
+
+    GradientEstimator(float dt, float gamma, const Eigen::Matrix<T, DIM_P, 1> & theta_init, float r)
+    {
+      this->dt = dt;
+      this->gamma = gamma;
+      this->theta_est = theta_init;
+      this->theta_init = theta_init;
+      this->p = theta_init.size();
+      this->r = r;
+    }
+
+    ~GradientEstimator()
+    {
+    }
 
     /**
      * @brief Step the execution of the estimator (must be called in a loop externally)
      */
-    void step(const Eigen::VectorXd &y, const Eigen::MatrixXd &phi) override;
+    void step(const Eigen::Matrix<T, DIM_N, 1> &y, const Eigen::Matrix<T, DIM_P, DIM_N> &phi)
+    {
+      y_err = y - phi.transpose() * theta_est;
+
+      Eigen::VectorXd tmp1 = y_err.array().abs().pow(r);
+      Eigen::VectorXd tmp2 = y_err.cwiseSign();
+
+      // std::cout << tmp1 << " " << tmp2 << std::endl;
+
+      dtheta = gamma * phi * (
+        tmp1.cwiseProduct(tmp2)
+      );
+
+      theta_est += dt * dtheta;
+    }
 
     /**
      * @brief Get the current estimate of the parameter. Updates when the step function is called.
      */
-    Eigen::VectorXd get_estimate() override;
+    Eigen::Matrix<T, DIM_P, 1> get_estimate()
+    {
+      return theta_est.reshaped(DIM_P, 1);
+    }
 
     /**
      * @brief Reset internal estimator variables
      */
-    void reset() override;
+    void reset()
+    {
+      for (int i = 0; i < DIM_P; ++i)
+      {
+        theta_est[i] = theta_init[i];
+      }
+    }
 
   private:
     float dt{};
     float gamma{};
     float r{};
-    Eigen::VectorXd theta_est, theta_init, dtheta, y_err;
+    Eigen::Matrix<T, DIM_P, 1> theta_est, theta_init, dtheta;
+    Eigen::Matrix<T, DIM_N, 1> y_err;
     int p{}; // number of parameters
   };
 }

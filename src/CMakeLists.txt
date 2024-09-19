@@ -1,11 +1,12 @@
 add_library(sdu_estimators
     sdu_estimators.cpp
-    estimators/gradient_estimator.cpp
-    estimators/drem.cpp
+#    estimators/gradient_estimator.cpp
+#    estimators/drem.cpp
     ../include/sdu_estimators/sdu_estimators.hpp
+
     ../include/sdu_estimators/parameter_estimators/parameter_estimator.hpp
     ../include/sdu_estimators/parameter_estimators/gradient_estimator.hpp
-    ../include/sdu_estimators/parameter_estimators/drem.hpp
+#    ../include/sdu_estimators/parameter_estimators/drem.hpp
 
     regressor_extensions/kreisselmeier.cpp
     ../include/sdu_estimators/regressor_extensions/kreisselmeier.hpp

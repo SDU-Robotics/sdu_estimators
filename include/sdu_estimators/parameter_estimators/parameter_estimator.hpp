@@ -19,7 +19,7 @@ namespace sdu_estimators::parameter_estimators
  * and \f$ \theta : \mathbb{R}_+ \to \mathbb{R}^m \f$ is the parameter vector.
  *
  */
-
+template <typename T, int32_t DIM_N, int32_t DIM_P>
 class ParameterEstimator
 {
 public:
@@ -28,13 +28,13 @@ public:
   /**
    * @brief Step the execution of the estimator (must be called in a loop externally)
    */
-  virtual void step(const Eigen::VectorXd &y,
-                    const Eigen::MatrixXd &phi) = 0;
+  virtual void step(const Eigen::Matrix<T, DIM_N, 1> &y,
+                    const Eigen::Matrix<T, DIM_P, DIM_N> &phi) = 0;
 
   /**
    * @brief Get the current estimate of the parameter. Updates when the step function is called.
    */
-  virtual Eigen::VectorXd get_estimate() = 0;
+  virtual Eigen::Matrix<T, DIM_P, 1> get_estimate() = 0;
 
   /**
    * @brief Reset internal estimator variables

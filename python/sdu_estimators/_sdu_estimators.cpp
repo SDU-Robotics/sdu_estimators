@@ -4,7 +4,7 @@
 
 #include <sdu_estimators/sdu_estimators.hpp>
 #include <sdu_estimators/parameter_estimators/parameter_estimator.hpp>
-#include <sdu_estimators/parameter_estimators/drem.hpp>
+// #include <sdu_estimators/parameter_estimators/drem.hpp>
 #include <sdu_estimators/parameter_estimators/gradient_estimator.hpp>
 
 namespace nb = nanobind;
@@ -16,9 +16,10 @@ namespace sdu_estimators
     m.doc() = "Python Bindings for sdu_estimators";
     m.def("add_one", &add_one, "Increments an integer value");
 
-    nb::class_<parameter_estimators::DREM>(m, "DREM")
-      .def(nb::init<float, Eigen::VectorXd &, Eigen::VectorXd &, float>())
-      .def(nb::init<float, const Eigen::VectorXd &, const Eigen::VectorXd &, float, float>());
+    // nb::class_<parameter_estimators::DREM>(m, "DREM")
+    //   .def(nb::init<float, Eigen::VectorXd &, Eigen::VectorXd &, float>())
+    //   .def(nb::init<float, const Eigen::VectorXd &, const Eigen::VectorXd &, float, float>());
+
     //   .def(nb::init<float, const Eigen::VectorXd &, const Eigen::VectorXd &, float>())
     //   .def(nb::init<float, const Eigen::VectorXd &, const Eigen::VectorXd &, float, float>());
     // nb::class_<parameter_estimators::DREM, parameter_estimators::ParameterEstimator>(m, "DREM")
