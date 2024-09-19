@@ -17,14 +17,15 @@ namespace sdu_estimators::state_estimators::utils
     Exact
   };
 
-  inline void c2d(Eigen::MatrixXd & A, Eigen::MatrixXd & B,
+  template <typename T, int32_t DIM_Nx, int32_t DIM_Nu>
+  void c2d(Eigen::Matrix<T, DIM_Nx, DIM_Nx> & A, Eigen::Matrix<T, DIM_Nx, DIM_Nu> & B,
            float Ts,
-           Eigen::MatrixXd & Ad, Eigen::MatrixXd & Bd,
+           Eigen::Matrix<T, DIM_Nx, DIM_Nx> & Ad, Eigen::Matrix<T, DIM_Nx, DIM_Nu> & Bd,
            IntegrationMethod method)
   {
     // Ad = A;
     // Bd = B;
-    auto I = Eigen::MatrixXd::Identity(A.rows(), A.rows());
+    auto I = Eigen::Matrix<T, DIM_Nx, DIM_Nx>::Identity(A.rows(), A.rows());
 
     switch (method)
     {

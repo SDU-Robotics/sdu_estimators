@@ -27,15 +27,15 @@ int main()
   theta_true << 1,
                 2;
 
-  float ell = 1;
+  // float ell = 1;
+  // sdu_estimators::regressor_extensions::Kreisselmeier<double, 1, 2> reg_ext(dt, ell);
+
+  Eigen::Vector<double, 2> alpha, beta;
+  alpha << 5, 10;
+  beta << 0.1, 0.5;
+  sdu_estimators::regressor_extensions::LTI<double, 1, 2> reg_ext(dt, alpha, beta);
+
   float r = 0.5;
-  sdu_estimators::regressor_extensions::Kreisselmeier<double, 1, 2> reg_ext(dt, ell);
-
-  // Eigen::Vector<double, 2> alpha, beta;
-  // alpha << 5, 10;
-  // beta << 0.1, 0.5;
-  // sdu_estimators::regressor_extensions::LTI<double, 1, 2> reg_ext(dt, alpha, beta);
-
   sdu_estimators::parameter_estimators::DREM<double, 1, 2> DREM(dt, gamma, theta_init, r, &reg_ext);
   // sdu_estimators::parameter_estimators::GradientEstimator grad_est(dt, gamma, theta_init);
   std::vector<Eigen::VectorXd> all_theta_est;

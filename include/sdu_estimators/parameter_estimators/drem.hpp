@@ -66,7 +66,7 @@ namespace sdu_estimators::parameter_estimators
       Eigen::MatrixXd phi_tmp = phi_f;
       float Yvar_i;
 
-      for (int i = 0; i < p; ++i)
+      for (int i = 0; i < DIM_P; ++i)
       {
         phi_tmp(Eigen::all, i) = y_f;
 

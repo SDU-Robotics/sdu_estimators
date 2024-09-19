@@ -15,24 +15,27 @@ int main()
   k = 2;
   m = 20;
 
-  Eigen::VectorXd F;
-  F.resize(1);
+  Eigen::Vector<double, 1> F;
+  // F.resize(1);
   F << 5;
 
-  Eigen::MatrixXd A, B, C, D;
+  Eigen::Matrix<double, 2, 2> A;
+  Eigen::Matrix<double, 2, 1> B;
+  Eigen::Matrix<double, 1, 2> C;
+  Eigen::Matrix<double, 1, 1> D;
 
-  A.resize(2, 2);
+  // A.resize(2, 2);
   A << 0, 1,
        -k/m, -c/m;
 
-  B.resize(2, 1);
+  // B.resize(2, 1);
   B << 0,
        1/m;
 
-  C.resize(1, 2);
+  // C.resize(1, 2);
   C << 1, 0;
 
-  D.resize(1, 1);
+  // D.resize(1, 1);
   D << 0;
 
   float Ts = 0.002;
@@ -45,7 +48,7 @@ int main()
   // sdu_estimators::state_estimators::utils::IntegrationMethod method = sdu_estimators::state_estimators::utils::Bilinear;
   sdu_estimators::state_estimators::utils::IntegrationMethod method = sdu_estimators::state_estimators::utils::Exact;
 
-  sdu_estimators::state_estimators::StateSpaceModel sys(A, B, C, D, Ts, method);
+  sdu_estimators::state_estimators::StateSpaceModel<double, 2, 1, 1> sys(A, B, C, D, Ts, method);
   sys.reset();
 
   std::cout << sys.getAd() << std::endl;

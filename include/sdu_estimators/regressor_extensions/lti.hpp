@@ -14,6 +14,8 @@ namespace sdu_estimators::regressor_extensions
   template <typename T, int32_t DIM_N, int32_t DIM_P>
   class LTI : public RegressorExtension<T, DIM_N, DIM_P>
   {
+    static_assert(DIM_N == 1, "The LTI regressor extension only works with N == 1.");
+
   public:
     LTI(float dt, Eigen::Vector<T, DIM_P> & alpha, Eigen::Vector<T, DIM_P> & beta)
     {
