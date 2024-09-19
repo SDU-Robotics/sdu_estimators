@@ -5,6 +5,7 @@
 #include <iostream>
 #include <sdu_estimators/parameter_estimators/drem.hpp>
 #include <vector>
+#include "sdu_estimators/regressor_extensions/kreisselmeier.hpp"
 
 int main()
 {
@@ -18,16 +19,16 @@ int main()
 
   float ell = 1;
   float r = 1;
-  Eigen::VectorXd theta_init, theta_true;
-  theta_init.resize(2);
-  theta_true.resize(2);
+  Eigen::Matrix<double, 2, 1> theta_init, theta_true;
+  // theta_init.resize(2);
+  // theta_true.resize(2);
 
   theta_init << 0,
                 0;
   theta_true << 1,
                 2;
 
-  sdu_estimators::parameter_estimators::DREM DREM(dt, gamma, theta_init, ell, r);
+  sdu_estimators::parameter_estimators::DREM<double, 1, 2> DREM(dt, gamma, theta_init, ell, r);
   // sdu_estimators::parameter_estimators::GradientEstimator grad_est(dt, gamma, theta_init);
   std::vector<Eigen::VectorXd> all_theta_est;
   Eigen::VectorXd y;

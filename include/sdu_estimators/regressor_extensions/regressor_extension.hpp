@@ -7,18 +7,34 @@
 
 namespace sdu_estimators::regressor_extensions
 {
+  template <typename T, int32_t DIM_N, int32_t DIM_P>
   class RegressorExtension
   {
-    public:
-      virtual ~RegressorExtension() = default;
+  public:
+    // RegressorExtension() = default;
 
-      virtual void step(const Eigen::VectorXd &y,
-                        const Eigen::MatrixXd &phi) = 0;
+    virtual ~RegressorExtension() = default;
 
-      virtual Eigen::VectorXd getY() = 0; // get filtered states
-      virtual Eigen::MatrixXd getPhi() = 0; // get filtered states
+    virtual void step(const Eigen::Matrix<T, DIM_N, 1> &y,
+                      const Eigen::Matrix<T, DIM_P, DIM_N> &phi) = 0;
 
-      virtual void reset() = 0;
+    // get filtered states
+    virtual Eigen::Matrix<T, DIM_P, 1> getY()
+    {
+      return y_f;
+    }
+
+    // get filtered states
+    virtual Eigen::Matrix<T, DIM_P, DIM_P> getPhi()
+    {
+      return phi_f;
+    };
+
+    virtual void reset() = 0;
+
+  protected:
+    Eigen::Matrix<T, DIM_P, 1> y_f; // filtered y
+    Eigen::Matrix<T, DIM_P, DIM_P> phi_f; // filtered phi
   };
 }
 

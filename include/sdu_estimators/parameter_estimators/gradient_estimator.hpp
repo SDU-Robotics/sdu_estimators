@@ -18,6 +18,7 @@ namespace sdu_estimators::parameter_estimators
    * where \f$ \gamma > 0 \f$ is a tuning parameter, \f$ y : \mathbb{R}_+ \to \mathbb{R}^n \f$ is the output, \f$ \phi : \mathbb{R}_+ \to \mathbb{R}^{m \times n} \f$ is,
    * the regressor matrix and \f$ \theta : \mathbb{R}_+ \to \mathbb{R}^m \f$ is the parameter vector.
    */
+
   template <typename T, int32_t DIM_N, int32_t DIM_P>
   class GradientEstimator : public ParameterEstimator<T, DIM_N, DIM_P>
   {
@@ -73,10 +74,11 @@ namespace sdu_estimators::parameter_estimators
      */
     void reset()
     {
-      for (int i = 0; i < DIM_P; ++i)
-      {
-        theta_est[i] = theta_init[i];
-      }
+      theta_est = theta_init;
+      // for (int i = 0; i < DIM_P; ++i)
+      // {
+      //   theta_est[i] = theta_init[i];
+      // }
     }
 
   private:

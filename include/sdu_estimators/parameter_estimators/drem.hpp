@@ -3,8 +3,11 @@
 #define DREM_HPP
 
 #include <sdu_estimators/parameter_estimators/parameter_estimator.hpp>
-#include <sdu_estimators/regressor_extensions/kreisselmeier.hpp>
+// #include <sdu_estimators/regressor_extensions/kreisselmeier.hpp>
+#include <sdu_estimators/regressor_extensions/regressor_extension.hpp>
 #include <type_traits>
+
+#include "sdu_estimators/regressor_extensions/kreisselmeier.hpp"
 
 namespace sdu_estimators::parameter_estimators
 {
@@ -17,38 +20,95 @@ namespace sdu_estimators::parameter_estimators
    *
    */
 
-  class DREM : public ParameterEstimator
+  template <typename T, int32_t DIM_N, int32_t DIM_P>
+  class DREM : public ParameterEstimator<T, DIM_N, DIM_P>
   {
+  // static_assert(std::is_base_of_v<regressor_extensions::RegressorExtension, T_REG_EXT>,
+  //   "T_REG_EXT must derive from regressor_extensions::RegressorExtension");
+
   public:
-    DREM(float dt, const Eigen::VectorXd & gamma, const Eigen::VectorXd & theta_init, float ell);
-    DREM(float dt, const Eigen::VectorXd & gamma, const Eigen::VectorXd & theta_init, float ell, float r);
-    ~DREM() override;
+    DREM(float dt, const Eigen::Matrix<T, DIM_P, 1> & gamma, const Eigen::Matrix<T, DIM_P, 1> & theta_init, float ell)
+      : DREM(dt, gamma, theta_init, ell, 1.0f)
+    {
+    }
+
+
+    DREM(float dt, const Eigen::Matrix<T, DIM_P, 1> & gamma, const Eigen::Matrix<T, DIM_P, 1> & theta_init, float ell, float r)
+      : reg_ext(dt, ell)
+    {
+      this->dt = dt;
+      this->gamma = gamma;
+      this->theta_est = theta_init;
+      this->theta_init = theta_init;
+      this->dtheta = theta_init * 0;
+      this->p = theta_init.size();
+      this->r = r;
+    }
+
+    ~DREM()
+    {
+    }
 
     /**
      * @brief Step the execution of the estimator (must be called in a loop externally)
      */
-    void step(const Eigen::VectorXd &y, const Eigen::MatrixXd &phi) override;
+    void step(const Eigen::Matrix<T, DIM_N, 1> &y, const Eigen::Matrix<T, DIM_P, DIM_N> &phi)
+    {
+      reg_ext.step(y, phi);
+
+      Eigen::Matrix<T, DIM_P, 1> y_f = reg_ext.getY();
+      Eigen::Matrix<T, DIM_P, DIM_P> phi_f = reg_ext.getPhi();
+
+      double Delta = phi_f.determinant();
+
+      Eigen::MatrixXd phi_tmp = phi_f;
+      float Yvar_i;
+
+      for (int i = 0; i < p; ++i)
+      {
+        phi_tmp(Eigen::all, i) = y_f;
+
+        Yvar_i = phi_tmp.determinant();
+
+        y_err_i = Yvar_i - Delta * theta_est[i];
+        dtheta[i] = gamma[i] * Delta * (pow(abs(y_err_i), r) * std::signbit(-y_err_i));
+
+        phi_tmp(Eigen::all, i) = phi_f(Eigen::all, i);
+      }
+
+      theta_est += dt * dtheta;
+    }
 
     /**
      * @brief Get the current estimate of the parameter. Updates when the step function is called.
      */
-    Eigen::VectorXd get_estimate() override;
+    Eigen::Matrix<T, DIM_P, 1> get_estimate()
+    {
+      return theta_est;
+    }
 
     /**
      * @brief Reset internal estimator variables
      */
-    void reset() override;
+    void reset()
+    {
+      theta_est = theta_init;
+      reg_ext.reset();
+    }
 
   private:
     float dt{};
-    Eigen::VectorXd gamma;
+    Eigen::Matrix<T, DIM_P, 1> gamma;
     float r{};
-    Eigen::VectorXd theta_est, theta_init, dtheta, y_err;
+    Eigen::Matrix<T, DIM_P, 1> theta_est, theta_init, dtheta;
+    Eigen::Matrix<T, DIM_N, 1> y_err;
     int p{}; // number of parameters
 
     float y_err_i{};
 
-    regressor_extensions::Kreisselmeier reg_ext;
+    // T_REG_EXT<T, DIM_N, DIM_P> reg_ext;
+    // T_REG_EXT reg_ext;
+    regressor_extensions::Kreisselmeier<T, DIM_N, DIM_P> reg_ext;
   };
 }
 

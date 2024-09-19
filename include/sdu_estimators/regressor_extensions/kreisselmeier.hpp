@@ -11,26 +11,55 @@ namespace sdu_estimators::regressor_extensions
    * Description
    */
 
-  class Kreisselmeier : public RegressorExtension
+  template <typename T, int32_t DIM_N, int32_t DIM_P>
+  class Kreisselmeier : public RegressorExtension<T, DIM_N, DIM_P>
   {
   public:
-    Kreisselmeier(float dt, float ell);
-    ~Kreisselmeier() override;
+    Kreisselmeier(float dt, float ell)
+    {
+      this->dt = dt;
+      this->ell = ell;
 
-    void step(const Eigen::VectorXd &y,
-                  const Eigen::MatrixXd &phi) override;
+      first_run = true;
+    }
 
-    Eigen::VectorXd getY() override; // get filtered states
-    Eigen::MatrixXd getPhi() override; // get filtered states
+    ~Kreisselmeier()
+    {
 
-    void reset() override;
+    }
+
+    void step(const Eigen::Matrix<T, DIM_N, 1> &y, const Eigen::Matrix<T, DIM_P, DIM_N> &phi)
+    {
+      if (first_run)
+      {
+        this->y_f.setZero();
+        this->phi_f.setZero();
+
+        first_run = false;
+      }
+
+      this->phi_f += dt * (
+            -ell * this->phi_f + phi * phi.transpose()
+          );
+
+      this->y_f += dt * (
+        -ell * this->y_f + phi * y
+      );
+    }
+
+    // Eigen::VectorXd getY() override; // get filtered states
+    // Eigen::MatrixXd getPhi() override; // get filtered states
+
+    void reset()
+    {
+      first_run = true;
+      this->y_f *= 0;
+      this->phi_f *= 0;
+    }
 
   private:
     float dt{};
     float ell{};
-
-    Eigen::VectorXd y_f; // filtered y
-    Eigen::MatrixXd phi_f; // filtered phi
 
     bool first_run{};
 };
