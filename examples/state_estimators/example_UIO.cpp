@@ -68,7 +68,7 @@ int main()
 
   float Ts = 0.001;
   float tstart = 0;
-  float tstop = 25;
+  float tstop = 50;
   int N = (tstop - tstart) / Ts;
 
   sdu_estimators::state_estimators::utils::IntegrationMethod method = sdu_estimators::state_estimators::utils::Euler;
