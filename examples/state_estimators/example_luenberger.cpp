@@ -79,14 +79,11 @@ int main()
 
   std::vector<Eigen::Vector<double, 2>> all_states;
   std::vector<Eigen::Vector<double, 2>> all_est_states;
-  Eigen::VectorXd tmp1, tmp2, d;
+  Eigen::VectorXd tmp1, tmp2;
 
   Eigen::Vector<double, 2> uu, y;
-  Eigen::Vector<double, 1> u;
+  Eigen::Vector<double, 1> u, d;
 
-  u.resize(1);
-  d.resize(1);
-  uu.resize(2);
 
   for (int i = 0; i < N; ++i)
   {

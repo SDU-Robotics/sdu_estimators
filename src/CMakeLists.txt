@@ -6,9 +6,7 @@ add_library(sdu_estimators
 
     ../include/sdu_estimators/parameter_estimators/parameter_estimator.hpp
     ../include/sdu_estimators/parameter_estimators/gradient_estimator.hpp
-#    ../include/sdu_estimators/parameter_estimators/drem.hpp
-
-#    regressor_extensions/kreisselmeier.cpp
+    ../include/sdu_estimators/parameter_estimators/drem.hpp
     ../include/sdu_estimators/regressor_extensions/kreisselmeier.hpp
     ../include/sdu_estimators/regressor_extensions/lti.hpp
 
@@ -18,6 +16,7 @@ add_library(sdu_estimators
 
 #    state_estimators/state_space_model.cpp
     ../include/sdu_estimators/state_estimators/luenberger_observer.hpp
+    ../include/sdu_estimators/state_estimators/unknown_input_observer.hpp
 #    state_estimators/luenberger_observer.cpp
 #    state_estimators/unknown_input_observer.cpp
 )
