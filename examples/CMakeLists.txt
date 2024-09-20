@@ -16,7 +16,7 @@ target_link_libraries(example_luenberger PRIVATE sdu_estimators)
 add_executable(example_UIO state_estimators/example_UIO.cpp)
 target_link_libraries(example_UIO PRIVATE sdu_estimators)
 
-add_executable(example_beam state_estimators/example_beam.cpp)
+add_executable(example_beam structural_parameters/example_beam.cpp)
 target_link_libraries(example_beam PRIVATE sdu_estimators)
 
 #add_executable(example_utils state_estimators/example_utils.cpp)

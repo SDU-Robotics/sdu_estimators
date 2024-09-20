@@ -23,12 +23,12 @@ namespace sdu_estimators::parameter_estimators
   class GradientEstimator : public ParameterEstimator<T, DIM_N, DIM_P>
   {
   public:
-    GradientEstimator(float dt, float gamma, const Eigen::Matrix<T, DIM_P, 1> & theta_init)
+    GradientEstimator(float dt, const Eigen::Vector<T, DIM_P> gamma, const Eigen::Vector<T, DIM_P> & theta_init)
       : GradientEstimator(dt, gamma, theta_init, 1.0f)
     {
     }
 
-    GradientEstimator(float dt, float gamma, const Eigen::Matrix<T, DIM_P, 1> & theta_init, float r)
+    GradientEstimator(float dt, const Eigen::Vector<T, DIM_P> gamma, const Eigen::Matrix<T, DIM_P, 1> & theta_init, float r)
     {
       this->dt = dt;
       this->gamma = gamma;
@@ -54,7 +54,7 @@ namespace sdu_estimators::parameter_estimators
 
       // std::cout << tmp1 << " " << tmp2 << std::endl;
 
-      dtheta = gamma * phi * (
+      dtheta = gamma.asDiagonal() * phi * (
         tmp1.cwiseProduct(tmp2)
       );
 
@@ -64,7 +64,7 @@ namespace sdu_estimators::parameter_estimators
     /**
      * @brief Get the current estimate of the parameter. Updates when the step function is called.
      */
-    Eigen::Matrix<T, DIM_P, 1> get_estimate()
+    Eigen::Vector<T, DIM_P> get_estimate()
     {
       return theta_est.reshaped(DIM_P, 1);
     }
@@ -83,10 +83,9 @@ namespace sdu_estimators::parameter_estimators
 
   private:
     float dt{};
-    float gamma{};
     float r{};
-    Eigen::Matrix<T, DIM_P, 1> theta_est, theta_init, dtheta;
-    Eigen::Matrix<T, DIM_N, 1> y_err;
+    Eigen::Vector<T, DIM_P> theta_est, theta_init, dtheta, gamma;
+    Eigen::Vector<T, DIM_N> y_err;
     int p{}; // number of parameters
   };
 }

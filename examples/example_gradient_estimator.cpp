@@ -11,7 +11,7 @@ int main()
 {
   float dt = 0.002;
   float tend = 50 / dt; // 10s
-  float gamma = 0.5;
+  Eigen::Vector<double, 2> gamma = {0.5, 0.5};
   float r = 0.5;
   Eigen::Matrix<double, 2, 1> theta_init, theta_true;
   // theta_init.resize(2);
