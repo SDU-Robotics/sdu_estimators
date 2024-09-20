@@ -84,7 +84,6 @@ int main()
   Eigen::Vector<double, 2> uu, y;
   Eigen::Vector<double, 1> u, d;
 
-
   for (int i = 0; i < N; ++i)
   {
     // std::cout << i << std::endl;
