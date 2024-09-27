@@ -15,23 +15,23 @@ def test_gradient():
 
     dt = 0.002
     tend = int(50./dt)
-    gamma = np.array([0.5, 0.5])
-    theta_init = np.array([0, 0])
-    theta_true = np.array([1, 2])
+    gamma = np.array([0.5, 0.5, 0.5])
+    theta_init = np.array([0, 0, 0])
+    theta_true = np.array([1, 2, 3])
     r = 0.5
 
     GradientEstimator = sdu_estimators.GradientEstimator(dt, gamma, theta_init, r)
     print(GradientEstimator)
     print(GradientEstimator.get_estimate())
 
-    all_theta_est = np.zeros((tend, 2))
+    all_theta_est = np.zeros((tend, 3))
 
     before = time.time()
 
     for i in range(tend):
         t = i * dt
-        phi = np.array([np.sin(t), np.cos(t)])
-        y = phi.T @ theta_true.reshape([2, 1]);
+        phi = np.array([np.sin(t), np.cos(t), 1.])
+        y = phi.T @ theta_true.reshape([3, 1]);
         GradientEstimator.step(y, phi)
 
         all_theta_est[i, :] = GradientEstimator.get_estimate()

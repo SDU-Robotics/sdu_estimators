@@ -19,12 +19,22 @@ namespace sdu_estimators
     // nb::class_<parameter_estimators::GradientEstimator<double, 1, 2>, 
     //            shared_ptr<parameter_estimators::GradientEstimator<double, 1, 2>>,
     //            parameter_estimators::ParameterEstimator>(m, "GradientEstimator")
+
     nb::class_<parameter_estimators::GradientEstimator<double, 1, 2>>(m, "GradientEstimator")
       .def(nb::init<float, const Eigen::Vector<double, 2>, const Eigen::Vector<double, 2>>())
       .def(nb::init<float, const Eigen::Vector<double, 2>, const Eigen::Vector<double, 2>, float>())
       .def("get_estimate", &parameter_estimators::GradientEstimator<double, 1, 2>::get_estimate)
       .def("step", &parameter_estimators::GradientEstimator<double, 1, 2>::step);
 
-    // void step(const Eigen::Matrix<T, DIM_N, 1> &y, const Eigen::Matrix<T, DIM_P, DIM_N> &phi)
+    nb::class_<parameter_estimators::GradientEstimator<double, 1, 3>>(m, "GradientEstimator")
+      .def(nb::init<float, const Eigen::Vector<double, 3>, const Eigen::Vector<double, 3>>())
+      .def(nb::init<float, const Eigen::Vector<double, 3>, const Eigen::Vector<double, 3>, float>())
+      .def("get_estimate", &parameter_estimators::GradientEstimator<double, 1, 3>::get_estimate)
+      .def("step", &parameter_estimators::GradientEstimator<double, 1, 3>::step);
+
+    /* Unfortunately, it seems the above, quite ugly, way of binding has to be done for the number of parameters and 
+     * you desire.
+     * TODO: Figure out a nicer way of binding.
+     */ 
   }
 }  // namespace sdu_estimators
