@@ -28,7 +28,7 @@ namespace sdu_estimators::parameter_estimators
     {
     }
 
-    GradientEstimator(float dt, const Eigen::Vector<T, DIM_P> gamma, const Eigen::Matrix<T, DIM_P, 1> & theta_init, float r)
+    GradientEstimator(float dt, const Eigen::Vector<T, DIM_P> gamma, const Eigen::Vector<T, DIM_P> & theta_init, float r)
     {
       this->dt = dt;
       this->gamma = gamma;

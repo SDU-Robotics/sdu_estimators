@@ -30,17 +30,17 @@ int main()
   theta_true << 1,
                 2;
 
-  // float ell = 1;
-  // sdu_estimators::regressor_extensions::Kreisselmeier<double, 1, 2> reg_ext(dt, ell);
+  float ell = 0.95;
+  sdu_estimators::regressor_extensions::Kreisselmeier<double, 1, 2> reg_ext(dt, ell);
 
   // Eigen::Vector<double, 2> alpha, beta;
   // alpha << 5, 10;
   // beta << 0.1, 0.5;
   // sdu_estimators::regressor_extensions::LTI<double, 1, 2> reg_ext(dt, alpha, beta);
 
-  std::cout << "test" << std::endl;
-  std::vector<int> d{0, 100};
-  sdu_estimators::regressor_extensions::Delay<double, 1, 2> reg_ext(d);
+  // std::cout << "test" << std::endl;
+  // std::vector<int> d{0, 100};
+  // sdu_estimators::regressor_extensions::Delay<double, 1, 2> reg_ext(d);
 
   std::cout << "test" << std::endl;
 

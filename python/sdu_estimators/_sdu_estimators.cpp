@@ -16,22 +16,15 @@ namespace sdu_estimators
     m.doc() = "Python Bindings for sdu_estimators";
     m.def("add_one", &add_one, "Increments an integer value");
 
+    // nb::class_<parameter_estimators::GradientEstimator<double, 1, 2>, 
+    //            shared_ptr<parameter_estimators::GradientEstimator<double, 1, 2>>,
+    //            parameter_estimators::ParameterEstimator>(m, "GradientEstimator")
+    nb::class_<parameter_estimators::GradientEstimator<double, 1, 2>>(m, "GradientEstimator")
+      .def(nb::init<float, const Eigen::Vector<double, 2>, const Eigen::Vector<double, 2>>())
+      .def(nb::init<float, const Eigen::Vector<double, 2>, const Eigen::Vector<double, 2>, float>())
+      .def("get_estimate", &parameter_estimators::GradientEstimator<double, 1, 2>::get_estimate)
+      .def("step", &parameter_estimators::GradientEstimator<double, 1, 2>::step);
 
-
-    // nb::class_<parameter_estimators::DREM>(m, "DREM")
-    //   .def(nb::init<float, Eigen::VectorXd &, Eigen::VectorXd &, float>())
-    //   .def(nb::init<float, const Eigen::VectorXd &, const Eigen::VectorXd &, float, float>());
-
-    //   .def(nb::init<float, const Eigen::VectorXd &, const Eigen::VectorXd &, float>())
-    //   .def(nb::init<float, const Eigen::VectorXd &, const Eigen::VectorXd &, float, float>());
-    // nb::class_<parameter_estimators::DREM, parameter_estimators::ParameterEstimator>(m, "DREM")
-    //   .def(nb::init<float, const Eigen::VectorXd &, const Eigen::VectorXd &, float>())
-    //   .def(nb::init<float, const Eigen::VectorXd &, const Eigen::VectorXd &, float, float>())
-    //   .def("step", &parameter_estimators::DREM::step,
-    //     "Step the execution of the estimator (must be called in a loop externally).",
-    //     nb::arg("y"), nb::arg("phi"))
-    //   .def("get_estimate", &parameter_estimators::DREM::get_estimate,
-    //     "Get the current estimate of the parameter. Updates when the step function is called")
-    //   .def("reset", &parameter_estimators::DREM::reset);
+    // void step(const Eigen::Matrix<T, DIM_N, 1> &y, const Eigen::Matrix<T, DIM_P, DIM_N> &phi)
   }
 }  // namespace sdu_estimators
