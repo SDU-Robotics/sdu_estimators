@@ -9,6 +9,7 @@ add_library(sdu_estimators
     ../include/sdu_estimators/parameter_estimators/drem.hpp
     ../include/sdu_estimators/regressor_extensions/kreisselmeier.hpp
     ../include/sdu_estimators/regressor_extensions/lti.hpp
+#    ../include/sdu_estimators/regressor_extensions/delay.hpp
 
     ../include/sdu_estimators/state_estimators/state_space_model.hpp
     ../include/sdu_estimators/state_estimators/utils.hpp

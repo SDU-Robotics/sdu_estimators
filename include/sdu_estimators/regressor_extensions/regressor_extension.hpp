@@ -33,7 +33,7 @@ namespace sdu_estimators::regressor_extensions
     virtual void reset() = 0;
 
   protected:
-    Eigen::Matrix<T, DIM_P, DIM_N> y_f; // filtered y
+    Eigen::Matrix<T, DIM_P, 1> y_f; // filtered y
     Eigen::Matrix<T, DIM_P, DIM_P> phi_f; // filtered phi
   };
 }

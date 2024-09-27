@@ -6,6 +6,7 @@
 #include <sdu_estimators/parameter_estimators/drem.hpp>
 #include <vector>
 // #include "sdu_estimators/regressor_extensions/kreisselmeier.hpp"
+#include "sdu_estimators/regressor_extensions/delay.hpp"
 #include "sdu_estimators/regressor_extensions/lti.hpp"
 
 int main()
@@ -17,6 +18,8 @@ int main()
   gamma.resize(2);
   gamma << 10,
            10;
+
+  // gamma *= 100;
 
   Eigen::Matrix<double, 2, 1> theta_init, theta_true;
   // theta_init.resize(2);
@@ -30,10 +33,16 @@ int main()
   // float ell = 1;
   // sdu_estimators::regressor_extensions::Kreisselmeier<double, 1, 2> reg_ext(dt, ell);
 
-  Eigen::Vector<double, 2> alpha, beta;
-  alpha << 5, 10;
-  beta << 0.1, 0.5;
-  sdu_estimators::regressor_extensions::LTI<double, 1, 2> reg_ext(dt, alpha, beta);
+  // Eigen::Vector<double, 2> alpha, beta;
+  // alpha << 5, 10;
+  // beta << 0.1, 0.5;
+  // sdu_estimators::regressor_extensions::LTI<double, 1, 2> reg_ext(dt, alpha, beta);
+
+  std::cout << "test" << std::endl;
+  std::vector<int> d{0, 100};
+  sdu_estimators::regressor_extensions::Delay<double, 1, 2> reg_ext(d);
+
+  std::cout << "test" << std::endl;
 
   float r = 0.5;
   sdu_estimators::parameter_estimators::DREM<double, 1, 2> DREM(dt, gamma, theta_init, r, &reg_ext);
@@ -60,7 +69,7 @@ int main()
 
     // save data
     all_theta_est.push_back(tmp);
-    std::cout << tmp.transpose() << std::endl;
+    // std::cout << tmp.transpose() << std::endl;
   }
 
   std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
