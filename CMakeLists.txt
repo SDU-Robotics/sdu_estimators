@@ -4,7 +4,7 @@ cmake_minimum_required(VERSION 3.9)
 project(
   sdu_estimators
   VERSION 0.0.1
-  LANGUAGES CXX Fortran)
+  LANGUAGES CXX)
 
 # Initialize some default paths
 include(GNUInstallDirs)
