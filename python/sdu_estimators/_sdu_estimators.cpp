@@ -61,7 +61,7 @@ namespace sdu_estimators
     nb::class_<parameter_estimators::DREM<double, DIM_N_1, DIM_P_2>>(m, "DREM_1x2")
       .def(nb::init<float, const Eigen::Vector<double, DIM_P_2>, const Eigen::Vector<double, DIM_P_2>,
                 regressor_extensions::RegressorExtension<double, DIM_N_1, DIM_P_2>* >())
-    .def(nb::init<float, const Eigen::Vector<double, DIM_P_2>, const Eigen::Vector<double, DIM_P_2>,
+      .def(nb::init<float, const Eigen::Vector<double, DIM_P_2>, const Eigen::Vector<double, DIM_P_2>,
                 regressor_extensions::RegressorExtension<double, DIM_N_1, DIM_P_2>*, float >())
       .def("get_estimate", &parameter_estimators::DREM<double, DIM_N_1, DIM_P_2>::get_estimate)
       .def("step", &parameter_estimators::DREM<double, DIM_N_1, DIM_P_2>::step);
