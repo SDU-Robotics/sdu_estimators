@@ -45,7 +45,7 @@ int main()
   std::cout << "test" << std::endl;
 
   float r = 0.5;
-  sdu_estimators::parameter_estimators::DREM<double, 1, 2> DREM(dt, gamma, theta_init, r, &reg_ext);
+  sdu_estimators::parameter_estimators::DREM<double, 1, 2> DREM(dt, gamma, theta_init, &reg_ext, r);
   // sdu_estimators::parameter_estimators::GradientEstimator grad_est(dt, gamma, theta_init);
   std::vector<Eigen::VectorXd> all_theta_est;
   Eigen::VectorXd y;

@@ -29,13 +29,13 @@ namespace sdu_estimators::parameter_estimators
   public:
     DREM(float dt, const Eigen::Matrix<T, DIM_P, 1> & gamma, const Eigen::Matrix<T, DIM_P, 1> & theta_init,
       regressor_extensions::RegressorExtension<T, DIM_N, DIM_P> * reg_ext)
-      : DREM(dt, gamma, theta_init, 1.0f, reg_ext)
+      : DREM(dt, gamma, theta_init, reg_ext, 1.0f)
     {
     }
 
 
-    DREM(float dt, const Eigen::Matrix<T, DIM_P, 1> & gamma, const Eigen::Matrix<T, DIM_P, 1> & theta_init, float r,
-      regressor_extensions::RegressorExtension<T, DIM_N, DIM_P> * reg_ext)
+    DREM(float dt, const Eigen::Matrix<T, DIM_P, 1> & gamma, const Eigen::Matrix<T, DIM_P, 1> & theta_init,
+      regressor_extensions::RegressorExtension<T, DIM_N, DIM_P> * reg_ext, float r)
     {
       this->dt = dt;
       this->gamma = gamma;
