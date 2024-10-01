@@ -4,7 +4,7 @@ cmake_minimum_required(VERSION 3.9)
 project(
   sdu_estimators
   VERSION 0.0.1
-  LANGUAGES CXX Fortran)
+  LANGUAGES CXX)
 
 # Initialize some default paths
 include(GNUInstallDirs)
@@ -56,8 +56,20 @@ if(BUILD_PYTHON)
   nanobind_add_module(_sdu_estimators python/sdu_estimators/_sdu_estimators.cpp)
   target_link_libraries(_sdu_estimators PUBLIC sdu_estimators)
 
+  nanobind_add_stub(
+          _sdu_estimators
+          INSTALL_TIME
+          MODULE _sdu_estimators
+          OUTPUT _sdu_estimators.pyi
+          MARKER_FILE py.typed
+          PYTHON_PATH "."
+
   # Install the Python module shared library
   install(TARGETS _sdu_estimators DESTINATION .)
+
+  install(FILES py.typed my_ext.pyi DESTINATION ".")
+  )
+
 endif()
 
 # Add an alias target for use if this project is included as a subproject in

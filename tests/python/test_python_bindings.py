@@ -36,7 +36,7 @@ def test_gradient():
         t = i * dt
         phi = np.array([np.sin(t), np.cos(t), 1.])
         y = phi.T @ theta_true.reshape([3, 1])
-        GradientEstimator.step(y, phi)
+        GradientEstimator.step(y, phi)        
 
         all_theta_est[i, :] = GradientEstimator.get_estimate()
 
