@@ -7,16 +7,19 @@
 namespace sdu_estimators::parameter_estimators
 {
   /**
-   * A simple gradient-based parameter estimator as described in e.g.,
-   *   S. Sastry and M. Bodson, Adaptive Control: Stability, Convergence, and Robustness.
-   *        USA: Prentice-Hall, Inc., 1989, isbn: 0130043265.
+   * A simple gradient-based parameter estimator as described in e.g., [1].
    *
    * The parameter \f$ \theta \f$ can be estimated by \f$ \hat{\theta} \f$ with the following update rule:
    *
-   * \f$  \dot{\hat{\theta}}(t) = \gamma \phi(t) (y(t) - \phi^\intercal(t) \hat{\theta}(t)), \f$
+   * \f{equation}{
+   *    \dot{\hat{\theta}}(t) = \gamma \phi(t) (y(t) - \phi^\intercal(t) \hat{\theta}(t)),
+   * \f}
    *
    * where \f$ \gamma > 0 \f$ is a tuning parameter, \f$ y : \mathbb{R}_+ \to \mathbb{R}^n \f$ is the output, \f$ \phi : \mathbb{R}_+ \to \mathbb{R}^{m \times n} \f$ is,
    * the regressor matrix and \f$ \theta : \mathbb{R}_+ \to \mathbb{R}^m \f$ is the parameter vector.
+   *
+   *  [1] S. Sastry and M. Bodson, Adaptive Control: Stability, Convergence, and Robustness.
+   *        USA: Prentice-Hall, Inc., 1989, isbn: 0130043265.
    */
 
   template <typename T, int32_t DIM_N, int32_t DIM_P>
@@ -36,12 +39,18 @@ namespace sdu_estimators::parameter_estimators
     }
     //
     // *
-    //      * \f$  \dot{\hat{\theta}}(t) = \gamma \phi(t) \lceil y(t) - \phi^T(t) \hat{\theta}(t) \rfloor^r, \f$
+    //      * \f$  \dot{\hat{\theta}}(t) = \gamma \phi(t) \lceil y(t) - \phi^\intercal(t) \hat{\theta}(t) \rfloor^r, \f$
     //      *
-    //      * where \f$ \lceil x \rfloor^r = \lvert x \rvert^r \text{sign}(x) \f$, \f $r \in (0,1) \f$.
+    //      * where \f$ \lceil x \rfloor^r = \lvert x \rvert^r \text{sign}(x) \f$, \f$r \in (0,1) \f$.
 
     /**
      * @brief Constructor for the gradient-based finite-time update rule.
+     *
+     * \f{equation}{
+     *    \dot{\hat{\theta}}(t) = \gamma \phi(t) \lceil y(t) - \phi^\intercal(t) \hat{\theta}(t) \rfloor^r,
+     * \f}
+     *
+     * where \f$ \lceil x \rfloor^r = \lvert x \rvert^r \text{sign}(x) \f$, \f$ r \in (0, 1) \f$.
      *
      * @param dt Sample time.
      * @param gamma \f$ \gamma \in \mathbb{R}^p \f$ is the vector of gains.
