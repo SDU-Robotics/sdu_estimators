@@ -19,3 +19,4 @@ A C++ library containing online parameter estimation methods for general as well
   :caption: Table of Contents
   
   pages/api/api
+  pages/bibliography

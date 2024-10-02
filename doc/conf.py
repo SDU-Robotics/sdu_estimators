@@ -33,7 +33,11 @@ extensions = [
     "sphinx_copybutton",
     "sphinx_inline_tabs",
     "sphinx_rtd_theme",
+    # "sphinxcontrib.bibtex"
 ]
+
+#
+# bibtex_bibfiles = ['zrefs.bib']
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = []
@@ -42,7 +46,6 @@ templates_path = []
 # directories to ignore when looking for source files.
 # This pattern also affects html_static_path and html_extra_path.
 exclude_patterns = []
-
 
 # -- Options for HTML output -------------------------------------------------
 

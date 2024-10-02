@@ -7,7 +7,7 @@
 namespace sdu_estimators::parameter_estimators
 {
   /**
-   * A simple gradient-based parameter estimator as described in e.g., [1].
+   * A simple gradient-based parameter estimator as described in e.g., \cite Sastry1989.
    *
    * The parameter \f$ \theta \f$ can be estimated by \f$ \hat{\theta} \f$ with the following update rule:
    *
@@ -18,8 +18,6 @@ namespace sdu_estimators::parameter_estimators
    * where \f$ \gamma > 0 \f$ is a tuning parameter, \f$ y : \mathbb{R}_+ \to \mathbb{R}^n \f$ is the output, \f$ \phi : \mathbb{R}_+ \to \mathbb{R}^{m \times n} \f$ is,
    * the regressor matrix and \f$ \theta : \mathbb{R}_+ \to \mathbb{R}^m \f$ is the parameter vector.
    *
-   *  [1] S. Sastry and M. Bodson, Adaptive Control: Stability, Convergence, and Robustness.
-   *        USA: Prentice-Hall, Inc., 1989, isbn: 0130043265.
    */
 
   template <typename T, int32_t DIM_N, int32_t DIM_P>

@@ -12,11 +12,7 @@
 namespace sdu_estimators::parameter_estimators
 {
   /**
-   * An implementation of dynamic regressor extension and mixing (DREM) as described in e.g.,
-   *  Aranovskiy, S., Bobtsov, A., Ortega, R., & Pyrkin, A. (2016, July).
-   *    Parameters estimation via dynamic regressor extension and mixing.
-   *    In 2016 American Control Conference (ACC) (pp. 6971-6976). IEEE.
-   *
+   * An implementation of dynamic regressor extension and mixing (DREM) as described in e.g., \cite Aranovskiy2017.
    *
    */
 

@@ -4,3 +4,4 @@ Jinja2<3.1
 sphinx_rtd_theme
 sphinx-copybutton
 sphinx-inline-tabs
+sphinxcontrib-bibtex
