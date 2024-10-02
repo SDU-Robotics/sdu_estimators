@@ -2,7 +2,6 @@
 // #include <nanobind/ndarray.h>
 #include <nanobind/eigen/dense.h>
 
-#include <sdu_estimators/sdu_estimators.hpp>
 // #include <sdu_estimators/parameter_estimators/parameter_estimator.hpp>
 #include <sdu_estimators/parameter_estimators/drem.hpp>
 #include <sdu_estimators/parameter_estimators/gradient_estimator.hpp>
@@ -21,7 +20,6 @@ namespace sdu_estimators
   NB_MODULE(_sdu_estimators, m)
   {
     m.doc() = "Python Bindings for sdu_estimators";
-    m.def("add_one", &add_one, "Increments an integer value");
 
     // nb::class_<parameter_estimators::GradientEstimator<double, 1, 2>, 
     //            shared_ptr<parameter_estimators::GradientEstimator<double, 1, 2>>,

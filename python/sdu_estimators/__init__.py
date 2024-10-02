@@ -1,6 +1,5 @@
 from multiprocessing.managers import Value
 
-from sdu_estimators._sdu_estimators import add_one
 from sdu_estimators._sdu_estimators import GradientEstimator
 
 from sdu_estimators._sdu_estimators import Kreisselmeier_1x2
@@ -19,10 +18,6 @@ from importlib import metadata
 
 __version__ = metadata.version(__package__)
 del metadata
-
-
-def one_plus_one():
-    return add_one(1)
 
 def DREM(dt, gamma, theta_init, KRE, r = 1.):
     # assert gamma.size() == theta_init.size()

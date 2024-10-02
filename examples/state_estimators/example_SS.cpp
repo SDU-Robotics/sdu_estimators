@@ -4,7 +4,6 @@
 #include <fstream>
 #include <iostream>
 #include <sdu_estimators/state_estimators/state_space_model.hpp>
-#include <sdu_estimators/sdu_estimators.hpp>
 #include <vector>
 #include <sdu_estimators/state_estimators/utils.hpp>
 

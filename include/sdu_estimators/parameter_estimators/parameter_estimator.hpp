@@ -9,14 +9,14 @@ namespace sdu_estimators::parameter_estimators
 {
 
 /**
- * This class provides a base class for the different parameter_estimators for estimating the parameter in the linear regression
+ * This class provides a base class for the different parameter estimators for estimating the parameter in the linear regression
  * equation (LRE) defined as:
  *
- * \f$ y(t) = \phi^T(t) \theta(t), \f$
+ * \f$ y(t) = \phi^\intercal(t) \theta(t), \f$
  *
  * where \f$ y : \mathbb{R}_+ \to \mathbb{R}^n \f$ is the output,
- * \f$ \phi : \mathbb{R}_+ \to \mathbb{R}^{m \times n} \f$ is the regressor matrix
- * and \f$ \theta : \mathbb{R}_+ \to \mathbb{R}^m \f$ is the parameter vector.
+ * \f$ \phi : \mathbb{R}_+ \to \mathbb{R}^{p \times n} \f$ is the regressor matrix
+ * and \f$ \theta : \mathbb{R}_+ \to \mathbb{R}^p \f$ is the parameter vector.
  *
  */
 template <typename T, int32_t DIM_N, int32_t DIM_P>
@@ -27,14 +27,19 @@ public:
 
   /**
    * @brief Step the execution of the estimator (must be called in a loop externally)
+   *
+   * @param y The output, \f$ y : \mathbb{R}_+ \to \mathbb{R}^n \f$.
+   * @param phi The regressor matrix, \f$ \phi : \mathbb{R}_+ \to \mathbb{R}^{p \times n} \f$.
    */
   virtual void step(const Eigen::Matrix<T, DIM_N, 1> &y,
                     const Eigen::Matrix<T, DIM_P, DIM_N> &phi) = 0;
 
   /**
    * @brief Get the current estimate of the parameter. Updates when the step function is called.
+   *
+   * @return The estimate of the parameter \f$ \hat{\theta} : \mathbb{R}_+ \to \mathbb{R}^p \f$.
    */
-  virtual Eigen::Matrix<T, DIM_P, 1> get_estimate() = 0;
+  virtual Eigen::Vector<T, DIM_P> get_estimate() = 0;
 
   /**
    * @brief Reset internal estimator variables

@@ -1,6 +1,3 @@
-sdu_estimators
-==============
-
 |License badge| |Build badge| |Docs badge|
 
 .. |License badge| image:: https://img.shields.io/badge/License-MIT-yellow.svg
@@ -11,6 +8,9 @@ sdu_estimators
 
 .. |Docs badge| image:: https://readthedocs.org/projects/sdu_estimators/badge/
   :target: https://sdu-estimators.readthedocs.io/
+
+sdu_estimators
+==============
 
 A C++ library containing online parameter estimation methods for general as well as specific applications developed at University of Southern Denmark (SDU).
 

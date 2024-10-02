@@ -4,7 +4,6 @@
 #include <fstream>
 #include <iostream>
 #include <sdu_estimators/parameter_estimators/gradient_estimator.hpp>
-#include <sdu_estimators/sdu_estimators.hpp>
 #include <vector>
 
 int main()

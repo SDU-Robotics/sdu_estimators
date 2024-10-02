@@ -13,7 +13,7 @@ namespace sdu_estimators::parameter_estimators
    *
    * The parameter \f$ \theta \f$ can be estimated by \f$ \hat{\theta} \f$ with the following update rule:
    *
-   * \f$  \dot{\hat{\theta}}(t) = \gamma \phi(t) (y(t) - \phi^T(t) \hat{\theta}(t)), \f$
+   * \f$  \dot{\hat{\theta}}(t) = \gamma \phi(t) (y(t) - \phi^\intercal(t) \hat{\theta}(t)), \f$
    *
    * where \f$ \gamma > 0 \f$ is a tuning parameter, \f$ y : \mathbb{R}_+ \to \mathbb{R}^n \f$ is the output, \f$ \phi : \mathbb{R}_+ \to \mathbb{R}^{m \times n} \f$ is,
    * the regressor matrix and \f$ \theta : \mathbb{R}_+ \to \mathbb{R}^m \f$ is the parameter vector.
@@ -23,11 +23,31 @@ namespace sdu_estimators::parameter_estimators
   class GradientEstimator : public ParameterEstimator<T, DIM_N, DIM_P>
   {
   public:
+    /**
+     * @brief Constructor for the default gradient-based update rule.
+     *
+     * @param dt Sample time.
+     * @param gamma \f$ \gamma \in \mathbb{R}^p \f$ is the vector of gains.
+     * @param theta_init The initial value of the parameter estimate \f$ \hat{\theta}(0) \f$.
+     */
     GradientEstimator(float dt, const Eigen::Vector<T, DIM_P> gamma, const Eigen::Vector<T, DIM_P> & theta_init)
       : GradientEstimator(dt, gamma, theta_init, 1.0f)
     {
     }
+    //
+    // *
+    //      * \f$  \dot{\hat{\theta}}(t) = \gamma \phi(t) \lceil y(t) - \phi^T(t) \hat{\theta}(t) \rfloor^r, \f$
+    //      *
+    //      * where \f$ \lceil x \rfloor^r = \lvert x \rvert^r \text{sign}(x) \f$, \f $r \in (0,1) \f$.
 
+    /**
+     * @brief Constructor for the gradient-based finite-time update rule.
+     *
+     * @param dt Sample time.
+     * @param gamma \f$ \gamma \in \mathbb{R}^p \f$ is the vector of gains.
+     * @param theta_init The initial value of the parameter estimate \f$ \hat{\theta}(0) \f$.
+     * @param r The value of the coefficient, \f$ r \in (0,1) \f$.
+     */
     GradientEstimator(float dt, const Eigen::Vector<T, DIM_P> gamma, const Eigen::Vector<T, DIM_P> & theta_init, float r)
     {
       this->dt = dt;

@@ -84,7 +84,7 @@ namespace sdu_estimators::parameter_estimators
     /**
      * @brief Get the current estimate of the parameter. Updates when the step function is called.
      */
-    Eigen::Matrix<T, DIM_P, 1> get_estimate()
+    Eigen::Vector<T, DIM_P> get_estimate()
     {
       return theta_est;
     }

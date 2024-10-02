@@ -1,8 +1,6 @@
-add_library(sdu_estimators
-    sdu_estimators.cpp
-#    estimators/gradient_estimator.cpp
+add_library(sdu_estimators INTERFACE
+        #    estimators/gradient_estimator.cpp
 #    estimators/drem.cpp
-    ../include/sdu_estimators/sdu_estimators.hpp
 
     ../include/sdu_estimators/parameter_estimators/parameter_estimator.hpp
     ../include/sdu_estimators/parameter_estimators/gradient_estimator.hpp
@@ -22,10 +20,13 @@ add_library(sdu_estimators
 #    state_estimators/unknown_input_observer.cpp
 )
 
-target_link_libraries(sdu_estimators Eigen3::Eigen)
+target_link_libraries(sdu_estimators INTERFACE
+        Eigen3::Eigen)
 
+#target_include_directories(
+#  sdu_estimators PUBLIC $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/include/>
+#                        $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
 target_include_directories(
-  sdu_estimators PUBLIC $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/include/>
-                        $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
-
-#set_property(TARGET sdu_estimators PROPERTY LINKER_LANGUAGE Fortran)
+  sdu_estimators INTERFACE
+        $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/include/>
+        $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
