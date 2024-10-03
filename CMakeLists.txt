@@ -1,4 +1,5 @@
 cmake_minimum_required(VERSION 3.9)
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 # Set a name and a version number for your project:
 project(
@@ -53,22 +54,34 @@ if(BUILD_PYTHON)
   add_subdirectory(ext/nanobind)
 
   # Compile the nanobind module
-  nanobind_add_module(_sdu_estimators python/sdu_estimators/_sdu_estimators.cpp)
+  nanobind_add_module(_sdu_estimators
+          python/sdu_estimators/_sdu_estimators.cpp)
+
   target_link_libraries(_sdu_estimators PUBLIC sdu_estimators)
 
-  nanobind_add_stub(
-          _sdu_estimators
-          INSTALL_TIME
-          MODULE _sdu_estimators
-          OUTPUT _sdu_estimators.pyi
-          MARKER_FILE py.typed
-          PYTHON_PATH "."
+#  nanobind_add_stub(
+#          _sdu_estimators
+#          INSTALL_TIME
+#          MODULE _sdu_estimators
+#          OUTPUT _sdu_estimators.pyi
+#          MARKER_FILE py.typed
+#          PYTHON_PATH "."
+#  )
+
+#  nanobind_add_stub(
+#          _sdu_estimators_stub
+#          INSTALL_TIME
+#          MODULE _sdu_estimators
+#          OUTPUT _sdu_estimators.pyi
+#          PYTHON_PATH $<TARGET_FILE_DIR:_sdu_estimators>
+#          DEPENDS _sdu_estimators
+#          MARKER_FILE ${CMAKE_CURRENT_SOURCE_DIR}/py.typed
+#  )
 
   # Install the Python module shared library
-  install(TARGETS _sdu_estimators DESTINATION .)
+  install(TARGETS _sdu_estimators DESTINATION ".")
 
-  install(FILES py.typed my_ext.pyi DESTINATION ".")
-  )
+#  install(FILES py.typed _sdu_estimators.pyi DESTINATION ".")
 
 endif()
 

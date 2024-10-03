@@ -24,9 +24,11 @@ def test_gradient():
     theta_true = np.array([1, 2, 3])
     r = 0.5
 
-    GradientEstimator = sdu_estimators.GradientEstimator(dt, gamma, theta_init, r)
+    GradientEstimator = sdu_estimators.GradientEstimator_1x3(dt, gamma, theta_init, r)
     print(GradientEstimator)
     print(GradientEstimator.get_estimate())
+
+    # print(help(sdu_estimators.GradientEstimator.step))
 
     all_theta_est = np.zeros((tend, 3))
 
@@ -36,7 +38,7 @@ def test_gradient():
         t = i * dt
         phi = np.array([np.sin(t), np.cos(t), 1.])
         y = phi.T @ theta_true.reshape([3, 1])
-        GradientEstimator.step(y, phi)        
+        GradientEstimator.step(y, phi)
 
         all_theta_est[i, :] = GradientEstimator.get_estimate()
 
@@ -108,6 +110,7 @@ def test_DREM():
     solver = sdu_estimators.DREM(dt, gamma, theta_init, KRE)
     print(solver)
     # print(solver.get_estimate())
+    # print(help(sdu_estimators.DREM_1x2.step))
 
     all_theta_est = np.zeros((tend, theta_true.shape[0]))
 
