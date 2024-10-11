@@ -26,6 +26,7 @@ namespace sdu_estimators::state_estimators
                        utils::IntegrationMethod method)
     {
       Eigen::Matrix<T, DIM_Nx, DIM_Nx> newA = A - L * C;
+      // TODO: Check eigenvalues of newA. If unstable; give error. Real part should be less than zero.
 
       Eigen::Matrix<T, DIM_Nx, DIM_Nu + DIM_Ny> newB, newD;
       newB << B, L;

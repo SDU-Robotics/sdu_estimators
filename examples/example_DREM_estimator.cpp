@@ -14,12 +14,11 @@ int main()
   float dt = 0.002;
   float tend = 50 / dt; // 10s
 
-  Eigen::VectorXd gamma;
-  gamma.resize(2);
+  Eigen::Matrix<double, 2, 1> gamma;
   gamma << 10,
            10;
 
-  // gamma *= 100;
+  gamma *= 0.1;
 
   Eigen::Matrix<double, 2, 1> theta_init, theta_true;
   // theta_init.resize(2);
