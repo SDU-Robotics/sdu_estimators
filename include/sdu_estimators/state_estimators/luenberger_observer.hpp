@@ -26,7 +26,20 @@ namespace sdu_estimators::state_estimators
                        utils::IntegrationMethod method)
     {
       Eigen::Matrix<T, DIM_Nx, DIM_Nx> newA = A - L * C;
-      // TODO: Check eigenvalues of newA. If unstable; give error. Real part should be less than zero.
+      // Check eigenvalues of newA. If unstable; give error. Real part should be less than zero.
+      Eigen::Vector<std::complex<T>, DIM_Nx> eivals = newA.eigenvalues();
+      std::stringstream err_s;
+      err_s << "The eigenvalues of `A - LC` should be less than zero. ";
+      err_s << "They are ";
+      err_s << eivals.transpose();
+
+      for (int i = 0; i < DIM_Nx; ++i)
+      {
+        if (eivals(i).real() >= 0.)
+        {
+          throw std::invalid_argument(err_s.str());
+        }
+      }
 
       Eigen::Matrix<T, DIM_Nx, DIM_Nu + DIM_Ny> newB, newD;
       newB << B, L;
