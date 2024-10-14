@@ -18,7 +18,7 @@ int main()
   gamma << 10,
            10;
 
-  gamma *= 0.1;
+  gamma *= 1;
 
   Eigen::Matrix<double, 2, 1> theta_init, theta_true;
   // theta_init.resize(2);

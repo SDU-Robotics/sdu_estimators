@@ -4,6 +4,7 @@
 
 #include <sdu_estimators/parameter_estimators/parameter_estimator.hpp>
 // #include <sdu_estimators/regressor_extensions/kreisselmeier.hpp>
+#include <iostream>
 #include <sdu_estimators/regressor_extensions/regressor_extension.hpp>
 #include <type_traits>
 
@@ -57,22 +58,46 @@ namespace sdu_estimators::parameter_estimators
       Eigen::Matrix<T, DIM_P, 1> y_f = reg_ext->getY();
       Eigen::Matrix<T, DIM_P, DIM_P> phi_f = reg_ext->getPhi();
 
-      double Delta = phi_f.determinant();
+      Eigen::FullPivHouseholderQR<Eigen::Matrix<T, DIM_P, DIM_P> > qr(phi_f);
+      double Delta = exp(qr.logAbsDeterminant()); // phi_f.determinant();
+      std::cout << Delta << std::endl;
+
+      if (Delta != Delta)
+        Delta = 0;
+
+
 
       Eigen::MatrixXd phi_tmp = phi_f;
-      float Yvar_i;
+      // float Yvar_i;
 
-      for (int i = 0; i < DIM_P; ++i)
-      {
-        phi_tmp(Eigen::all, i) = y_f;
+      Yvar = qr.solve(Delta * y_f); // To compute phi_f^{-1} * Delta * y_f.
+      // adj(phi_f) = phi_f^{-1} * Delta
 
-        Yvar_i = phi_tmp.determinant();
+      // Yvar = Delta * phi_f.inverse() * y_f;
+      // for (int i = 0; i < DIM_P; ++i)
+      // {
+      //   if (Yvar[i] != Yvar[i])  // Element is nan
+      //   {
+      //     // Yvar[i] = 0;
+      //     Yvar *= 0;
+      //     break;
+      //   }
+      // }
+      // adj(phi_f) = Delta * phi_f.inverse()
 
-        y_err_i = Yvar_i - Delta * theta_est[i];
-        dtheta[i] = gamma[i] * Delta * (pow(abs(y_err_i), r) * std::signbit(-y_err_i));
+      dtheta = gamma.asDiagonal() * Delta * (Yvar - Delta * theta_est);
 
-        phi_tmp(Eigen::all, i) = phi_f(Eigen::all, i);
-      }
+      // for (int i = 0; i < DIM_P; ++i)
+      // {
+      //   phi_tmp(Eigen::all, i) = y_f;
+      //
+      //   Yvar_i = phi_tmp.determinant();
+      //
+      //   y_err_i = Yvar_i - Delta * theta_est[i];
+      //   dtheta[i] = gamma[i] * Delta * (pow(abs(y_err_i), r) * std::signbit(-y_err_i));
+      //
+      //   phi_tmp(Eigen::all, i) = phi_f(Eigen::all, i);
+      // }
 
       theta_est += dt * dtheta;
     }
@@ -98,7 +123,7 @@ namespace sdu_estimators::parameter_estimators
     float dt{};
     Eigen::Matrix<T, DIM_P, 1> gamma;
     float r{};
-    Eigen::Matrix<T, DIM_P, 1> theta_est, theta_init, dtheta;
+    Eigen::Matrix<T, DIM_P, 1> theta_est, theta_init, dtheta, Yvar;
     Eigen::Matrix<T, DIM_N, 1> y_err;
     int p{}; // number of parameters
 
