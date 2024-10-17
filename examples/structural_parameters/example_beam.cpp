@@ -134,7 +134,7 @@ int main()
 {
   float fs = 500;
   float dt = 1. / fs;
-  float tend = 10. / dt;
+  float tend = 50. / dt;
 
   Eigen::Vector<long double, 182> theta_init;
   theta_init.setZero();
@@ -142,18 +142,18 @@ int main()
   Eigen::Vector<long double, 182> gamma;
   gamma.setOnes();
 
-  /*
-  gamma *= 1e6;
+
+  gamma *= 1e4;
   sdu_estimators::parameter_estimators::GradientEstimator<long double, 13, 182> estimator(dt, gamma, theta_init);
-  */
 
 
-  float ell = 0.01;
+  /*
+  float ell = 0.001;
   sdu_estimators::regressor_extensions::Kreisselmeier<long double, 13, 182> reg_ext(dt, ell);
-  float r = 0.5;
-  gamma *= 1e1;
+  float r = 0.;
+  gamma *= 1e100;
   sdu_estimators::parameter_estimators::DREM<long double, 13, 182> estimator(dt, gamma, theta_init, &reg_ext, r);
-
+  */
 
   Eigen::Matrix<long double, 182, 13> phi;
   Eigen::Vector<long double, 13> q, dq, ddq, y, F, u;

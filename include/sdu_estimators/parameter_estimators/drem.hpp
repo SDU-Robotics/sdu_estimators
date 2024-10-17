@@ -13,6 +13,7 @@
 #include "sdu_estimators/parameter_estimators/utils.hpp"
 #include <cmath>
 
+#include <Eigen/Sparse>
 
 namespace sdu_estimators::parameter_estimators
 {
@@ -62,9 +63,30 @@ namespace sdu_estimators::parameter_estimators
       Eigen::Matrix<T, DIM_P, 1> y_f = reg_ext->getY();
       Eigen::Matrix<T, DIM_P, DIM_P> phi_f = reg_ext->getPhi();
 
-      Eigen::FullPivHouseholderQR<Eigen::Matrix<T, DIM_P, DIM_P> > qr(phi_f);
-      double Delta = exp(qr.logAbsDeterminant()); // phi_f.determinant();
+      Eigen::HouseholderQR<Eigen::Matrix<T, DIM_P, DIM_P>> qr(phi_f);
+      /*
+      Eigen::SparseLU<Eigen::Matrix<T, DIM_P, DIM_P> > lu_solver;
+      lu_solver.analyzePattern(phi_f);
+      lu_solver.factorize(phi_f);
+
+      double Delta = lu_solver.signDeterminant() * exp(lu_solver.logAbsDeterminant()); // phi_f.determinant();
+      */
+
+      /*
+      Eigen::SparseLU<Eigen::SparseMatrix<T>, Eigen::COLAMDOrdering<int> >   solver;
+      std::cout << "test" << std::endl;
+      solver.analyzePattern(phi_f.sparseView());
+      std::cout << "test2" << std::endl;
+      // solver.factorize(phi_f.sparseView());
+      std::cout << "test3" << std::endl;
+
+      T Delta = solver.signDeterminant() * exp(solver.logAbsDeterminant()); // phi_f.determinant();
       // T Delta = exp(utils::logdet<Eigen::Matrix<T, DIM_P, DIM_P>>(phi_f, false));
+      */
+
+      Eigen::FullPivLU<Eigen::Matrix<T, DIM_P, DIM_P>> lu(phi_f);
+      T Delta = lu.determinant();
+
       // double Delta = phi_f.determinant();
       std::cout << "Delta " << Delta << std::endl;
 
@@ -74,7 +96,7 @@ namespace sdu_estimators::parameter_estimators
       // Eigen::Matrix<T, DIM_P, DIM_P> phi_tmp = phi_f;
       // float Yvar_i;
 
-      Yvar = qr.solve(Delta * y_f); // To compute phi_f^{-1} * Delta * y_f.
+      Yvar = lu.solve(Delta * y_f); // To compute phi_f^{-1} * Delta * y_f.
       // adj(phi_f) = phi_f^{-1} * Delta
       // Eigen::MatrixXd Yvar = phi_f.inverse() * Delta * y_f;
 
@@ -149,3 +171,4 @@ namespace sdu_estimators::parameter_estimators
 
 
 #endif //DREM_HPP
+
