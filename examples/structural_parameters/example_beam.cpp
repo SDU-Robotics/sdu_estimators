@@ -134,33 +134,57 @@ int main()
 {
   float fs = 500;
   float dt = 1. / fs;
-  float tend = 21. / dt;
+  float tend = 5. / dt;
 
   Eigen::Vector<double, 182> theta_init;
   theta_init.setZero();
 
   Eigen::Vector<double, 182> gamma;
   gamma.setOnes();
-  // gamma *= 0.01;
-  //
-  // sdu_estimators::parameter_estimators::GradientEstimator<double, 13, 182> grad_est(dt, gamma, theta_init);
+  gamma *= 1e7;
 
+  sdu_estimators::parameter_estimators::GradientEstimator<double, 13, 182> estimator(dt, gamma, theta_init);
+
+  /*
   float ell = 3;
   sdu_estimators::regressor_extensions::Kreisselmeier<double, 13, 182> reg_ext(dt, ell);
   float r = 1;
   gamma *= 1;
-  sdu_estimators::parameter_estimators::DREM<double, 13, 182> estimator(dt, gamma, theta_init, &reg_ext, r);
+  sdu_estimators::parameter_estimators::DREM<double, 13, 182> estimator(dt, gamma, theta_init, &reg_ext, r);*/
 
   Eigen::Matrix<double, 182, 13> phi;
   Eigen::Vector<double, 13> q, dq, ddq, y, F, u;
+  u.setZero();
+  F.setZero();
+
   Eigen::Matrix<double, 13, 13> M_act, K_act, M_act_inv;
   M_act = getTrueM();
   M_act_inv = M_act.inverse();
   K_act = getTrueK();
 
-  q.setOnes();
-  q *= 0.5;
-  ddq.setOnes();
+  Eigen::Vector<double, 91> M_act_vec, K_act_vec;
+  Eigen::Vector<double, 182> theta_act;
+
+  int id_elem = 0;
+
+  for (int i = 0; i < M_act.cols(); ++i)
+  {
+    for (int j = i; j < M_act.rows(); ++j)
+    {
+      M_act_vec[id_elem] = M_act(i, j);
+      K_act_vec[id_elem] = K_act(i, j);
+
+      ++id_elem;
+    }
+  }
+
+  theta_act << M_act_vec, K_act_vec;
+
+  q.setZero();
+  // q *= 0.5;
+  dq.setZero();
+  ddq.setZero();
+  std::vector<Eigen::VectorXd> all_q, all_dq, all_ddq;
 
   phi = getBeamPhi(q, ddq);
 
@@ -186,8 +210,9 @@ int main()
     // // load true matrices
     // y << K_act * q + M_act * ddq;
 
-    u.setRandom();
-    u *= 1;
+    // u.setRandom();
+    // u *= 0.001;
+    u[0] = sin(10 * t);
 
     ddq = M_act_inv * (F + u - K_act * q);
 
@@ -195,6 +220,7 @@ int main()
     q += dt * dq;
 
     F = M_act * ddq + K_act * q - u;
+    // F = M_act * ddq + K_act * q;
     y << F;
 
     // std::cout << y << std::endl;
@@ -205,6 +231,10 @@ int main()
 
     // all_y.push_back(y);
     // all_phi.push_back(phi);
+
+    all_q.push_back(q);
+    all_dq.push_back(dq);
+    all_ddq.push_back(ddq);
   }
 
   std::ofstream outfile;
@@ -218,6 +248,27 @@ int main()
     s << ",theta_est_";
     s << std::setfill('0') << std::setw(3) << i + 1;
   }
+  for (int i = 0; i < 182; ++i)
+  {
+    s << ",theta_act_";
+    s << std::setfill('0') << std::setw(3) << i + 1;
+  }
+  for (int i = 0; i < 13; ++i)
+  {
+    s << ",q_";
+    s << std::setfill('0') << std::setw(3) << i + 1;
+  }
+  for (int i = 0; i < 13; ++i)
+  {
+    s << ",dq_";
+    s << std::setfill('0') << std::setw(3) << i + 1;
+  }
+  for (int i = 0; i < 13; ++i)
+  {
+    s << ",ddq_";
+    s << std::setfill('0') << std::setw(3) << i + 1;
+  }
+
   // std::cout << "print test " << sprintf("%02d", 2 + 1) << std::endl;
   outfile << s.str() << std::endl;
 
@@ -231,6 +282,26 @@ int main()
       outfile << "," << all_theta_est[i][j];
     }
 
+    for (int j = 0; j < 182; ++j)
+    {
+      outfile << "," << theta_act[j];
+    }
+
+    for (int j = 0; j < 13; ++j)
+    {
+      outfile << "," << all_q[i][j];
+    }
+
+    for (int j = 0; j < 13; ++j)
+    {
+      outfile << "," << all_dq[i][j];
+    }
+
+    for (int j = 0; j < 13; ++j)
+    {
+      outfile << "," << all_ddq[i][j];
+    }
+
     // for (auto & elem : all_y[i])
     //   outfile << "," << elem;
 
@@ -240,3 +311,4 @@ int main()
 
   return 1;
 }
+
