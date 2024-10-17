@@ -10,6 +10,10 @@
 
 #include "sdu_estimators/regressor_extensions/kreisselmeier.hpp"
 
+#include "sdu_estimators/parameter_estimators/utils.hpp"
+#include <cmath>
+
+
 namespace sdu_estimators::parameter_estimators
 {
   /**
@@ -60,18 +64,19 @@ namespace sdu_estimators::parameter_estimators
 
       Eigen::FullPivHouseholderQR<Eigen::Matrix<T, DIM_P, DIM_P> > qr(phi_f);
       double Delta = exp(qr.logAbsDeterminant()); // phi_f.determinant();
-      std::cout << Delta << std::endl;
+      // T Delta = exp(utils::logdet<Eigen::Matrix<T, DIM_P, DIM_P>>(phi_f, false));
+      // double Delta = phi_f.determinant();
+      std::cout << "Delta " << Delta << std::endl;
 
-      if (Delta != Delta)
+      if (!std::isfinite(Delta))
         Delta = 0;
 
-
-
-      Eigen::MatrixXd phi_tmp = phi_f;
+      // Eigen::Matrix<T, DIM_P, DIM_P> phi_tmp = phi_f;
       // float Yvar_i;
 
       Yvar = qr.solve(Delta * y_f); // To compute phi_f^{-1} * Delta * y_f.
       // adj(phi_f) = phi_f^{-1} * Delta
+      // Eigen::MatrixXd Yvar = phi_f.inverse() * Delta * y_f;
 
       // Yvar = Delta * phi_f.inverse() * y_f;
       // for (int i = 0; i < DIM_P; ++i)
@@ -85,19 +90,24 @@ namespace sdu_estimators::parameter_estimators
       // }
       // adj(phi_f) = Delta * phi_f.inverse()
 
-      dtheta = gamma.asDiagonal() * Delta * (Yvar - Delta * theta_est);
+      Eigen::Vector<T, DIM_P> y_err = Yvar - Delta * theta_est;
+      Eigen::Vector<T, DIM_P> tmp1 = y_err.array().abs().pow(r);
+      Eigen::Vector<T, DIM_P> tmp2 = y_err.cwiseSign();
 
-      // for (int i = 0; i < DIM_P; ++i)
-      // {
-      //   phi_tmp(Eigen::all, i) = y_f;
-      //
-      //   Yvar_i = phi_tmp.determinant();
-      //
-      //   y_err_i = Yvar_i - Delta * theta_est[i];
-      //   dtheta[i] = gamma[i] * Delta * (pow(abs(y_err_i), r) * std::signbit(-y_err_i));
-      //
-      //   phi_tmp(Eigen::all, i) = phi_f(Eigen::all, i);
-      // }
+      dtheta = gamma.asDiagonal() * Delta * tmp1.cwiseProduct(tmp2);
+
+      /*
+      for (int i = 0; i < DIM_P; ++i)
+      {
+        phi_tmp(Eigen::all, i) = y_f;
+
+        Yvar_i = phi_tmp.determinant();
+
+        y_err_i = Yvar_i - Delta * theta_est[i];
+        dtheta[i] = gamma[i] * Delta * (pow(abs(y_err_i), r) * std::signbit(-y_err_i));
+
+        phi_tmp(Eigen::all, i) = phi_f(Eigen::all, i);
+      } */
 
       theta_est += dt * dtheta;
     }

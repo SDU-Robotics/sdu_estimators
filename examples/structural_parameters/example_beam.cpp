@@ -7,7 +7,7 @@
 #include <sdu_estimators/parameter_estimators/drem.hpp>
 
 
-Eigen::Matrix<double, 182, 13> getBeamPhi(Eigen::Vector<double, 13> x, Eigen::Vector<double, 13> ddx)
+Eigen::Matrix<long double, 182, 13> getBeamPhi(Eigen::Vector<long double, 13> x, Eigen::Vector<long double, 13> ddx)
 {
   /* Conversion from MATLAB code to C++ for phi-matrix for the EUROfusion beam.
    *
@@ -52,15 +52,15 @@ Eigen::Matrix<double, 182, 13> getBeamPhi(Eigen::Vector<double, 13> x, Eigen::Ve
   out1 = reshape([mt1,mt2,mt3,mt4,mt5,mt6,mt7,mt8,mt9,mt10,mt11,mt12],182,13);
   */
 
-  Eigen::Vector<double, 200> mt1, mt2, mt3, mt4, mt5, mt6, mt7, mt8, mt9, mt10, mt11;
-  Eigen::Vector<double, 166> mt12;
+  Eigen::Vector<long double, 200> mt1, mt2, mt3, mt4, mt5, mt6, mt7, mt8, mt9, mt10, mt11;
+  Eigen::Vector<long double, 166> mt12;
 
   // mt1 = [ddx1,ddx2,ddx3,ddx4,ddx5,ddx6,ddx7,ddx8,ddx9,ddx10,ddx11,ddx12,ddx13,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,x1,x2,x3,x4,x5,x6,x7,x8,x9,x10,x11,x12,x13,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,ddx1,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,ddx2,ddx3,ddx4,ddx5,ddx6];
-  double ddx1, ddx2, ddx3, ddx4, ddx5, ddx6, ddx7, ddx8, ddx9, ddx10, ddx11, ddx12, ddx13;
+  long double ddx1, ddx2, ddx3, ddx4, ddx5, ddx6, ddx7, ddx8, ddx9, ddx10, ddx11, ddx12, ddx13;
   ddx1 = ddx[0]; ddx2 = ddx[1]; ddx3 = ddx[2]; ddx4 = ddx[3]; ddx5 = ddx[4]; ddx6 = ddx[5]; ddx7 = ddx[6]; ddx8 = ddx[7];
   ddx9 = ddx[8]; ddx10 = ddx[9]; ddx11 = ddx[10]; ddx12 = ddx[11]; ddx13 = ddx[12];
 
-  double x1, x2, x3, x4, x5, x6, x7, x8, x9, x10, x11, x12, x13;
+  long double x1, x2, x3, x4, x5, x6, x7, x8, x9, x10, x11, x12, x13;
   x1 = x[0]; x2 = x[1]; x3 = x[2]; x4 = x[3]; x5 = x[4]; x6 = x[5]; x7 = x[6]; x8 = x[7];
   x9 = x[8]; x10 = x[9]; x11 = x[10]; x12 = x[11]; x13 = x[12];
 
@@ -77,20 +77,20 @@ Eigen::Matrix<double, 182, 13> getBeamPhi(Eigen::Vector<double, 13> x, Eigen::Ve
   mt11 << 0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,ddx1,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,ddx2,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,ddx3,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,ddx4,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,ddx5,0.0,0.0,0.0,0.0,0.0,0.0,0.0,ddx6,0.0,0.0,0.0,0.0,0.0,0.0,ddx7,0.0,0.0,0.0,0.0,0.0,ddx8,0.0,0.0,0.0,0.0,ddx9,0.0,0.0,0.0,ddx10,0.0,0.0,ddx11,0.0,ddx12,ddx13,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,x1,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,x2,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,x3,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,x4,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,x5,0.0,0.0,0.0,0.0,0.0,0.0,0.0,x6,0.0,0.0,0.0,0.0,0.0,0.0,x7,0.0,0.0,0.0,0.0,0.0,x8,0.0,0.0,0.0,0.0,x9,0.0,0.0,0.0,x10,0.0,0.0,x11,0.0,x12,x13,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,ddx1,0.0,0.0,0.0;
   mt12 << 0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,ddx2,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,ddx3,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,ddx4,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,ddx5,0.0,0.0,0.0,0.0,0.0,0.0,0.0,ddx6,0.0,0.0,0.0,0.0,0.0,0.0,ddx7,0.0,0.0,0.0,0.0,0.0,ddx8,0.0,0.0,0.0,0.0,ddx9,0.0,0.0,0.0,ddx10,0.0,0.0,ddx11,0.0,ddx12,ddx13,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,x1,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,x2,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,x3,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,x4,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,x5,0.0,0.0,0.0,0.0,0.0,0.0,0.0,x6,0.0,0.0,0.0,0.0,0.0,0.0,x7,0.0,0.0,0.0,0.0,0.0,x8,0.0,0.0,0.0,0.0,x9,0.0,0.0,0.0,x10,0.0,0.0,x11,0.0,x12,x13;
 
-  // Eigen::Matrix<double, 182, 13> out;
-  Eigen::Vector<double, 2366> out_vec;
+  // Eigen::Matrix<long double, 182, 13> out;
+  Eigen::Vector<long double, 2366> out_vec;
   out_vec << mt1, mt2, mt3, mt4, mt5, mt6, mt7, mt8, mt9, mt10, mt11, mt12;
 
   // Reshape to 182x13
-  Eigen::Matrix<double, 182, 13> out_mat;
+  Eigen::Matrix<long double, 182, 13> out_mat;
   out_mat << out_vec.reshaped(182, 13);
 
   return out_mat;
 }
 
-Eigen::Matrix<double, 13, 13> getTrueM()
+Eigen::Matrix<long double, 13, 13> getTrueM()
 {
-  Eigen::Matrix<double, 13, 13> out;
+  Eigen::Matrix<long double, 13, 13> out;
   out <<
      25644.5988898207,19.3338614509,-6411.4751410036,570.4311625169,-508.1774146847,6765.5236447759,4153.5934224066,705.3490395516,4786.8390813827,-8810.6227682793,-40768.1831291458,17392.1165380621,26.8229032913,
      19.3338614509,27841.7726022066,5335.8092827834,2851.4088719601,-544.7876326571,-3194.4068860441,-986.7418003712,6206.7839780927,-3138.8342965132,-7027.4111544981,30852.4864384382,65714.2057504058,27.5170217960,
@@ -109,9 +109,9 @@ Eigen::Matrix<double, 13, 13> getTrueM()
   return out;
 }
 
-Eigen::Matrix<double, 13, 13> getTrueK()
+Eigen::Matrix<long double, 13, 13> getTrueK()
 {
-  Eigen::Matrix<double, 13, 13> out;
+  Eigen::Matrix<long double, 13, 13> out;
   out <<
      1407769.8107290301,86337.4898350760,3284758.7589110299,-672481.4604448490,-5301865.1981767099,503078.1037384460,-1407769.8107229001,-86337.4898424598,-3284758.7589101898,5026257.7074759603,27834484.8395485990,-2961256.9762905799,0.0000000000,
      86337.4898350760,789973.9600906370,649353.3509640290,1792509.4631268301,8080.3575629890,371486.1657960120,-86337.4898455659,-789973.9600935800,-649353.3509668360,7353058.8462429298,6503965.0309620304,-9509733.7564682700,0.0000000000,
@@ -134,36 +134,39 @@ int main()
 {
   float fs = 500;
   float dt = 1. / fs;
-  float tend = 5. / dt;
+  float tend = 10. / dt;
 
-  Eigen::Vector<double, 182> theta_init;
+  Eigen::Vector<long double, 182> theta_init;
   theta_init.setZero();
 
-  Eigen::Vector<double, 182> gamma;
+  Eigen::Vector<long double, 182> gamma;
   gamma.setOnes();
-  gamma *= 1e7;
-
-  sdu_estimators::parameter_estimators::GradientEstimator<double, 13, 182> estimator(dt, gamma, theta_init);
 
   /*
-  float ell = 3;
-  sdu_estimators::regressor_extensions::Kreisselmeier<double, 13, 182> reg_ext(dt, ell);
-  float r = 1;
-  gamma *= 1;
-  sdu_estimators::parameter_estimators::DREM<double, 13, 182> estimator(dt, gamma, theta_init, &reg_ext, r);*/
+  gamma *= 1e6;
+  sdu_estimators::parameter_estimators::GradientEstimator<long double, 13, 182> estimator(dt, gamma, theta_init);
+  */
 
-  Eigen::Matrix<double, 182, 13> phi;
-  Eigen::Vector<double, 13> q, dq, ddq, y, F, u;
+
+  float ell = 0.01;
+  sdu_estimators::regressor_extensions::Kreisselmeier<long double, 13, 182> reg_ext(dt, ell);
+  float r = 0.5;
+  gamma *= 1e1;
+  sdu_estimators::parameter_estimators::DREM<long double, 13, 182> estimator(dt, gamma, theta_init, &reg_ext, r);
+
+
+  Eigen::Matrix<long double, 182, 13> phi;
+  Eigen::Vector<long double, 13> q, dq, ddq, y, F, u;
   u.setZero();
   F.setZero();
 
-  Eigen::Matrix<double, 13, 13> M_act, K_act, M_act_inv;
+  Eigen::Matrix<long double, 13, 13> M_act, K_act, M_act_inv;
   M_act = getTrueM();
   M_act_inv = M_act.inverse();
   K_act = getTrueK();
 
-  Eigen::Vector<double, 91> M_act_vec, K_act_vec;
-  Eigen::Vector<double, 182> theta_act;
+  Eigen::Vector<long double, 91> M_act_vec, K_act_vec;
+  Eigen::Vector<long double, 182> theta_act, theta_est;
 
   int id_elem = 0;
 
@@ -180,17 +183,21 @@ int main()
 
   theta_act << M_act_vec, K_act_vec;
 
-  q.setZero();
+  // q.setOnes();
   // q *= 0.5;
+  q.setZero();
   dq.setZero();
   ddq.setZero();
-  std::vector<Eigen::VectorXd> all_q, all_dq, all_ddq;
+  std::vector<Eigen::Vector<long double, 13>> all_q, all_dq, all_ddq;
 
   phi = getBeamPhi(q, ddq);
 
-  std::cout << phi << std::endl;
+  // std::cout << phi << std::endl;
 
-  std::vector<Eigen::VectorXd> all_theta_est;
+  std::vector<Eigen::Vector<long double, 182>> all_theta_est;
+
+  std::vector<long double> parameter_error;
+  std::vector<long double> residual_error;
 
   // std::vector<Eigen::VectorXd> all_y;
   // std::vector<Eigen::MatrixXd> all_phi;
@@ -215,9 +222,15 @@ int main()
     u[0] = sin(10 * t);
 
     ddq = M_act_inv * (F + u - K_act * q);
-
     dq += dt * ddq;
     q += dt * dq;
+
+    // std::cout << u << std::endl;
+    // ddq = M_act_inv * (u - K_act * q);
+
+    // std::cout << "ddq " << ddq << std::endl;
+    // std::cout << "dq " << dq << std::endl;
+    // std::cout << "q " << q << std::endl;
 
     F = M_act * ddq + K_act * q - u;
     // F = M_act * ddq + K_act * q;
@@ -227,14 +240,31 @@ int main()
     phi = getBeamPhi(q, ddq);
 
     estimator.step(y, phi);
+
     all_theta_est.push_back(estimator.get_estimate());
+
+    theta_est = estimator.get_estimate();
 
     // all_y.push_back(y);
     // all_phi.push_back(phi);
 
+
+
     all_q.push_back(q);
     all_dq.push_back(dq);
     all_ddq.push_back(ddq);
+
+    parameter_error.push_back(
+      (theta_est - theta_act).squaredNorm()
+    );
+
+    residual_error.push_back(
+      (y - phi.transpose() * theta_est).squaredNorm()
+    );
+
+    std::cout << theta_est.head(5).transpose() << std::endl;
+    std::cout << theta_act.head(5).transpose() << std::endl;
+    std::cout << parameter_error.back() << std::endl;
   }
 
   std::ofstream outfile;
@@ -268,6 +298,8 @@ int main()
     s << ",ddq_";
     s << std::setfill('0') << std::setw(3) << i + 1;
   }
+  s << ",parameter_error";
+  s << ",residual_error";
 
   // std::cout << "print test " << sprintf("%02d", 2 + 1) << std::endl;
   outfile << s.str() << std::endl;
@@ -302,6 +334,9 @@ int main()
       outfile << "," << all_ddq[i][j];
     }
 
+    outfile << "," << parameter_error[i];
+    outfile << "," << residual_error[i];
+
     // for (auto & elem : all_y[i])
     //   outfile << "," << elem;
 
@@ -311,4 +346,5 @@ int main()
 
   return 1;
 }
+
 

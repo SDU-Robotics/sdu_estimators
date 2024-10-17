@@ -76,8 +76,8 @@ namespace sdu_estimators::parameter_estimators
     {
       y_err = y - phi.transpose() * theta_est;
 
-      Eigen::VectorXd tmp1 = y_err.array().abs().pow(r);
-      Eigen::VectorXd tmp2 = y_err.cwiseSign();
+      Eigen::Vector<T, DIM_N> tmp1 = y_err.array().abs().pow(r);
+      Eigen::Vector<T, DIM_N> tmp2 = y_err.cwiseSign();
 
       // std::cout << tmp1 << " " << tmp2 << std::endl;
 

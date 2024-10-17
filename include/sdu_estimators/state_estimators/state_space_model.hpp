@@ -2,7 +2,7 @@
 #define STATE_SPACE_MODEL_HPP
 
 #include <Eigen/Dense>
-#include "utils.hpp"
+#include "sdu_estimators/state_estimators/utils.hpp"
 
 namespace sdu_estimators::state_estimators
 {
