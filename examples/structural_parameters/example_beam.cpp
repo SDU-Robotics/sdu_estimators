@@ -132,9 +132,9 @@ Eigen::Matrix<long double, 13, 13> getTrueK()
 
 int main()
 {
-  float fs = 500;
+  float fs = 1000;
   float dt = 1. / fs;
-  float tend = 50. / dt;
+  float tend = 20. / dt;
 
   Eigen::Vector<long double, 182> theta_init;
   theta_init.setZero();
@@ -142,9 +142,9 @@ int main()
   Eigen::Vector<long double, 182> gamma;
   gamma.setOnes();
 
-
-  gamma *= 1e4;
-  sdu_estimators::parameter_estimators::GradientEstimator<long double, 13, 182> estimator(dt, gamma, theta_init);
+  gamma *= 1e6;
+  float r = 1;
+  sdu_estimators::parameter_estimators::GradientEstimator<long double, 13, 182> estimator(dt, gamma, theta_init, r);
 
 
   /*
@@ -161,6 +161,7 @@ int main()
   F.setZero();
 
   Eigen::Matrix<long double, 13, 13> M_act, K_act, M_act_inv;
+
   M_act = getTrueM();
   M_act_inv = M_act.inverse();
   K_act = getTrueK();
@@ -186,9 +187,13 @@ int main()
   // q.setOnes();
   // q *= 0.5;
   q.setZero();
+  // q[0] = 1.;
+  // q[1] = 1.;
+  // q[2] = 1.;
+
   dq.setZero();
   ddq.setZero();
-  std::vector<Eigen::Vector<long double, 13>> all_q, all_dq, all_ddq;
+  std::vector<Eigen::Vector<long double, 13>> all_q, all_dq, all_ddq, all_F;
 
   phi = getBeamPhi(q, ddq);
 
@@ -219,9 +224,16 @@ int main()
 
     // u.setRandom();
     // u *= 0.001;
-    u[0] = sin(10 * t);
+    u[0] = 10 * sin(10 * t);
+    u[1] = 10 * sin(15 * t + 0.1);
+    u[2] = 10 * sin(20 * t + 0.2);
 
-    ddq = M_act_inv * (F + u - K_act * q);
+    // std::cout << F << std::endl;
+
+    // ddq = M_act_inv * (F + u - K_act * q);
+    // ddq = M_act_inv * (F + u - K_act * q);
+    ddq = M_act_inv * (u - K_act * q);
+    // ddq = M_act_inv * (F - K_act * q);
     dq += dt * ddq;
     q += dt * dq;
 
@@ -232,8 +244,9 @@ int main()
     // std::cout << "dq " << dq << std::endl;
     // std::cout << "q " << q << std::endl;
 
-    F = M_act * ddq + K_act * q - u;
+    F = M_act * ddq + K_act * q; // - u;
     // F = M_act * ddq + K_act * q;
+    // y << -(M_act * ddq + K_act * q);
     y << F;
 
     // std::cout << y << std::endl;
@@ -248,11 +261,10 @@ int main()
     // all_y.push_back(y);
     // all_phi.push_back(phi);
 
-
-
     all_q.push_back(q);
     all_dq.push_back(dq);
     all_ddq.push_back(ddq);
+    all_F.push_back(F);
 
     parameter_error.push_back(
       (theta_est - theta_act).squaredNorm()
@@ -262,8 +274,15 @@ int main()
       (y - phi.transpose() * theta_est).squaredNorm()
     );
 
-    std::cout << theta_est.head(5).transpose() << std::endl;
-    std::cout << theta_act.head(5).transpose() << std::endl;
+    // std::cout << theta_est.head(5).transpose() << std::endl;
+    for (int i = 0; i < 10; ++i)
+      std::cout <<  theta_est(i, i) << " ";
+    std::cout << std::endl;
+
+    for (int i = 0; i < 10; ++i)
+      std::cout <<  theta_act(i, i) << " ";
+    std::cout << std::endl;
+    // std::cout << theta_act.head(5).transpose() << std::endl;
     std::cout << parameter_error.back() << std::endl;
   }
 
@@ -296,6 +315,11 @@ int main()
   for (int i = 0; i < 13; ++i)
   {
     s << ",ddq_";
+    s << std::setfill('0') << std::setw(3) << i + 1;
+  }
+  for (int i = 0; i < 13; ++i)
+  {
+    s << ",F_";
     s << std::setfill('0') << std::setw(3) << i + 1;
   }
   s << ",parameter_error";
@@ -332,6 +356,11 @@ int main()
     for (int j = 0; j < 13; ++j)
     {
       outfile << "," << all_ddq[i][j];
+    }
+
+    for (int j = 0; j < 13; ++j)
+    {
+      outfile << "," << all_F[i][j];
     }
 
     outfile << "," << parameter_error[i];
