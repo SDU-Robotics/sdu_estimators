@@ -30,7 +30,8 @@ namespace sdu_estimators
       .def(nb::init<float, const Eigen::Vector<T, DIM_P>, const Eigen::Vector<T, DIM_P>, float>(),
         nb::arg("dt"), nb::arg("gamma"), nb::arg("theta_init"), nb::arg("r"))
       .def("get_estimate", &Class::get_estimate)
-      .def("step", &Class::step, nb::arg("y"), nb::arg("phi"));
+    .def("step", &Class::step, nb::arg("y"), nb::arg("phi"));
+      // .def("step", &Class::step, nb::arg("y"), nb::arg("phi"), nb::arg("method"));
   }
 
   template <typename T, int32_t DIM_N, int32_t DIM_P>

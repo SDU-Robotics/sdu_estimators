@@ -36,6 +36,12 @@ namespace sdu_estimators::parameter_estimators::utils
         }
         return ld;
     }
+
+    enum class IntegrationMethod
+    {
+      Euler,
+      Heuns
+    };
 }
 
 #endif

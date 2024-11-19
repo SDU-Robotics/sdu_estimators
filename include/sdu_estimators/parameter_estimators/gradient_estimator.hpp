@@ -3,6 +3,7 @@
 #define GRADIENT_ESTIMATOR_HPP
 
 #include <sdu_estimators/parameter_estimators/parameter_estimator.hpp>
+#include <sdu_estimators/parameter_estimators/utils.hpp>
 
 namespace sdu_estimators::parameter_estimators
 {
@@ -31,8 +32,9 @@ namespace sdu_estimators::parameter_estimators
      * @param gamma \f$ \gamma \in \mathbb{R}^p \f$ is the vector of gains.
      * @param theta_init The initial value of the parameter estimate \f$ \hat{\theta}(0) \f$.
      */
-    GradientEstimator(float dt, const Eigen::Vector<T, DIM_P> gamma, const Eigen::Vector<T, DIM_P> & theta_init)
-      : GradientEstimator(dt, gamma, theta_init, 1.0f)
+    GradientEstimator(float dt, const Eigen::Vector<T, DIM_P> gamma, const Eigen::Vector<T, DIM_P> & theta_init,
+       utils::IntegrationMethod method = utils::IntegrationMethod::Euler)
+      : GradientEstimator(dt, gamma, theta_init, 1.0f, method)
     {
     }
     //
@@ -55,7 +57,8 @@ namespace sdu_estimators::parameter_estimators
      * @param theta_init The initial value of the parameter estimate \f$ \hat{\theta}(0) \f$.
      * @param r The value of the coefficient, \f$ r \in (0,1) \f$.
      */
-    GradientEstimator(float dt, const Eigen::Vector<T, DIM_P> gamma, const Eigen::Vector<T, DIM_P> & theta_init, float r)
+    GradientEstimator(float dt, const Eigen::Vector<T, DIM_P> gamma, const Eigen::Vector<T, DIM_P> & theta_init, float r,
+      utils::IntegrationMethod method = utils::IntegrationMethod::Euler)
     {
       this->dt = dt;
       this->gamma = gamma;
@@ -63,6 +66,11 @@ namespace sdu_estimators::parameter_estimators
       this->theta_init = theta_init;
       this->p = theta_init.size();
       this->r = r;
+
+      this->y_old.setZero();
+      this->phi_old.setZero();
+
+      this->intg_method = method;
     }
 
     ~GradientEstimator()
@@ -73,19 +81,47 @@ namespace sdu_estimators::parameter_estimators
      * @brief Step the execution of the estimator (must be called in a loop externally)
      */
     void step(const Eigen::Matrix<T, DIM_N, 1> &y, const Eigen::Matrix<T, DIM_P, DIM_N> &phi)
+      // utils::IntegrationMethod method = utils::IntegrationMethod::Euler)
     {
-      y_err = y - phi.transpose() * theta_est;
+      if (intg_method == utils::IntegrationMethod::Euler)
+      {
+        y_err = y - phi.transpose() * theta_est;
 
-      Eigen::Vector<T, DIM_N> tmp1 = y_err.array().abs().pow(r);
-      Eigen::Vector<T, DIM_N> tmp2 = y_err.cwiseSign();
+        Eigen::Vector<T, DIM_N> tmp1 = y_err.array().abs().pow(r);
+        Eigen::Vector<T, DIM_N> tmp2 = y_err.cwiseSign();
 
-      // std::cout << tmp1 << " " << tmp2 << std::endl;
+        // std::cout << tmp1 << " " << tmp2 << std::endl;
 
-      dtheta = gamma.asDiagonal() * phi * (
-        tmp1.cwiseProduct(tmp2)
-      );
+        dtheta = gamma.asDiagonal() * phi * (
+          tmp1.cwiseProduct(tmp2)
+        );
 
-      theta_est += dt * dtheta;
+        theta_est += dt * dtheta;
+      }
+      else if (intg_method == utils::IntegrationMethod::Heuns)
+      {
+        /*
+         * Heun's method
+         *
+         * ytilde_{i+1} = y_i + h * f(t_i, y_i)
+         * y_{i + 1} = y_i + h/2 * (f(t_i, y_i) + f(t_{i+1}, ytilde_{i+1}))
+         *
+         * For parameter estimation
+         *
+         * thetatilde_{i+1} = theta_i + h * dtheta(y_i, phi_i, theta_i)
+         * theta_{i+1} = theta_i + (h/2) * (dtheta(y_i, phi_i, theta_i) + dtheta(y_{i+1}, phi_{i+1}, thetatilde_{i+1}))
+         */
+        Eigen::Vector<T, DIM_P> dtheta_old = gamma.asDiagonal() * phi * (y_old - phi_old.transpose() * theta_est);
+
+        Eigen::Vector<T, DIM_P> theta_tilde_new = theta_est + dt * dtheta_old;
+
+        Eigen::Vector<T, DIM_P> dtheta_new = gamma.asDiagonal() * phi * (y - phi.transpose() * theta_tilde_new);
+
+        theta_est = theta_est + (dt / 2.) * (dtheta_old + dtheta_new);
+
+        y_old = y;
+        phi_old = phi;
+      }
     }
 
     /**
@@ -113,7 +149,11 @@ namespace sdu_estimators::parameter_estimators
     float r{};
     Eigen::Vector<T, DIM_P> theta_est, theta_init, dtheta, gamma;
     Eigen::Vector<T, DIM_N> y_err;
+    Eigen::Vector<T, DIM_N> y_old;
+    Eigen::Matrix<T, DIM_N, DIM_P> phi_old;
     int p{}; // number of parameters
+
+    utils::IntegrationMethod intg_method;
   };
 }
 

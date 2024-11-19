@@ -21,7 +21,8 @@ int main()
   theta_true << 1,
                 2;
 
-  sdu_estimators::parameter_estimators::GradientEstimator<double, 1, 2> grad_est(dt, gamma, theta_init, r);
+  sdu_estimators::parameter_estimators::GradientEstimator<double, 1, 2> grad_est(dt, gamma, theta_init, r,
+    sdu_estimators::parameter_estimators::utils::IntegrationMethod::Heuns);
   // sdu_estimators::parameter_estimators::GradientEstimator grad_est(dt, gamma, theta_init);
   std::vector<Eigen::VectorXd> all_theta_est;
   Eigen::VectorXd y;
@@ -41,6 +42,8 @@ int main()
     y << phi.transpose() * theta_true;
 
     grad_est.step(y, phi);
+      // sdu_estimators::parameter_estimators::utils::IntegrationMethod::Euler);
+
     Eigen::VectorXd tmp = grad_est.get_estimate();
 
     // save data
