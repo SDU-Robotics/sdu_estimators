@@ -60,7 +60,7 @@ if(BUILD_PYTHON)
   target_link_libraries(_sdu_estimators PUBLIC sdu_estimators)
 
   install(TARGETS _sdu_estimators DESTINATION ".")
-  
+
   nanobind_add_stub(
           _sdu_estimators
           INSTALL_TIME

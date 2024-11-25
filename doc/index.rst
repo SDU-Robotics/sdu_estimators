@@ -17,6 +17,9 @@ A C++ library containing online parameter estimation methods for general as well
 .. toctree::
   :maxdepth: 2
   :caption: Table of Contents
-  
+
+  pages/getting_started/getting_started
+  pages/installation/installation
+  pages/examples/examples
   pages/api/api
   pages/bibliography
