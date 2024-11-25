@@ -111,11 +111,18 @@ namespace sdu_estimators::parameter_estimators
          * thetatilde_{i+1} = theta_i + h * dtheta(y_i, phi_i, theta_i)
          * theta_{i+1} = theta_i + (h/2) * (dtheta(y_i, phi_i, theta_i) + dtheta(y_{i+1}, phi_{i+1}, thetatilde_{i+1}))
          */
-        Eigen::Vector<T, DIM_P> dtheta_old = gamma.asDiagonal() * phi * (y_old - phi_old.transpose() * theta_est);
+        y_err = y_old - phi_old.transpose() * theta_est;
+        Eigen::Vector<T, DIM_N> tmp1 = y_err.array().abs().pow(r);
+        Eigen::Vector<T, DIM_N> tmp2 = y_err.cwiseSign();
 
+        Eigen::Vector<T, DIM_P> dtheta_old = gamma.asDiagonal() * phi * tmp1.cwiseProduct(tmp2);
         Eigen::Vector<T, DIM_P> theta_tilde_new = theta_est + dt * dtheta_old;
 
-        Eigen::Vector<T, DIM_P> dtheta_new = gamma.asDiagonal() * phi * (y - phi.transpose() * theta_tilde_new);
+        y_err = y - phi.transpose() * theta_tilde_new;
+        tmp1 = y_err.array().abs().pow(r);
+        tmp2 = y_err.cwiseSign();
+
+        Eigen::Vector<T, DIM_P> dtheta_new = gamma.asDiagonal() * phi * tmp1.cwiseProduct(tmp2);
 
         theta_est = theta_est + (dt / 2.) * (dtheta_old + dtheta_new);
 
@@ -150,7 +157,7 @@ namespace sdu_estimators::parameter_estimators
     Eigen::Vector<T, DIM_P> theta_est, theta_init, dtheta, gamma;
     Eigen::Vector<T, DIM_N> y_err;
     Eigen::Vector<T, DIM_N> y_old;
-    Eigen::Matrix<T, DIM_N, DIM_P> phi_old;
+    Eigen::Matrix<T, DIM_P, DIM_N> phi_old;
     int p{}; // number of parameters
 
     utils::IntegrationMethod intg_method;

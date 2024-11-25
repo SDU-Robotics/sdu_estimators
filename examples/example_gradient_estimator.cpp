@@ -8,7 +8,7 @@
 
 int main()
 {
-  float dt = 0.002;
+  float dt = 0.1;
   float tend = 50 / dt; // 10s
   Eigen::Vector<double, 2> gamma = {0.5, 0.5};
   float r = 0.5;
