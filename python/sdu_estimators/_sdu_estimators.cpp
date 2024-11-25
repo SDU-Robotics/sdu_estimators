@@ -29,6 +29,8 @@ namespace sdu_estimators
         nb::arg("dt"), nb::arg("gamma"), nb::arg("theta_init"))
       .def(nb::init<float, const Eigen::Vector<T, DIM_P>, const Eigen::Vector<T, DIM_P>, float>(),
         nb::arg("dt"), nb::arg("gamma"), nb::arg("theta_init"), nb::arg("r"))
+      .def(nb::init<float, const Eigen::Vector<T, DIM_P>, const Eigen::Vector<T, DIM_P>, float, parameter_estimators::utils::IntegrationMethod>(),
+        nb::arg("dt"), nb::arg("gamma"), nb::arg("theta_init"), nb::arg("r"), nb::arg("integration_method"))
       .def("get_estimate", &Class::get_estimate)
     .def("step", &Class::step, nb::arg("y"), nb::arg("phi"));
       // .def("step", &Class::step, nb::arg("y"), nb::arg("phi"), nb::arg("method"));
@@ -84,6 +86,10 @@ namespace sdu_estimators
   NB_MODULE(_sdu_estimators, m)
   {
     m.doc() = "Python Bindings for sdu_estimators";
+
+    nb::enum_<parameter_estimators::utils::IntegrationMethod>(m, "IntegrationMethod")
+      .value("Euler", parameter_estimators::utils::IntegrationMethod::Euler)
+      .value("Heuns", parameter_estimators::utils::IntegrationMethod::Heuns);
 
     nb_GradientEstimator<double, 1, 2>(m, "_1x2");
     nb_GradientEstimator<double, 1, 3>(m, "_1x3");

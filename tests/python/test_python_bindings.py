@@ -24,7 +24,8 @@ def test_gradient():
     theta_true = np.array([1, 2, 3])
     r = 0.5
 
-    GradientEstimator = sdu_estimators.GradientEstimator_1x3(dt, gamma, theta_init, r)
+    integration_method = sdu_estimators.IntegrationMethod.Heuns
+    GradientEstimator = sdu_estimators.GradientEstimator_1x3(dt, gamma, theta_init, r, integration_method)
     print(GradientEstimator)
     print(GradientEstimator.get_estimate())
 

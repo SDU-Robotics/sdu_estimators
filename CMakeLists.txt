@@ -59,14 +59,16 @@ if(BUILD_PYTHON)
 
   target_link_libraries(_sdu_estimators PUBLIC sdu_estimators)
 
-#  nanobind_add_stub(
-#          _sdu_estimators
-#          INSTALL_TIME
-#          MODULE _sdu_estimators
-#          OUTPUT _sdu_estimators.pyi
-#          MARKER_FILE py.typed
-#          PYTHON_PATH "."
-#  )
+  install(TARGETS _sdu_estimators DESTINATION ".")
+  
+  nanobind_add_stub(
+          _sdu_estimators
+          INSTALL_TIME
+          MODULE _sdu_estimators
+          OUTPUT _sdu_estimators.pyi
+          MARKER_FILE py.typed
+          PYTHON_PATH "."
+  )
 
 #  nanobind_add_stub(
 #          _sdu_estimators_stub
@@ -79,7 +81,7 @@ if(BUILD_PYTHON)
 #  )
 
   # Install the Python module shared library
-  install(TARGETS _sdu_estimators DESTINATION ".")
+
 
 #  install(FILES py.typed _sdu_estimators.pyi DESTINATION ".")
 

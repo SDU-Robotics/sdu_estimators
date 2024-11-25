@@ -1,4 +1,4 @@
-from multiprocessing.managers import Value
+# from multiprocessing.managers import Value
 
 from sdu_estimators._sdu_estimators import GradientEstimator_1x2
 from sdu_estimators._sdu_estimators import GradientEstimator_1x3
@@ -11,6 +11,8 @@ from sdu_estimators._sdu_estimators import RegressorExtension_1x3
 
 from sdu_estimators._sdu_estimators import DREM_1x2
 from sdu_estimators._sdu_estimators import DREM_1x3
+
+from sdu_estimators._sdu_estimators import IntegrationMethod
 
 # from sdu_estimators._sdu_estimators import Kreisselmeier
 # from sdu_estimators._sdu_estimators import RegressorExtension
