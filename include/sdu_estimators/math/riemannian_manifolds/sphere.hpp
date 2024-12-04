@@ -18,7 +18,7 @@ namespace sdu_estimators::math::manifold
   public:
     Sphere()
     {
-      std::cout << "constructed" << std::endl;
+      // std::cout << "constructed" << std::endl;
     }
 
     T dist(point &point_a, point &point_b)
@@ -101,6 +101,9 @@ namespace sdu_estimators::math::manifold
       return factor * v;
     }
   };
+
+  #undef point
+  #undef vector
 }
 
 #endif //SPHERE_HPP
