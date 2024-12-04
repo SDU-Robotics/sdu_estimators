@@ -24,7 +24,9 @@ namespace sdu_estimators::math::manifold
     T dist(point &point_a, point &point_b)
     {
       T chordal_distance = (point_a - point_b).norm();
-      T d = std::real(2 * asin(0.5 * chordal_distance));
+      std::complex<T> tmp = 0.5 * chordal_distance;
+      T d = std::real(2. * asin(tmp));
+      // T d = std::real(2 * asin(0.5 * chordal_distance));
       return d;
     }
 
