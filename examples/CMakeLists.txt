@@ -13,10 +13,6 @@ target_link_libraries(example_luenberger PRIVATE sdu_estimators)
 add_executable(example_UIO state_estimators/example_UIO.cpp)
 target_link_libraries(example_UIO PRIVATE sdu_estimators)
 
-add_executable(test_manifold_init manifold/test_manifold_init.cpp)
-target_link_libraries(test_manifold_init PRIVATE sdu_estimators)
-
-
 # increase stack size
 add_executable(example_beam structural_parameters/example_beam.cpp)
 target_link_libraries(example_beam PRIVATE sdu_estimators)
@@ -24,3 +20,7 @@ target_compile_definitions(example_beam PRIVATE EIGEN_STACK_ALLOCATION_LIMIT=0)
 
 #add_executable(example_utils state_estimators/example_utils.cpp)
 #target_link_libraries(example_utils PRIVATE sdu_estimators)
+
+# manifolds
+add_executable(example_gradient_estimator_sphere manifold/example_gradient_estimator_sphere.cpp)
+target_link_libraries(example_gradient_estimator_sphere PRIVATE sdu_estimators)
