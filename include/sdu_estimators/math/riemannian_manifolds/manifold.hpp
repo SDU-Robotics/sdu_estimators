@@ -56,7 +56,7 @@ namespace sdu_estimators::math::manifold
      * @param trangent_vector
      * @return
      */
-    virtual point retraction(point &point_, vector &trangent_vector) = 0;
+    virtual point retraction(point &point_, vector &tangent_vector) = 0;
 
     /**
      * Exponential map on the manifold.
