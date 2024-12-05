@@ -78,6 +78,7 @@ namespace sdu_estimators::math::manifold
 
       // vector y = point_ * cos(nrm) + tangent_vector * (sin(nrm_pi) / nrm_pi);
       vector y = point_ * cos(nrm) + tangent_vector * (sin(nrm) / nrm);
+      y.normalize();
       return y;
     }
 
