@@ -108,6 +108,21 @@ namespace sdu_estimators
         nb::arg("point_a"), nb::arg("point_b"));
   }
 
+  template <typename T, int32_t DIM_N, int32_t DIM_P>
+  void nb_GradientEstimatorSphere(nb::module_ m, const std::string & typestr)
+  {
+    using Class = parameter_estimators::GradientEstimatorSphere<T, DIM_N, DIM_P>;
+    std::string nbclass_name = std::string("GradientEstimatorSphere") + typestr;
+
+    nb::class_<Class>(m, nbclass_name.c_str())
+      .def(nb::init<double, double, const Eigen::Vector<T, DIM_P>>(),
+        nb::arg("dt"), nb::arg("gamma"), nb::arg("theta_init"))
+      .def("step", &Class::step,
+        nb::arg("y"), nb::arg("phi"))
+      .def("get_estimate", &Class::get_estimate)
+      .def("reset", &Class::reset);
+  }
+
 
   NB_MODULE(_sdu_estimators, m)
   {
@@ -130,5 +145,7 @@ namespace sdu_estimators
     nb_DREM<double, 1, 3>(m, "_1x3");
 
     nb_Sphere<double, 3>(m, "_3");
+
+    nb_GradientEstimatorSphere<double, 1, 3>(m, "_1x3");
   }
 }  // namespace sdu_estimators
