@@ -12,8 +12,8 @@ namespace sdu_estimators::parameter_estimators
    *
    */
 
-  template <typename T, int32_t DIM_P>
-  class GradientEstimatorSphere : public ParameterEstimator<T, 1, DIM_P>
+  template <typename T, int32_t DIM_N, int32_t DIM_P>
+  class GradientEstimatorSphere : public ParameterEstimator<T, DIM_N, DIM_P>
   {
   public:
     /**
@@ -40,7 +40,7 @@ namespace sdu_estimators::parameter_estimators
     /**
      * @brief Step the execution of the estimator (must be called in a loop externally)
      */
-    void step(const Eigen::Matrix<T, 1, 1> &y, const Eigen::Matrix<T, DIM_P, 1> &phi)
+    void step(const Eigen::Vector<T, DIM_N> &y, const Eigen::Matrix<T, DIM_P, DIM_N> &phi)
       // utils::IntegrationMethod method = utils::IntegrationMethod::Euler)
     {
       y_err = y - phi.transpose() * theta_est;
@@ -74,9 +74,8 @@ namespace sdu_estimators::parameter_estimators
   private:
     double dt, r, gamma;
     Eigen::Vector<T, DIM_P> theta_est, theta_init, dtheta;
-    Eigen::Vector<T, 1> y_err;
-    Eigen::Vector<T, 1> y_old;
-    Eigen::Matrix<T, DIM_P, 1> phi_old;
+    Eigen::Vector<T, DIM_N> y_err, y_old;
+    Eigen::Matrix<T, DIM_P, DIM_N> phi_old;
     int p{}; // number of parameters
 
     math::manifold::Sphere<T, DIM_P> sphere_manifold;

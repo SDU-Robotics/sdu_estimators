@@ -9,8 +9,8 @@
 
 int main()
 {
-  double dt = 0.0001;
-  double tend = 20 / dt; // 10s
+  double dt = 0.001;
+  double tend = 12 / dt; // 10s
   double gamma = 2;
 
   Eigen::Vector<double, 3> theta_init, theta_true;
@@ -25,15 +25,15 @@ int main()
                 0,
                 1;
 
-  sdu_estimators::parameter_estimators::GradientEstimatorSphere<double, 3> estimator(dt, gamma, theta_init);
+  sdu_estimators::math::manifold::Sphere<double, 3> sphere_manifold;
+
+  sdu_estimators::parameter_estimators::GradientEstimatorSphere<double, 2, 3> estimator(dt, gamma, theta_init);
 //  // sdu_estimators::parameter_estimators::GradientEstimator grad_est(dt, gamma, theta_init);
   std::vector<Eigen::VectorXd> all_theta_est;
-  Eigen::VectorXd y;
-  Eigen::VectorXd phi;
-  y.resize(1);
-  phi.resize(3);
+  Eigen::Vector<double, 2> y;
+  Eigen::Matrix<double, 3, 2> phi;
 
-  sdu_estimators::math::manifold::Sphere<double, 3> sphere_manifold;
+  // sdu_estimators::math::manifold::Sphere<double, 3> sphere_manifold;
   std::vector<double> dist;
 
   float t;
@@ -43,13 +43,14 @@ int main()
   for (int i = 0; i < tend; ++i)
   {
     t = i * dt;
-    phi << std::sin(1 * t),
-           std::cos(1 * t),
-           0;
+    phi << std::sin(1 * t), std::cos(2 * t),
+           std::cos(1 * t), 0,
+           0,                  std::sin(2 * t);
 
     // phi += 1*Eigen::Vector3d::Random();
 
-    y << 0;
+    // y << 0;
+    y << phi.transpose() * theta_true;
 
     estimator.step(y, phi);
       // sdu_estimators::parameter_estimators::utils::IntegrationMethod::Euler);

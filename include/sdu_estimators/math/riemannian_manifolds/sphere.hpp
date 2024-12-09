@@ -9,10 +9,10 @@
 
 namespace sdu_estimators::math::manifold
 {
-  #define point Eigen::Vector<T, n>
-  #define vector Eigen::Vector<T, n>
+  #define point Eigen::Vector<T, DIM_N>
+  #define vector Eigen::Vector<T, DIM_N>
 
-  template <typename T, int32_t n>
+  template <typename T, int32_t DIM_N>
   class Sphere : Manifold<T, point, vector>
   {
   public:
@@ -95,8 +95,8 @@ namespace sdu_estimators::math::manifold
       T di = dist(point_a, point_b);
 
       T eps = std::numeric_limits<T>::epsilon();
-      std::cout << eps << std::endl;
-      std::cout << eps << std::endl;
+      // std::cout << eps << std::endl;
+      // std::cout << eps << std::endl;
       double factor = (di + eps) / (v.norm() + eps);
 
       return factor * v;

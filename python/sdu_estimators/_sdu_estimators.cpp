@@ -7,6 +7,10 @@
 #include <sdu_estimators/parameter_estimators/gradient_estimator.hpp>
 #include <sdu_estimators/regressor_extensions/regressor_extension.hpp>
 
+// manifold
+#include <sdu_estimators/math/riemannian_manifolds/sphere.hpp>
+#include <sdu_estimators/parameter_estimators/gradient_estimator_sphere.hpp>
+
 namespace nb = nanobind;
 
 #define DIM_N_1 1
@@ -80,6 +84,28 @@ namespace sdu_estimators
       .def("get_estimate", &Class::get_estimate)
       .def("step", &Class::step,
         nb::arg("y"), nb::arg("phi"));
+  }
+
+  template <typename T, int32_t DIM_N>
+  void nb_Sphere(nb::module_ m, const std::string & typestr)
+  {
+    using Class = math::manifold::Sphere<T, DIM_N>;
+    std::string nbclass_name = std::string("Sphere") + typestr;
+
+    nb::class_<Class>(m, nbclass_name.c_str())
+      .def(nb::init<>())
+      .def("dist", &Class::dist,
+        nb::arg("point_a"), nb::arg("point_b"))
+      .def("projection", &Class::projection,
+        nb::arg("point"), nb::arg("vector"))
+      .def("euclidean_to_riemannian_gradient", &Class::euclidean_to_riemannian_gradient,
+        nb::arg("point"), nb::arg("euclidean_gradient"))
+      .def("retraction", &Class::retraction,
+        nb::arg("point"), nb::arg("tangent_vector"))
+      .def("exp", &Class::exp,
+        nb::arg("point"), nb::arg("tangent_vector"))
+      .def("log", &Class::log,
+        nb::arg("point_a"), nb::arg("point_b"));
   }
 
 
