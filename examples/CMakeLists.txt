@@ -24,3 +24,6 @@ target_compile_definitions(example_beam PRIVATE EIGEN_STACK_ALLOCATION_LIMIT=0)
 # manifolds
 add_executable(example_gradient_estimator_sphere manifold/example_gradient_estimator_sphere.cpp)
 target_link_libraries(example_gradient_estimator_sphere PRIVATE sdu_estimators)
+
+add_executable(test_manifold manifold/test_manifold_init.cpp)
+target_link_libraries(test_manifold PRIVATE sdu_estimators)

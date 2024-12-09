@@ -14,6 +14,8 @@ from sdu_estimators._sdu_estimators import DREM_1x3
 
 from sdu_estimators._sdu_estimators import IntegrationMethod
 
+from sdu_estimators._sdu_estimators import Sphere_3
+
 # from sdu_estimators._sdu_estimators import Kreisselmeier
 # from sdu_estimators._sdu_estimators import RegressorExtension
 

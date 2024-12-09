@@ -128,5 +128,7 @@ namespace sdu_estimators
 
     nb_DREM<double, 1, 2>(m, "_1x2");
     nb_DREM<double, 1, 3>(m, "_1x3");
+
+    nb_Sphere<double, 3>(m, "_3");
   }
 }  // namespace sdu_estimators

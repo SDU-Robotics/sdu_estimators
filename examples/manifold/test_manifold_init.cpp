@@ -12,8 +12,8 @@ void test_sphere()
   std::cout << "v1 " << v1 << std::endl;
   std::cout << "v2 " << v2 << std::endl;
 
-  // double d = sphere.dist(v1, v2);
-  // std::cout << "dist " << d << std::endl;
+  double d = sphere.dist(v1, v2);
+  std::cout << "dist " << d << std::endl;
 
   Eigen::Vector3d v3 = v2 * 2;
 
@@ -23,11 +23,10 @@ void test_sphere()
   auto retr = sphere.retraction(v1, v3);
   std::cout << "retr\n" << retr << std::endl;
 
-
   auto expv = sphere.exp(v1, v3);
   std::cout << "expv\n" << expv << std::endl;
 
-  auto logv = sphere.log(v1, v3);
+  auto logv = sphere.log(v1, v2);
   std::cout << "logv\n" << logv << std::endl;
 }
 
@@ -65,10 +64,10 @@ void test_spd()
 
 int main()
 {
-  // test_sphere();
+  test_sphere();
 
   //
-  test_spd();
+  // test_spd();
 
   return 0;
 }

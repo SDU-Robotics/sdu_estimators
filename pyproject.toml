@@ -15,7 +15,7 @@ build-backend = "setuptools.build_meta"
 # single source of truth for sdu_estimators's version
 [project]
 name = "sdu_estimators"
-version = "0.0.1"
+version = "0.0.2"
 description = "A library implementing various parameter- and state-estimation algorithms."
 readme = "README.md"
 maintainers = [
