@@ -12,6 +12,11 @@ namespace sdu_estimators::math::manifold
   #define point Eigen::Vector<T, DIM_N>
   #define vector Eigen::Vector<T, DIM_N>
 
+  /**
+   * Point: A n vector with unit length.
+   *
+   * Vector: A n tangent vector.
+   */
   template <typename T, int32_t DIM_N>
   class Sphere : Manifold<T, point, vector>
   {

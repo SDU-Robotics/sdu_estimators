@@ -1,0 +1,28 @@
+Math Utilities
+==============
+
+Riemannian Manifolds
+--------------------
+
+Manifold
+^^^^^^^^
+
+.. doxygenclass:: sdu_estimators::math::manifold::Manifold
+    :project: sdu_estimators
+    :members:
+
+
+Manifold of Spheres
+^^^^^^^^^^^^^^^^^^^
+
+.. doxygenclass:: sdu_estimators::math::manifold::Sphere
+    :project: sdu_estimators
+    :members:
+
+
+Manifold of Symmetric and Positive Definite Matrices
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. doxygenclass:: sdu_estimators::math::manifold::SymmetricPositiveDefinite
+    :project: sdu_estimators
+    :members:

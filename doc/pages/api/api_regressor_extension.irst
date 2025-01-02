@@ -1,0 +1,38 @@
+Regressor Extension
+===================
+
+.. doxygenclass:: sdu_estimators::regressor_extensions::RegressorExtension
+    :project: sdu_estimators
+    :members:
+
+
+Delay Operator
+--------------
+
+.. doxygenclass:: sdu_estimators::regressor_extensions::Delay
+    :project: sdu_estimators
+    :members:
+
+
+Linear Time Invariant (LTI) Filter
+----------------------------------
+
+.. doxygenclass:: sdu_estimators::regressor_extensions::LTI
+    :project: sdu_estimators
+    :members:
+
+
+Linear Time Variant (LTV) Filter
+--------------------------------
+
+.. doxygenclass:: sdu_estimators::regressor_extensions::LTV
+    :project: sdu_estimators
+    :members:
+
+
+Kreisselmeier Filter
+--------------------
+
+.. doxygenclass:: sdu_estimators::regressor_extensions::Kreisselmeier
+    :project: sdu_estimators
+    :members:

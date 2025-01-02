@@ -13,6 +13,12 @@ namespace sdu_estimators::math::manifold
   #define point Eigen::Matrix<T, n, n>  // an PSD matrix
   #define vector Eigen::Matrix<T, n, n> // a matrix
 
+
+  /**
+   * Point: A PSD n x n matrix.
+   *
+   * Vector: A n x n matrix.
+   */
   template <typename T, int32_t n>
   class SymmetricPositiveDefinite : Manifold<T, point, vector>
   {

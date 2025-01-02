@@ -1,0 +1,38 @@
+Parameter Estimator
+===================
+
+.. doxygenclass:: sdu_estimators::parameter_estimators::ParameterEstimator
+    :project: sdu_estimators
+    :members:
+
+
+Gradient Estimator
+------------------
+
+.. doxygenclass:: sdu_estimators::parameter_estimators::GradientEstimator
+    :project: sdu_estimators
+    :members:
+
+
+Gradient Estimator on the Sphere
+--------------------------------
+
+.. doxygenclass:: sdu_estimators::parameter_estimators::GradientEstimatorSphere
+    :project: sdu_estimators
+    :members:
+
+
+Dynamic Regressor Extension and Mixing (DREM)
+---------------------------------------------
+
+.. doxygenclass:: sdu_estimators::parameter_estimators::DREM
+    :project: sdu_estimators
+    :members:
+
+
+Utility Functions
+-----------------
+
+.. doxygennamespace:: sdu_estimators::parameter_estimators::utils
+    :project: sdu_estimators
+    :members:
