@@ -9,7 +9,7 @@ namespace sdu_estimators::parameter_estimators
 {
   /**
    * A simple gradient-based parameter estimator as described in e.g.,
-   * `:cite:p:"Sastry1989"`.
+   * \verbatim embed:rst:inline :cite:`Sastry1989` \endverbatim.
    *
    * Test `:role:"content of the role"`
    *

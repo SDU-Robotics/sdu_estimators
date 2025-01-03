@@ -7,6 +7,10 @@
 import os
 import subprocess
 
+from pybtex.plugin import register_plugin
+from pybtex.style.formatting.unsrt import Style as UnsrtStyle
+from pybtex.style.labels import BaseLabelStyle
+
 # -- Path setup --------------------------------------------------------------
 
 # If extensions (or modules to document with autodoc) are in another directory,
@@ -37,8 +41,26 @@ extensions = [
     "sphinxcontrib.bibtex",
 ]
 
-#
+# Bibliography
 bibtex_bibfiles = ['refs.bib']
+#  bibtex_default_style = 'plain'
+
+bibtex_default_style = "mystyle"
+
+
+# a simple label style which uses the bibtex keys for labels
+class MyLabelStyle(BaseLabelStyle):
+    def format_labels(self, sorted_entries):
+        # print(sorted_entries)
+        for number, entry in enumerate(sorted_entries):
+            yield str(number + 1)
+
+
+class MyStyle(UnsrtStyle):
+    default_label_style = MyLabelStyle
+
+
+register_plugin("pybtex.style.formatting", "mystyle", MyStyle)
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = []
