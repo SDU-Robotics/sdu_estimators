@@ -19,7 +19,7 @@ namespace sdu_estimators::parameter_estimators
 {
   /**
    * An implementation of dynamic regressor extension and mixing (DREM) as described in e.g., 
-   * \verbatim embed:rst:inline :cite:p:`Aranovskiy2017` \endverbatim.
+   * \verbatim embed:rst:inline :cite:`Aranovskiy2017` \endverbatim.
    *
    */
 
