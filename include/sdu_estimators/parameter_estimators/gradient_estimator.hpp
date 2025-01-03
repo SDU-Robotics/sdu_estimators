@@ -8,7 +8,10 @@
 namespace sdu_estimators::parameter_estimators
 {
   /**
-   * A simple gradient-based parameter estimator as described in e.g., \cite Sastry1989.
+   * A simple gradient-based parameter estimator as described in e.g.,
+   * `:cite:p:"Sastry1989"`.
+   *
+   * Test `:role:"content of the role"`
    *
    * The parameter \f$ \theta \f$ can be estimated by \f$ \hat{\theta} \f$ with the following update rule:
    *
