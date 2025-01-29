@@ -132,15 +132,19 @@ namespace sdu_estimators
       .value("Euler", parameter_estimators::utils::IntegrationMethod::Euler)
       .value("Heuns", parameter_estimators::utils::IntegrationMethod::Heuns);
 
+    nb_GradientEstimator<double, 1, 1>(m, "_1x1");
     nb_GradientEstimator<double, 1, 2>(m, "_1x2");
     nb_GradientEstimator<double, 1, 3>(m, "_1x3");
 
+    nb_RegressorExtension<double, 1, 1>(m, "_1x1");
     nb_RegressorExtension<double, 1, 2>(m, "_1x2");
     nb_RegressorExtension<double, 1, 3>(m, "_1x3");
 
+    nb_Kreisselmeier<double, 1, 1>(m, "_1x1");
     nb_Kreisselmeier<double, 1, 2>(m, "_1x2");
     nb_Kreisselmeier<double, 1, 3>(m, "_1x3");
 
+    nb_DREM<double, 1, 1>(m, "_1x1");
     nb_DREM<double, 1, 2>(m, "_1x2");
     nb_DREM<double, 1, 3>(m, "_1x3");
 
