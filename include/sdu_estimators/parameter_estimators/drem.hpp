@@ -89,7 +89,7 @@ namespace sdu_estimators::parameter_estimators
       T Delta = lu.determinant();
 
       // double Delta = phi_f.determinant();
-      std::cout << "Delta " << Delta << std::endl;
+      // std::cout << "Delta " << Delta << std::endl;
 
       if (!std::isfinite(Delta))
         Delta = 0;
