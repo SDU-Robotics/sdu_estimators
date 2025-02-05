@@ -3,6 +3,7 @@ import numpy as np
 from sdu_estimators._sdu_estimators import GradientEstimator_1x1
 from sdu_estimators._sdu_estimators import GradientEstimator_1x2
 from sdu_estimators._sdu_estimators import GradientEstimator_1x3
+from sdu_estimators._sdu_estimators import GradientEstimator_3x6
 # from sdu_estimators._sdu_estimators import GradientEstimator_1x4
 
 from sdu_estimators._sdu_estimators import Kreisselmeier_1x1
