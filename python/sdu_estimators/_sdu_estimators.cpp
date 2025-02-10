@@ -140,14 +140,17 @@ namespace sdu_estimators
     nb_RegressorExtension<double, 1, 1>(m, "_1x1");
     nb_RegressorExtension<double, 1, 2>(m, "_1x2");
     nb_RegressorExtension<double, 1, 3>(m, "_1x3");
+    nb_RegressorExtension<double, 3, 6>(m, "_3x6");
 
     nb_Kreisselmeier<double, 1, 1>(m, "_1x1");
     nb_Kreisselmeier<double, 1, 2>(m, "_1x2");
     nb_Kreisselmeier<double, 1, 3>(m, "_1x3");
+    nb_Kreisselmeier<double, 3, 6>(m, "_3x6");
 
     nb_DREM<double, 1, 1>(m, "_1x1");
     nb_DREM<double, 1, 2>(m, "_1x2");
     nb_DREM<double, 1, 3>(m, "_1x3");
+    nb_DREM<double, 3, 6>(m, "_3x6");
 
     nb_Sphere<double, 3>(m, "_3");
 
