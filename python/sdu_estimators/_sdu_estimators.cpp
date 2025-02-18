@@ -36,7 +36,8 @@ namespace sdu_estimators
       .def(nb::init<float, const Eigen::Vector<T, DIM_P>, const Eigen::Vector<T, DIM_P>, float, parameter_estimators::utils::IntegrationMethod>(),
         nb::arg("dt"), nb::arg("gamma"), nb::arg("theta_init"), nb::arg("r"), nb::arg("integration_method"))
       .def("get_estimate", &Class::get_estimate)
-    .def("step", &Class::step, nb::arg("y"), nb::arg("phi"));
+      .def("step", &Class::step,
+        nb::arg("y"), nb::arg("phi"));
       // .def("step", &Class::step, nb::arg("y"), nb::arg("phi"), nb::arg("method"));
   }
 
@@ -61,6 +62,8 @@ namespace sdu_estimators
     nb::class_<Class, ClassParent>(m, nbclass_name.c_str())
       .def(nb::init<float, float>(),
         nb::arg("dt"), nb::arg("ell"))
+      .def(nb::init<float, float, parameter_estimators::utils::IntegrationMethod>(),
+        nb::arg("dt"), nb::arg("ell"), nb::arg("integration_method"))
       .def("step", &Class::step,
         nb::arg("y"), nb::arg("phi"))
       .def("reset", &Class::reset);
@@ -81,6 +84,9 @@ namespace sdu_estimators
       .def(nb::init<float, const Eigen::Vector<T, DIM_P>, const Eigen::Vector<T, DIM_P>,
                 regressor_extensions::RegressorExtension<T, DIM_N, DIM_P>*, float >(),
                 nb::arg("dt"), nb::arg("gamma"), nb::arg("theta_init"), nb::arg("reg_ext"), nb::arg("r"))
+      .def(nb::init<float, const Eigen::Vector<T, DIM_P>, const Eigen::Vector<T, DIM_P>,
+              regressor_extensions::RegressorExtension<T, DIM_N, DIM_P>*, float, parameter_estimators::utils::IntegrationMethod>(),
+              nb::arg("dt"), nb::arg("gamma"), nb::arg("theta_init"), nb::arg("reg_ext"), nb::arg("r"),  nb::arg("integration_method"))
       .def("get_estimate", &Class::get_estimate)
       .def("step", &Class::step,
         nb::arg("y"), nb::arg("phi"));
@@ -130,7 +136,8 @@ namespace sdu_estimators
 
     nb::enum_<parameter_estimators::utils::IntegrationMethod>(m, "IntegrationMethod")
       .value("Euler", parameter_estimators::utils::IntegrationMethod::Euler)
-      .value("Heuns", parameter_estimators::utils::IntegrationMethod::Heuns);
+      .value("Heuns", parameter_estimators::utils::IntegrationMethod::Heuns)
+      .export_values();
 
     nb_GradientEstimator<double, 1, 1>(m, "_1x1");
     nb_GradientEstimator<double, 1, 2>(m, "_1x2");

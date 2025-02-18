@@ -31,23 +31,28 @@ namespace sdu_estimators::parameter_estimators
 
   public:
     DREM(float dt, const Eigen::Matrix<T, DIM_P, 1> & gamma, const Eigen::Matrix<T, DIM_P, 1> & theta_init,
-      regressor_extensions::RegressorExtension<T, DIM_N, DIM_P> * reg_ext)
-      : DREM(dt, gamma, theta_init, reg_ext, 1.0f)
+      regressor_extensions::RegressorExtension<T, DIM_N, DIM_P> * reg_ext,
+      utils::IntegrationMethod method = utils::IntegrationMethod::Euler)
+      : DREM(dt, gamma, theta_init, reg_ext, 1.0f, method)
     {
     }
 
 
     DREM(float dt, const Eigen::Matrix<T, DIM_P, 1> & gamma, const Eigen::Matrix<T, DIM_P, 1> & theta_init,
-      regressor_extensions::RegressorExtension<T, DIM_N, DIM_P> * reg_ext, float r)
+      regressor_extensions::RegressorExtension<T, DIM_N, DIM_P> * reg_ext, float r,
+      utils::IntegrationMethod method = utils::IntegrationMethod::Euler)
     {
       this->dt = dt;
       this->gamma = gamma;
       this->theta_est = theta_init;
       this->theta_init = theta_init;
       this->dtheta = theta_init * 0;
+      this->dtheta_old = theta_init * 0;
       this->p = theta_init.size();
       this->r = r;
       this->reg_ext = reg_ext;
+
+      this->intg_method = method;
     }
 
     ~DREM()
@@ -65,53 +70,14 @@ namespace sdu_estimators::parameter_estimators
       Eigen::Matrix<T, DIM_P, DIM_P> phi_f = reg_ext->getPhi();
 
       Eigen::HouseholderQR<Eigen::Matrix<T, DIM_P, DIM_P>> qr(phi_f);
-      /*
-      Eigen::SparseLU<Eigen::Matrix<T, DIM_P, DIM_P> > lu_solver;
-      lu_solver.analyzePattern(phi_f);
-      lu_solver.factorize(phi_f);
-
-      double Delta = lu_solver.signDeterminant() * exp(lu_solver.logAbsDeterminant()); // phi_f.determinant();
-      */
-
-      /*
-      Eigen::SparseLU<Eigen::SparseMatrix<T>, Eigen::COLAMDOrdering<int> >   solver;
-      std::cout << "test" << std::endl;
-      solver.analyzePattern(phi_f.sparseView());
-      std::cout << "test2" << std::endl;
-      // solver.factorize(phi_f.sparseView());
-      std::cout << "test3" << std::endl;
-
-      T Delta = solver.signDeterminant() * exp(solver.logAbsDeterminant()); // phi_f.determinant();
-      // T Delta = exp(utils::logdet<Eigen::Matrix<T, DIM_P, DIM_P>>(phi_f, false));
-      */
 
       Eigen::FullPivLU<Eigen::Matrix<T, DIM_P, DIM_P>> lu(phi_f);
       T Delta = lu.determinant();
 
-      // double Delta = phi_f.determinant();
-      // std::cout << "Delta " << Delta << std::endl;
-
       if (!std::isfinite(Delta))
         Delta = 0;
 
-      // Eigen::Matrix<T, DIM_P, DIM_P> phi_tmp = phi_f;
-      // float Yvar_i;
-
       Yvar = lu.solve(Delta * y_f); // To compute phi_f^{-1} * Delta * y_f.
-      // adj(phi_f) = phi_f^{-1} * Delta
-      // Eigen::MatrixXd Yvar = phi_f.inverse() * Delta * y_f;
-
-      // Yvar = Delta * phi_f.inverse() * y_f;
-      // for (int i = 0; i < DIM_P; ++i)
-      // {
-      //   if (Yvar[i] != Yvar[i])  // Element is nan
-      //   {
-      //     // Yvar[i] = 0;
-      //     Yvar *= 0;
-      //     break;
-      //   }
-      // }
-      // adj(phi_f) = Delta * phi_f.inverse()
 
       Eigen::Vector<T, DIM_P> y_err = Yvar - Delta * theta_est;
       Eigen::Vector<T, DIM_P> tmp1 = y_err.array().abs().pow(r);
@@ -119,20 +85,16 @@ namespace sdu_estimators::parameter_estimators
 
       dtheta = gamma.asDiagonal() * Delta * tmp1.cwiseProduct(tmp2);
 
-      /*
-      for (int i = 0; i < DIM_P; ++i)
+      if (intg_method == utils::IntegrationMethod::Euler)
       {
-        phi_tmp(Eigen::all, i) = y_f;
+        theta_est += dt * dtheta;
+      }
+      else if (intg_method == utils::IntegrationMethod::Heuns)
+      {
+        theta_est += (dt / 2.) * (dtheta + dtheta_old);
+      }
 
-        Yvar_i = phi_tmp.determinant();
-
-        y_err_i = Yvar_i - Delta * theta_est[i];
-        dtheta[i] = gamma[i] * Delta * (pow(abs(y_err_i), r) * std::signbit(-y_err_i));
-
-        phi_tmp(Eigen::all, i) = phi_f(Eigen::all, i);
-      } */
-
-      theta_est += dt * dtheta;
+      dtheta_old = dtheta;
     }
 
     /**
@@ -156,7 +118,7 @@ namespace sdu_estimators::parameter_estimators
     float dt{};
     Eigen::Matrix<T, DIM_P, 1> gamma;
     float r{};
-    Eigen::Matrix<T, DIM_P, 1> theta_est, theta_init, dtheta, Yvar;
+    Eigen::Matrix<T, DIM_P, 1> theta_est, theta_init, dtheta, dtheta_old, Yvar;
     Eigen::Matrix<T, DIM_N, 1> y_err;
     int p{}; // number of parameters
 
@@ -166,6 +128,8 @@ namespace sdu_estimators::parameter_estimators
     // T_REG_EXT reg_ext;
     // regressor_extensions::Kreisselmeier<T, DIM_N, DIM_P> reg_ext;
     regressor_extensions::RegressorExtension<T, DIM_N, DIM_P> * reg_ext;
+
+    utils::IntegrationMethod intg_method;
   };
 }
 

@@ -67,11 +67,9 @@ namespace sdu_estimators::parameter_estimators
       this->gamma = gamma;
       this->theta_est = theta_init;
       this->theta_init = theta_init;
+      this->dtheta_old = theta_init * 0;
       this->p = theta_init.size();
       this->r = r;
-
-      this->y_old.setZero();
-      this->phi_old.setZero();
 
       this->intg_method = method;
     }
@@ -86,52 +84,27 @@ namespace sdu_estimators::parameter_estimators
     void step(const Eigen::Matrix<T, DIM_N, 1> &y, const Eigen::Matrix<T, DIM_P, DIM_N> &phi)
       // utils::IntegrationMethod method = utils::IntegrationMethod::Euler)
     {
+      y_err = y - phi.transpose() * theta_est;
+
+      Eigen::Vector<T, DIM_N> tmp1 = y_err.array().abs().pow(r);
+      Eigen::Vector<T, DIM_N> tmp2 = y_err.cwiseSign();
+
+      // std::cout << tmp1 << " " << tmp2 << std::endl;
+
+      dtheta = gamma.asDiagonal() * phi * (
+        tmp1.cwiseProduct(tmp2)
+      );
+
       if (intg_method == utils::IntegrationMethod::Euler)
       {
-        y_err = y - phi.transpose() * theta_est;
-
-        Eigen::Vector<T, DIM_N> tmp1 = y_err.array().abs().pow(r);
-        Eigen::Vector<T, DIM_N> tmp2 = y_err.cwiseSign();
-
-        // std::cout << tmp1 << " " << tmp2 << std::endl;
-
-        dtheta = gamma.asDiagonal() * phi * (
-          tmp1.cwiseProduct(tmp2)
-        );
-
         theta_est += dt * dtheta;
       }
       else if (intg_method == utils::IntegrationMethod::Heuns)
       {
-        /*
-         * Heun's method
-         *
-         * ytilde_{i+1} = y_i + h * f(t_i, y_i)
-         * y_{i + 1} = y_i + h/2 * (f(t_i, y_i) + f(t_{i+1}, ytilde_{i+1}))
-         *
-         * For parameter estimation
-         *
-         * thetatilde_{i+1} = theta_i + h * dtheta(y_i, phi_i, theta_i)
-         * theta_{i+1} = theta_i + (h/2) * (dtheta(y_i, phi_i, theta_i) + dtheta(y_{i+1}, phi_{i+1}, thetatilde_{i+1}))
-         */
-        y_err = y_old - phi_old.transpose() * theta_est;
-        Eigen::Vector<T, DIM_N> tmp1 = y_err.array().abs().pow(r);
-        Eigen::Vector<T, DIM_N> tmp2 = y_err.cwiseSign();
-
-        Eigen::Vector<T, DIM_P> dtheta_old = gamma.asDiagonal() * phi * tmp1.cwiseProduct(tmp2);
-        Eigen::Vector<T, DIM_P> theta_tilde_new = theta_est + dt * dtheta_old;
-
-        y_err = y - phi.transpose() * theta_tilde_new;
-        tmp1 = y_err.array().abs().pow(r);
-        tmp2 = y_err.cwiseSign();
-
-        Eigen::Vector<T, DIM_P> dtheta_new = gamma.asDiagonal() * phi * tmp1.cwiseProduct(tmp2);
-
-        theta_est = theta_est + (dt / 2.) * (dtheta_old + dtheta_new);
-
-        y_old = y;
-        phi_old = phi;
+        theta_est += (dt / 2.) * (dtheta + dtheta_old);
       }
+
+      dtheta_old = dtheta;
     }
 
     /**
@@ -157,10 +130,8 @@ namespace sdu_estimators::parameter_estimators
   private:
     float dt{};
     float r{};
-    Eigen::Vector<T, DIM_P> theta_est, theta_init, dtheta, gamma;
+    Eigen::Vector<T, DIM_P> theta_est, theta_init, dtheta, dtheta_old, gamma;
     Eigen::Vector<T, DIM_N> y_err;
-    Eigen::Vector<T, DIM_N> y_old;
-    Eigen::Matrix<T, DIM_P, DIM_N> phi_old;
     int p{}; // number of parameters
 
     utils::IntegrationMethod intg_method;
