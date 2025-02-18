@@ -99,7 +99,7 @@ namespace sdu_estimators::parameter_estimators
       {
         theta_est += dt * dtheta;
       }
-      else if (intg_method == utils::IntegrationMethod::Heuns)
+      else if (intg_method == utils::IntegrationMethod::Trapezoidal)
       {
         theta_est += (dt / 2.) * (dtheta + dtheta_old);
       }

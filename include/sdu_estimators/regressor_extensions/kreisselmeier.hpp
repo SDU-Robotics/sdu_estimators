@@ -53,7 +53,7 @@ namespace sdu_estimators::regressor_extensions
         this->phi_f += dt * dphi_f;
         this->y_f += dt * dy_f;
       }
-      else if (intg_method == parameter_estimators::utils::IntegrationMethod::Heuns)
+      else if (intg_method == parameter_estimators::utils::IntegrationMethod::Trapezoidal)
       {
         this->phi_f += dt * (dphi_f + dphi_f_old) / 2.;
         this->y_f += dt * (dy_f + dy_f_old) / 2.;

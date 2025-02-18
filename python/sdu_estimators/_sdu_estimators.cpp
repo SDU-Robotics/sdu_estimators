@@ -136,7 +136,7 @@ namespace sdu_estimators
 
     nb::enum_<parameter_estimators::utils::IntegrationMethod>(m, "IntegrationMethod")
       .value("Euler", parameter_estimators::utils::IntegrationMethod::Euler)
-      .value("Heuns", parameter_estimators::utils::IntegrationMethod::Heuns)
+      .value("Trapezoidal", parameter_estimators::utils::IntegrationMethod::Trapezoidal)
       .export_values();
 
     nb_GradientEstimator<double, 1, 1>(m, "_1x1");

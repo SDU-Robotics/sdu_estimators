@@ -22,7 +22,7 @@ int main()
                 2;
 
   sdu_estimators::parameter_estimators::GradientEstimator<double, 1, 2> grad_est(dt, gamma, theta_init, r,
-    sdu_estimators::parameter_estimators::utils::IntegrationMethod::Heuns);
+    sdu_estimators::parameter_estimators::utils::IntegrationMethod::Trapezoidal);
   // sdu_estimators::parameter_estimators::GradientEstimator grad_est(dt, gamma, theta_init);
   std::vector<Eigen::VectorXd> all_theta_est;
   Eigen::VectorXd y;

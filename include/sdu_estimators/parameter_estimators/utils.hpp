@@ -40,7 +40,7 @@ namespace sdu_estimators::parameter_estimators::utils
     enum class IntegrationMethod
     {
       Euler,
-      Heuns
+      Trapezoidal
     };
 }
 
