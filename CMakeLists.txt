@@ -21,7 +21,7 @@ option(BUILD_PYTHON "Enable building of Python bindings" ON)
 option(BUILD_DOCS "Enable building of documentation" ON)
 
 # find dependencies
-find_package (Eigen3 3.3 REQUIRED NO_MODULE)
+find_package(Eigen3 3.3 REQUIRED NO_MODULE)
 
 # compile the library
 add_subdirectory(src)
@@ -32,6 +32,13 @@ add_subdirectory(examples)
 # compile the tests
 include(CTest)
 if(BUILD_TESTING)
+  if(NOT EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/ext/Catch2/CMakeLists.txt)
+    message(
+      FATAL_ERROR
+        "Catch2 submodule not found. Please run 'git submodule update --init --recursive'."
+    )
+  endif()
+
   add_subdirectory(ext/Catch2)
   include(./ext/Catch2/contrib/Catch.cmake)
   add_subdirectory(tests)
@@ -42,48 +49,53 @@ if(BUILD_DOCS)
   add_subdirectory(doc)
 endif()
 if(BUILD_PYTHON)
-  if (CMAKE_VERSION VERSION_LESS 3.18)
+  if(NOT EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/ext/nanobind/CMakeLists.txt)
+    message(
+      FATAL_ERROR
+        "nanobind submodule not found. Please run 'git submodule update --init --recursive'."
+    )
+  endif()
+
+  if(CMAKE_VERSION VERSION_LESS 3.18)
     set(DEV_MODULE Development)
   else()
     set(DEV_MODULE Development.Module)
   endif()
 
-  find_package(Python 3.8 COMPONENTS Interpreter ${DEV_MODULE} REQUIRED)
+  find_package(
+    Python 3.8
+    COMPONENTS Interpreter ${DEV_MODULE}
+    REQUIRED)
 
   # Add Python bindings
   add_subdirectory(ext/nanobind)
 
   # Compile the nanobind module
-  nanobind_add_module(_sdu_estimators
-          python/sdu_estimators/_sdu_estimators.cpp)
+  nanobind_add_module(_sdu_estimators python/sdu_estimators/_sdu_estimators.cpp)
 
   target_link_libraries(_sdu_estimators PUBLIC sdu_estimators)
 
   install(TARGETS _sdu_estimators DESTINATION ".")
 
   nanobind_add_stub(
-          _sdu_estimators
-          INSTALL_TIME
-          MODULE _sdu_estimators
-          OUTPUT _sdu_estimators.pyi
-          MARKER_FILE py.typed
-          PYTHON_PATH "."
-  )
+    _sdu_estimators
+    INSTALL_TIME
+    MODULE
+    _sdu_estimators
+    OUTPUT
+    _sdu_estimators.pyi
+    MARKER_FILE
+    py.typed
+    PYTHON_PATH
+    ".")
 
-#  nanobind_add_stub(
-#          _sdu_estimators_stub
-#          INSTALL_TIME
-#          MODULE _sdu_estimators
-#          OUTPUT _sdu_estimators.pyi
-#          PYTHON_PATH $<TARGET_FILE_DIR:_sdu_estimators>
-#          DEPENDS _sdu_estimators
-#          MARKER_FILE ${CMAKE_CURRENT_SOURCE_DIR}/py.typed
-#  )
+  # nanobind_add_stub( _sdu_estimators_stub INSTALL_TIME MODULE _sdu_estimators
+  # OUTPUT _sdu_estimators.pyi PYTHON_PATH $<TARGET_FILE_DIR:_sdu_estimators>
+  # DEPENDS _sdu_estimators MARKER_FILE ${CMAKE_CURRENT_SOURCE_DIR}/py.typed )
 
   # Install the Python module shared library
 
-
-#  install(FILES py.typed _sdu_estimators.pyi DESTINATION ".")
+  # install(FILES py.typed _sdu_estimators.pyi DESTINATION ".")
 
 endif()
 
