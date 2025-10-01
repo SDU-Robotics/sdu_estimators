@@ -1,29 +1,25 @@
-add_executable(example_gradient_estimator example_gradient_estimator.cpp)
-target_link_libraries(example_gradient_estimator PRIVATE sdu_estimators)
+macro(add_example example_name folder)
+    if(folder STREQUAL "")
+        set(folder ".")
+    endif()
+    add_executable(${example_name} ${folder}/${example_name}.cpp)
+    target_link_libraries(${example_name} PRIVATE sdu_estimators)
+endmacro()
 
-add_executable(example_DREM_estimator example_DREM_estimator.cpp)
-target_link_libraries(example_DREM_estimator PRIVATE sdu_estimators)
-
-add_executable(example_SS state_estimators/example_SS.cpp)
-target_link_libraries(example_SS PRIVATE sdu_estimators)
-
-add_executable(example_luenberger state_estimators/example_luenberger.cpp)
-target_link_libraries(example_luenberger PRIVATE sdu_estimators)
-
-add_executable(example_UIO state_estimators/example_UIO.cpp)
-target_link_libraries(example_UIO PRIVATE sdu_estimators)
+add_example(example_gradient_estimator ".")
+add_example(example_DREM_estimator ".")
+add_example(example_SS "state_estimators")
+add_example(example_luenberger "state_estimators")
+add_example(example_momentum_observer "state_estimators")
+add_example(example_UIO "state_estimators")
 
 # increase stack size
-add_executable(example_beam structural_parameters/example_beam.cpp)
-target_link_libraries(example_beam PRIVATE sdu_estimators)
+add_example(example_beam "structural_parameters")
 target_compile_definitions(example_beam PRIVATE EIGEN_STACK_ALLOCATION_LIMIT=0)
 
 #add_executable(example_utils state_estimators/example_utils.cpp)
 #target_link_libraries(example_utils PRIVATE sdu_estimators)
 
 # manifolds
-add_executable(example_gradient_estimator_sphere manifold/example_gradient_estimator_sphere.cpp)
-target_link_libraries(example_gradient_estimator_sphere PRIVATE sdu_estimators)
-
-add_executable(test_manifold manifold/test_manifold_init.cpp)
-target_link_libraries(test_manifold PRIVATE sdu_estimators)
+add_example(example_gradient_estimator_sphere "manifold")
+add_example(test_manifold_init "manifold")
