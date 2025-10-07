@@ -4,7 +4,7 @@
 #define PARAMETERESTIMATOR_HPP
 
 #include <cstdint>
-#include <Eigen/Dense>
+#include <Eigen/Core>
 
 namespace sdu_estimators::parameter_estimators
 {
