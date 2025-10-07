@@ -36,11 +36,11 @@ del metadata
 
 def DREM(dt, gamma, theta_init, regressor_extension, r = 1.):
     # assert gamma.size() == theta_init.size()
-    DIM_P = 1
+    dim_p = 1
     if isinstance(theta_init, (np.ndarray, list)):
-        DIM_P = len(theta_init)
-        
-    match DIM_P:
+        dim_p = len(theta_init)
+
+    match dim_p:
         case 1:
             theta_init = np.asarray([theta_init])
             gamma = np.asarray([gamma])
@@ -54,15 +54,15 @@ def DREM(dt, gamma, theta_init, regressor_extension, r = 1.):
             return DREM_1x3(dt, gamma, theta_init, regressor_extension, r)
 
         case _:
-            raise ValueError(f"Wrong p-dimension. {DIM_P} is not supported.")
+            raise ValueError(f"Wrong p-dimension. {dim_p} is not supported.")
 
 def Gradient(dt, gamma, theta_init, r = 1.):
     # assert gamma.size() == theta_init.size()
-    DIM_P = 1
+    dim_p = 1
     if isinstance(theta_init, (np.ndarray, list)):
-        DIM_P = len(theta_init)
+        dim_p = len(theta_init)
 
-    match DIM_P:
+    match dim_p:
         case 1:
             theta_init = np.asarray([theta_init])
             gamma = np.asarray([gamma])
@@ -76,4 +76,4 @@ def Gradient(dt, gamma, theta_init, r = 1.):
             return GradientEstimator_1x3(dt, gamma, theta_init, r)
 
         case _:
-            raise ValueError(f"Wrong p-dimension. {DIM_P} is not supported.")
+            raise ValueError(f"Wrong p-dimension. {dim_p} is not supported.")
