@@ -3,24 +3,26 @@
 #ifndef SPHERE_HPP
 #define SPHERE_HPP
 
+#include <cstdint>
 #include <iostream>
 
 #include "manifold.hpp"
 
 namespace sdu_estimators::math::manifold
 {
-  #define point Eigen::Vector<T, DIM_N>
-  #define vector Eigen::Vector<T, DIM_N>
+
 
   /**
    * Point: A n vector with unit length.
    *
    * Vector: A n tangent vector.
    */
-  template <typename T, int32_t DIM_N>
-  class Sphere : Manifold<T, point, vector>
+  template<typename T, std::int32_t DIM_N>
+  class Sphere : Manifold<T, Eigen::Vector<T, DIM_N>, Eigen::Vector<T, DIM_N>>
   {
-  public:
+   public:
+    using point = Eigen::Vector<T, DIM_N>;
+    using vector = Eigen::Vector<T, DIM_N>;
     Sphere()
     {
       // std::cout << "constructed" << std::endl;
@@ -108,8 +110,8 @@ namespace sdu_estimators::math::manifold
     }
   };
 
-  #undef point
-  #undef vector
-}
+#undef point
+#undef vector
+}  // namespace sdu_estimators::math::manifold
 
-#endif //SPHERE_HPP
+#endif  // SPHERE_HPP

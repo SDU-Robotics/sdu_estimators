@@ -2,6 +2,7 @@
 #ifndef DREM_HPP
 #define DREM_HPP
 
+#include <cstdint>
 #include <sdu_estimators/parameter_estimators/parameter_estimator.hpp>
 // #include <sdu_estimators/regressor_extensions/kreisselmeier.hpp>
 #include <iostream>
@@ -23,7 +24,7 @@ namespace sdu_estimators::parameter_estimators
    *
    */
 
-  template <typename T, int32_t DIM_N, int32_t DIM_P>
+  template <typename T, std::int32_t DIM_N, std::int32_t DIM_P>
   class DREM : public ParameterEstimator<T, DIM_N, DIM_P>
   {
   // static_assert(std::is_base_of_v<regressor_extensions::RegressorExtension, T_REG_EXT>,

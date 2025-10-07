@@ -3,26 +3,27 @@
 #ifndef SYMMETRICPOSITIVEDEFINITE_HPP
 #define SYMMETRICPOSITIVEDEFINITE_HPP
 
+#include <cstdint>
 #include <iostream>
+#include <unsupported/Eigen/MatrixFunctions>
 
 #include "manifold.hpp"
-#include <unsupported/Eigen/MatrixFunctions>
 
 namespace sdu_estimators::math::manifold
 {
-  #define point Eigen::Matrix<T, n, n>  // an PSD matrix
-  #define vector Eigen::Matrix<T, n, n> // a matrix
-
 
   /**
    * Point: A PSD n x n matrix.
    *
    * Vector: A n x n matrix.
    */
-  template <typename T, int32_t n>
-  class SymmetricPositiveDefinite : Manifold<T, point, vector>
+  template<typename T, int32_t n>
+  class SymmetricPositiveDefinite : Manifold<T, Eigen::Matrix<T, n, n>, Eigen::Matrix<T, n, n>>
   {
-  public:
+   public:
+    using point = Eigen::Matrix<T, n, n>;   // an PSD matrix
+    using vector = Eigen::Matrix<T, n, n>;  // a matrix
+
     SymmetricPositiveDefinite()
     {
       // std::cout << "constructed" << std::endl;
@@ -105,13 +106,13 @@ namespace sdu_estimators::math::manifold
       return symm(tmp);
     }
 
-  private:
-    point symm(point & X)
+   private:
+    point symm(point &X)
     {
       return 0.5 * (X + X.transpose());
     }
 
-    T traceAB(point & A, point & B)
+    T traceAB(point &A, point &B)
     {
       // Eigen::Vector<T, n * n> vecA = A.reshaped(1, n * n).transpose();
       point AB = A * B;
@@ -119,14 +120,14 @@ namespace sdu_estimators::math::manifold
       return out;
     }
 
-    T traceAA(point & A)
+    T traceAA(point &A)
     {
       return sqrt(traceAB(A, A));
     }
   };
 
-  #undef point
-  #undef vector
-}
+#undef point
+#undef vector
+}  // namespace sdu_estimators::math::manifold
 
-#endif // SYMMETRICPOSITIVEDEFINITE_HPP
+#endif  // SYMMETRICPOSITIVEDEFINITE_HPP

@@ -3,6 +3,7 @@
 #ifndef PARAMETERESTIMATOR_HPP
 #define PARAMETERESTIMATOR_HPP
 
+#include <cstdint>
 #include <Eigen/Dense>
 
 namespace sdu_estimators::parameter_estimators
@@ -19,7 +20,7 @@ namespace sdu_estimators::parameter_estimators
  * and \f$ \theta : \mathbb{R}_+ \to \mathbb{R}^p \f$ is the parameter vector.
  *
  */
-template <typename T, int32_t DIM_N, int32_t DIM_P>
+template <typename T, std::int32_t DIM_N, std::int32_t DIM_P>
 class ParameterEstimator
 {
 public:

@@ -2,6 +2,7 @@
 #ifndef GRADIENT_ESTIMATOR_HPP
 #define GRADIENT_ESTIMATOR_HPP
 
+#include <cstdint>
 #include <sdu_estimators/parameter_estimators/parameter_estimator.hpp>
 #include <sdu_estimators/parameter_estimators/utils.hpp>
 
@@ -19,15 +20,16 @@ namespace sdu_estimators::parameter_estimators
    *    \dot{\hat{\theta}}(t) = \gamma \phi(t) (y(t) - \phi^\intercal(t) \hat{\theta}(t)),
    * \f}
    *
-   * where \f$ \gamma > 0 \f$ is a tuning parameter, \f$ y : \mathbb{R}_+ \to \mathbb{R}^n \f$ is the output, \f$ \phi : \mathbb{R}_+ \to \mathbb{R}^{m \times n} \f$ is,
-   * the regressor matrix and \f$ \theta : \mathbb{R}_+ \to \mathbb{R}^m \f$ is the parameter vector.
+   * where \f$ \gamma > 0 \f$ is a tuning parameter, \f$ y : \mathbb{R}_+ \to \mathbb{R}^n \f$ is the output, \f$ \phi :
+   * \mathbb{R}_+ \to \mathbb{R}^{m \times n} \f$ is, the regressor matrix and \f$ \theta : \mathbb{R}_+ \to \mathbb{R}^m \f$
+   * is the parameter vector.
    *
    */
 
-  template <typename T, int32_t DIM_N, int32_t DIM_P>
+  template<typename T, std::int32_t DIM_N, std::int32_t DIM_P>
   class GradientEstimator : public ParameterEstimator<T, DIM_N, DIM_P>
   {
-  public:
+   public:
     /**
      * @brief Constructor for the default gradient-based update rule.
      *
@@ -35,9 +37,12 @@ namespace sdu_estimators::parameter_estimators
      * @param gamma \f$ \gamma \in \mathbb{R}^p \f$ is the vector of gains.
      * @param theta_init The initial value of the parameter estimate \f$ \hat{\theta}(0) \f$.
      */
-    GradientEstimator(float dt, const Eigen::Vector<T, DIM_P> gamma, const Eigen::Vector<T, DIM_P> & theta_init,
-       utils::IntegrationMethod method = utils::IntegrationMethod::Euler)
-      : GradientEstimator(dt, gamma, theta_init, 1.0f, method)
+    GradientEstimator(
+        float dt,
+        const Eigen::Vector<T, DIM_P> gamma,
+        const Eigen::Vector<T, DIM_P> &theta_init,
+        utils::IntegrationMethod method = utils::IntegrationMethod::Euler)
+        : GradientEstimator(dt, gamma, theta_init, 1.0f, method)
     {
     }
     //
@@ -60,18 +65,21 @@ namespace sdu_estimators::parameter_estimators
      * @param theta_init The initial value of the parameter estimate \f$ \hat{\theta}(0) \f$.
      * @param r The value of the coefficient, \f$ r \in (0,1) \f$.
      */
-    GradientEstimator(float dt, const Eigen::Vector<T, DIM_P> gamma, const Eigen::Vector<T, DIM_P> & theta_init, float r,
-      utils::IntegrationMethod method = utils::IntegrationMethod::Euler)
+    GradientEstimator(
+        float dt,
+        const Eigen::Vector<T, DIM_P> gamma,
+        const Eigen::Vector<T, DIM_P> &theta_init,
+        float r,
+        utils::IntegrationMethod method = utils::IntegrationMethod::Euler)
+        : dt(dt),
+          r(r),
+          gamma(gamma),
+          theta_est(theta_init),
+          theta_init(theta_init),
+          dtheta_old(theta_init * 0),
+          p(theta_init.size()),
+          intg_method(method)
     {
-      this->dt = dt;
-      this->gamma = gamma;
-      this->theta_est = theta_init;
-      this->theta_init = theta_init;
-      this->dtheta_old = theta_init * 0;
-      this->p = theta_init.size();
-      this->r = r;
-
-      this->intg_method = method;
     }
 
     ~GradientEstimator()
@@ -82,7 +90,7 @@ namespace sdu_estimators::parameter_estimators
      * @brief Step the execution of the estimator (must be called in a loop externally)
      */
     void step(const Eigen::Matrix<T, DIM_N, 1> &y, const Eigen::Matrix<T, DIM_P, DIM_N> &phi)
-      // utils::IntegrationMethod method = utils::IntegrationMethod::Euler)
+    // utils::IntegrationMethod method = utils::IntegrationMethod::Euler)
     {
       y_err = y - phi.transpose() * theta_est;
 
@@ -91,9 +99,7 @@ namespace sdu_estimators::parameter_estimators
 
       // std::cout << tmp1 << " " << tmp2 << std::endl;
 
-      dtheta = gamma.asDiagonal() * phi * (
-        tmp1.cwiseProduct(tmp2)
-      );
+      dtheta = gamma.asDiagonal() * phi * (tmp1.cwiseProduct(tmp2));
 
       if (intg_method == utils::IntegrationMethod::Euler)
       {
@@ -127,15 +133,15 @@ namespace sdu_estimators::parameter_estimators
       // }
     }
 
-  private:
-    float dt{};
-    float r{};
+   private:
+    float dt;
+    float r;
     Eigen::Vector<T, DIM_P> theta_est, theta_init, dtheta, dtheta_old, gamma;
     Eigen::Vector<T, DIM_N> y_err;
-    int p{}; // number of parameters
+    int p;  // number of parameters
 
     utils::IntegrationMethod intg_method;
   };
-}
+}  // namespace sdu_estimators::parameter_estimators
 
-#endif //GRADIENT_ESTIMATOR_HPP
+#endif  // GRADIENT_ESTIMATOR_HPP
