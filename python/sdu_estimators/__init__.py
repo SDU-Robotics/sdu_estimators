@@ -36,11 +36,10 @@ del metadata
 
 def DREM(dt, gamma, theta_init, regressor_extension, r = 1.):
     # assert gamma.size() == theta_init.size()
+    DIM_P = 1
     if isinstance(theta_init, (np.ndarray, list)):
         DIM_P = len(theta_init)
-    else:
-        DIM_P = 1.
-
+        
     match DIM_P:
         case 1:
             theta_init = np.asarray([theta_init])
@@ -59,10 +58,9 @@ def DREM(dt, gamma, theta_init, regressor_extension, r = 1.):
 
 def Gradient(dt, gamma, theta_init, r = 1.):
     # assert gamma.size() == theta_init.size()
+    DIM_P = 1
     if isinstance(theta_init, (np.ndarray, list)):
         DIM_P = len(theta_init)
-    else:
-        DIM_P = 1.
 
     match DIM_P:
         case 1:
