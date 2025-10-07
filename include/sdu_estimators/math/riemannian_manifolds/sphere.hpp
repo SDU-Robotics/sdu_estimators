@@ -3,16 +3,17 @@
 #ifndef SPHERE_HPP
 #define SPHERE_HPP
 
-#define _USE_MATH_DEFINES
 #include <cstdint>
 #include <iostream>
 #include <cmath>
-
 #include "manifold.hpp"
+
+#ifndef M_PI
+#define M_PI 3.1415926535897932384626433832
+#endif
 
 namespace sdu_estimators::math::manifold
 {
-
 
   /**
    * Point: A n vector with unit length.
