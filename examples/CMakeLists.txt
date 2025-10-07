@@ -6,6 +6,11 @@ macro(add_example example_name folder)
     target_link_libraries(${example_name} PRIVATE sdu_estimators)
 endmacro()
 
+if(MSVC)
+  add_compile_options(/bigobj)
+endif()
+
+
 add_example(example_gradient_estimator ".")
 add_example(example_DREM_estimator ".")
 add_example(example_SS "state_estimators")
