@@ -19,7 +19,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, macos-13, windows-latest]
-        build-type: [ Debug, RelWithDebInfo ]
+        build-type: [ Debug ]
         compiler: [ gcc, clang ]
         exclude:
           # Only default compiler on macos-latest and windows-latest
@@ -90,7 +90,7 @@ jobs:
       uses: pyvista/setup-headless-display-action@v3
 
     - name: install dependencies
-      uses: jrl-umi3218/github-actions/install-dependencies@master
+      uses: SDU-Robotics/github-actions/install-dependencies@master
       with:
         compiler: ${{ matrix.compiler }}
         build-type: ${{ matrix.build-type }}
@@ -99,9 +99,9 @@ jobs:
         macos: |
           brew: eigen
         windows: |
-          github:
-            - path: eigenteam/eigen-git-mirror
-              ref: 3.3.7
+          gitlab:
+            - path: libeigen/eigen
+              ref: 3.4.0
 
     - name: Set up Python
       uses: actions/setup-python@v5
