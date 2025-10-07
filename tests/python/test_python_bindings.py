@@ -6,11 +6,6 @@ matplotlib.use('TkAgg')
 import matplotlib.pyplot as plt
 
 
-def test_sdu_estimators():
-    assert sdu_estimators.add_one(1) == 2
-    assert sdu_estimators.one_plus_one() == 2
-
-
 def test_gradient():
     import numpy as np
     import time
@@ -24,7 +19,7 @@ def test_gradient():
     theta_true = np.array([1, 2, 3])
     r = 0.5
 
-    integration_method = sdu_estimators.IntegrationMethod.Heuns
+    integration_method = sdu_estimators.IntegrationMethod.Euler
     GradientEstimator = sdu_estimators.GradientEstimator_1x3(dt, gamma, theta_init, r, integration_method)
     print(GradientEstimator)
     print(GradientEstimator.get_estimate())

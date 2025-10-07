@@ -85,7 +85,10 @@ jobs:
 
       with:
         submodules: 'recursive'
-    - uses: pyvista/setup-headless-display-action@v3
+
+    - name: Setup headless display
+      uses: pyvista/setup-headless-display-action@v3
+      
     - name: install dependencies
       uses: jrl-umi3218/github-actions/install-dependencies@master
       with:
