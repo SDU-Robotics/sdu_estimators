@@ -1,7 +1,11 @@
 #include <Eigen/Core>
+#include <cmath>
 #include <iostream>
 #include <sdu_estimators/state_estimators/momentum_observer.hpp>
 
+#ifndef M_PI
+#define M_PI 3.1415926535897932384626433832
+#endif
 
 /**
  * @brief Dummy robot model for testing the momentum observer.
@@ -39,9 +43,9 @@ class RobotModel
 
 /**
  * @brief Placeholder function to simulate getting joint positions and velocities.
- * @param t 
- * @param size 
- * @return std::pair<Eigen::VectorXd, Eigen::VectorXd> 
+ * @param t
+ * @param size
+ * @return std::pair<Eigen::VectorXd, Eigen::VectorXd>
  */
 std::pair<Eigen::VectorXd, Eigen::VectorXd> getPositionAndVelocity(double t, size_t size)
 {
@@ -60,12 +64,13 @@ std::pair<Eigen::VectorXd, Eigen::VectorXd> getPositionAndVelocity(double t, siz
 
 /**
  * @brief Placeholder function to simulate measuring joint torques.
- * 
- * @param t 
- * @param size 
- * @return Eigen::VectorXd 
+ *
+ * @param t
+ * @param size
+ * @return Eigen::VectorXd
  */
-Eigen::VectorXd measureTorque(double t,size_t size) {
+Eigen::VectorXd measureTorque(double t, size_t size)
+{
   Eigen::VectorXd tau(size);
 
   // create a sinus path for all joints, let the speed be 0.25 radians per
@@ -73,7 +78,6 @@ Eigen::VectorXd measureTorque(double t,size_t size) {
   for (size_t i = 0; i < size; i++)
   {
     tau[i] = -3 * M_PI * M_PI * cos(t * M_PI + i);
-
   }
   return tau;
 }
@@ -85,15 +89,14 @@ int main()
   sdu_estimators::state_estimators::MomentumObserver observer(
       std::make_shared<RobotModel>(dof), dt, Eigen::VectorXd::Constant(dof, 1.0));
 
-
-      int IMax = 1.0 / dt;
+  int IMax = 1.0 / dt;
   for (int i = 0; i < IMax; ++i)
   {
     double t = i * dt;
     // Get the current position and velocity of the system
     auto [q, qd] = getPositionAndVelocity(t, dof);
     // Measure the Joint torques
-    Eigen::VectorXd tau_m = measureTorque(t,dof);
+    Eigen::VectorXd tau_m = measureTorque(t, dof);
     // Update the observer with the new measurements
     observer.update(q, qd, tau_m);
 
