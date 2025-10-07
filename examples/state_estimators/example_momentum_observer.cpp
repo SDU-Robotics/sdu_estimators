@@ -85,8 +85,11 @@ int main()
   sdu_estimators::state_estimators::MomentumObserver observer(
       std::make_shared<RobotModel>(dof), dt, Eigen::VectorXd::Constant(dof, 1.0));
 
-  for (double t = 0; t < 1; t += dt)
+
+      int IMax = 1.0 / dt;
+  for (int i = 0; i < IMax; ++i)
   {
+    double t = i * dt;
     // Get the current position and velocity of the system
     auto [q, qd] = getPositionAndVelocity(t, dof);
     // Measure the Joint torques
