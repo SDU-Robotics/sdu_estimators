@@ -17,7 +17,7 @@ namespace sdu_estimators::math::manifold
    *
    * Vector: A n x n matrix.
    */
-  template<typename T, int32_t n>
+  template<typename T, std::int32_t n>
   class SymmetricPositiveDefinite : Manifold<T, Eigen::Matrix<T, n, n>, Eigen::Matrix<T, n, n>>
   {
    public:
@@ -125,9 +125,6 @@ namespace sdu_estimators::math::manifold
       return sqrt(traceAB(A, A));
     }
   };
-
-#undef point
-#undef vector
 }  // namespace sdu_estimators::math::manifold
 
 #endif  // SYMMETRICPOSITIVEDEFINITE_HPP

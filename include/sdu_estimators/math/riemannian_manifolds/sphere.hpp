@@ -109,9 +109,6 @@ namespace sdu_estimators::math::manifold
       return factor * v;
     }
   };
-
-#undef point
-#undef vector
 }  // namespace sdu_estimators::math::manifold
 
 #endif  // SPHERE_HPP
