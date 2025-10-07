@@ -5,7 +5,7 @@
 
 #include <cstdint>
 #include <iostream>
-#include <cmath>
+#include <math.h>
 
 #include "manifold.hpp"
 
