@@ -2,6 +2,7 @@
 #ifndef GRADIENT_ESTIMATOR_SPHERE_HPP
 #define GRADIENT_ESTIMATOR_SPHERE_HPP
 
+#include <Eigen/Core>
 #include <cstdint>
 #include <sdu_estimators/math/riemannian_manifolds/sphere.hpp>
 #include <sdu_estimators/parameter_estimators/parameter_estimator.hpp>
@@ -25,13 +26,12 @@ namespace sdu_estimators::parameter_estimators
      * @param theta_init The initial value of the parameter estimate \f$ \hat{\theta}(0) \f$.
      */
     GradientEstimatorSphere(double dt, double gamma, const Eigen::Vector<T, DIM_P> &theta_init)
+        : dt(dt),
+          gamma(gamma),
+          theta_est(theta_init),
+          theta_init(theta_init),
+          p(DIM_P)
     {
-      this->dt = dt;
-      this->gamma = gamma;
-      this->theta_est = theta_init;
-      this->theta_init = theta_init;
-      // this->p = theta_init.size();
-      this->p = DIM_P;
     }
 
     ~GradientEstimatorSphere()
@@ -75,7 +75,7 @@ namespace sdu_estimators::parameter_estimators
     Eigen::Vector<T, DIM_P> theta_est, theta_init, dtheta;
     Eigen::Vector<T, DIM_N> y_err, y_old;
     Eigen::Matrix<T, DIM_P, DIM_N> phi_old;
-    int p{};  // number of parameters
+    int p;  // number of parameters
 
     math::manifold::Sphere<T, DIM_P> sphere_manifold;
   };
