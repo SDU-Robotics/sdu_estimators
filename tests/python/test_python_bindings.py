@@ -4,6 +4,7 @@ import matplotlib
 matplotlib.use('TkAgg')
 
 import matplotlib.pyplot as plt
+import os
 
 
 def test_gradient():
@@ -42,10 +43,10 @@ def test_gradient():
     print(f"duration: {(after - before)*1000} ms")
 
     print(GradientEstimator.get_estimate())
-
-    plt.figure()
-    plt.plot(all_theta_est)
-    plt.grid()
+    if(os.name != 'nt'):
+        plt.figure()
+        plt.plot(all_theta_est)
+        plt.grid()
 
 
 def test_KRE():
@@ -82,9 +83,9 @@ def test_KRE():
 
     after = time.time()
     print(f"duration: {(after - before)*1000} ms")
-
-    plt.figure()
-    plt.plot(all_Y)
+    if(os.name != 'nt'):
+        plt.figure()
+        plt.plot(all_Y)
 
 def test_DREM():
     import numpy as np
@@ -125,9 +126,10 @@ def test_DREM():
 
     print(solver.get_estimate())
 
-    plt.figure()
-    plt.plot(tvec, all_theta_est)
-    plt.grid()
+    if(os.name != 'nt'):
+        plt.figure()
+        plt.plot(tvec, all_theta_est)
+        plt.grid()
 
 
 def main():
