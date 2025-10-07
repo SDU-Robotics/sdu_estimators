@@ -11,6 +11,7 @@
 #include <sdu_estimators/math/riemannian_manifolds/sphere.hpp>
 #include <sdu_estimators/parameter_estimators/gradient_estimator_sphere.hpp>
 #include <sdu_estimators/state_estimators/momentum_observer.hpp>
+#include <cstdint>
 
 namespace nb = nanobind;
 
@@ -21,7 +22,7 @@ namespace nb = nanobind;
 
 namespace sdu_estimators
 {
-  template<typename T, int32_t DIM_N, int32_t DIM_P>
+  template<typename T, std::int32_t DIM_N, std::int32_t DIM_P>
   void nb_GradientEstimator(nb::module_ m, const std::string& typestr)
   {
     using Class = parameter_estimators::GradientEstimator<T, DIM_N, DIM_P>;
@@ -58,7 +59,7 @@ namespace sdu_estimators
     // .def("step", &Class::step, nb::arg("y"), nb::arg("phi"), nb::arg("method"));
   }
 
-  template<typename T, int32_t DIM_N, int32_t DIM_P>
+  template<typename T, std::int32_t DIM_N, std::int32_t DIM_P>
   void nb_RegressorExtension(nb::module_ m, const std::string& typestr)
   {
     using Class = regressor_extensions::RegressorExtension<T, DIM_N, DIM_P>;
@@ -67,7 +68,7 @@ namespace sdu_estimators
     nb::class_<Class>(m, nbclass_name.c_str()).def("getY", &Class::getY).def("getPhi", &Class::getPhi);
   }
 
-  template<typename T, int32_t DIM_N, int32_t DIM_P>
+  template<typename T, std::int32_t DIM_N, std::int32_t DIM_P>
   void nb_Kreisselmeier(nb::module_ m, const std::string& typestr)
   {
     using Class = regressor_extensions::Kreisselmeier<T, DIM_N, DIM_P>;
@@ -85,7 +86,7 @@ namespace sdu_estimators
         .def("reset", &Class::reset);
   }
 
-  template<typename T, int32_t DIM_N, int32_t DIM_P>
+  template<typename T, std::int32_t DIM_N, std::int32_t DIM_P>
   void nb_DREM(nb::module_ m, const std::string& typestr)
   {
     using Class = parameter_estimators::DREM<T, DIM_N, DIM_P>;
@@ -134,7 +135,7 @@ namespace sdu_estimators
         .def("step", &Class::step, nb::arg("y"), nb::arg("phi"));
   }
 
-  template<typename T, int32_t DIM_N>
+  template<typename T, std::int32_t DIM_N>
   void nb_Sphere(nb::module_ m, const std::string& typestr)
   {
     using Class = math::manifold::Sphere<T, DIM_N>;
@@ -154,7 +155,7 @@ namespace sdu_estimators
         .def("log", &Class::log, nb::arg("point_a"), nb::arg("point_b"));
   }
 
-  template<typename T, int32_t DIM_N, int32_t DIM_P>
+  template<typename T, std::int32_t DIM_N, std::int32_t DIM_P>
   void nb_GradientEstimatorSphere(nb::module_ m, const std::string& typestr)
   {
     using Class = parameter_estimators::GradientEstimatorSphere<T, DIM_N, DIM_P>;
