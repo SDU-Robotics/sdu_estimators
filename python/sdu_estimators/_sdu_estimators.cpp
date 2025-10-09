@@ -10,7 +10,6 @@
 // manifold
 #include <sdu_estimators/math/riemannian_manifolds/sphere.hpp>
 #include <sdu_estimators/parameter_estimators/gradient_estimator_sphere.hpp>
-#include <sdu_estimators/state_estimators/momentum_observer.hpp>
 #include <cstdint>
 
 namespace nb = nanobind;
