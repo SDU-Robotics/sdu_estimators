@@ -15,7 +15,6 @@ add_example(example_gradient_estimator ".")
 add_example(example_DREM_estimator ".")
 add_example(example_SS "state_estimators")
 add_example(example_luenberger "state_estimators")
-add_example(example_momentum_observer "state_estimators")
 add_example(example_UIO "state_estimators")
 
 # increase stack size
