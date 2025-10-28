@@ -21,8 +21,7 @@ add_example(example_UIO "state_estimators")
 add_example(example_beam "structural_parameters")
 target_compile_definitions(example_beam PRIVATE EIGEN_STACK_ALLOCATION_LIMIT=0)
 
-#add_executable(example_utils state_estimators/example_utils.cpp)
-#target_link_libraries(example_utils PRIVATE sdu_estimators)
+add_example(example_utils "state_estimators")
 
 # manifolds
 add_example(example_gradient_estimator_sphere "manifold")
