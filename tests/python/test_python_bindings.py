@@ -4,11 +4,7 @@ import matplotlib
 matplotlib.use('TkAgg')
 
 import matplotlib.pyplot as plt
-
-
-def test_sdu_estimators():
-    assert sdu_estimators.add_one(1) == 2
-    assert sdu_estimators.one_plus_one() == 2
+import os
 
 
 def test_gradient():
@@ -24,7 +20,7 @@ def test_gradient():
     theta_true = np.array([1, 2, 3])
     r = 0.5
 
-    integration_method = sdu_estimators.IntegrationMethod.Heuns
+    integration_method = sdu_estimators.IntegrationMethod.Euler
     GradientEstimator = sdu_estimators.GradientEstimator_1x3(dt, gamma, theta_init, r, integration_method)
     print(GradientEstimator)
     print(GradientEstimator.get_estimate())
@@ -47,10 +43,10 @@ def test_gradient():
     print(f"duration: {(after - before)*1000} ms")
 
     print(GradientEstimator.get_estimate())
-
-    plt.figure()
-    plt.plot(all_theta_est)
-    plt.grid()
+    if(os.name != 'nt'):
+        plt.figure()
+        plt.plot(all_theta_est)
+        plt.grid()
 
 
 def test_KRE():
@@ -87,9 +83,9 @@ def test_KRE():
 
     after = time.time()
     print(f"duration: {(after - before)*1000} ms")
-
-    plt.figure()
-    plt.plot(all_Y)
+    if(os.name != 'nt'):
+        plt.figure()
+        plt.plot(all_Y)
 
 def test_DREM():
     import numpy as np
@@ -130,9 +126,10 @@ def test_DREM():
 
     print(solver.get_estimate())
 
-    plt.figure()
-    plt.plot(tvec, all_theta_est)
-    plt.grid()
+    if(os.name != 'nt'):
+        plt.figure()
+        plt.plot(tvec, all_theta_est)
+        plt.grid()
 
 
 def main():

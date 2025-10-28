@@ -3,6 +3,7 @@
 #define PARAMETER_ESTIMATORS_UTILS_HPP
 
 #include <Eigen/Dense>
+#include <cmath>
 
 
 namespace sdu_estimators::parameter_estimators::utils
@@ -14,25 +15,25 @@ namespace sdu_estimators::parameter_estimators::utils
     template <typename MatrixType>
     inline typename MatrixType::Scalar logdet(const MatrixType& M, bool use_cholesky = false) {
         using namespace Eigen;
-        using std::log;
         typedef typename MatrixType::Scalar Scalar;
+
         Scalar ld = 0;
         if (use_cholesky) {
             LLT<Matrix<Scalar,Dynamic,Dynamic>> chol(M);
             auto& U = chol.matrixL();
-            for (unsigned i = 0; i < M.rows(); ++i)
-                ld += log(U(i,i));
+            for (unsigned int i = 0; i < M.rows(); ++i)
+                ld += std::log(U(i,i));
             ld *= 2;
         } else {
             PartialPivLU<Matrix<Scalar,Dynamic,Dynamic>> lu(M);
             auto& LU = lu.matrixLU();
             Scalar c = lu.permutationP().determinant(); // -1 or 1
-            for (unsigned i = 0; i < LU.rows(); ++i) {
+            for (unsigned int i = 0; i < LU.rows(); ++i) {
                 const auto& lii = LU(i,i);
                 if (lii < Scalar(0)) c *= -1;
-                ld += log(abs(lii));
+                ld += std::log(std::abs(lii));
             }
-            ld += log(c);
+            ld += std::log(c);
         }
         return ld;
     }

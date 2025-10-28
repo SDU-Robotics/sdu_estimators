@@ -10,6 +10,7 @@
 // manifold
 #include <sdu_estimators/math/riemannian_manifolds/sphere.hpp>
 #include <sdu_estimators/parameter_estimators/gradient_estimator_sphere.hpp>
+#include <cstdint>
 
 namespace nb = nanobind;
 
@@ -20,8 +21,8 @@ namespace nb = nanobind;
 
 namespace sdu_estimators
 {
-  template <typename T, int32_t DIM_N, int32_t DIM_P>
-  void nb_GradientEstimator(nb::module_ m, const std::string & typestr)
+  template<typename T, std::int32_t DIM_N, std::int32_t DIM_P>
+  void nb_GradientEstimator(nb::module_ m, const std::string& typestr)
   {
     using Class = parameter_estimators::GradientEstimator<T, DIM_N, DIM_P>;
     // using ClassParent = parameter_estimators::ParameterEstimator<T, DIM_N, DIM_P>;
@@ -29,48 +30,63 @@ namespace sdu_estimators
 
     // nb::class_<Class, ClassParent>(m, nbclass_name.c_str())
     nb::class_<Class>(m, nbclass_name.c_str())
-      .def(nb::init<float, const Eigen::Vector<T, DIM_P>, const Eigen::Vector<T, DIM_P>>(),
-        nb::arg("dt"), nb::arg("gamma"), nb::arg("theta_init"))
-      .def(nb::init<float, const Eigen::Vector<T, DIM_P>, const Eigen::Vector<T, DIM_P>, float>(),
-        nb::arg("dt"), nb::arg("gamma"), nb::arg("theta_init"), nb::arg("r"))
-      .def(nb::init<float, const Eigen::Vector<T, DIM_P>, const Eigen::Vector<T, DIM_P>, float, parameter_estimators::utils::IntegrationMethod>(),
-        nb::arg("dt"), nb::arg("gamma"), nb::arg("theta_init"), nb::arg("r"), nb::arg("integration_method"))
-      .def("get_estimate", &Class::get_estimate)
-      .def("step", &Class::step,
-        nb::arg("y"), nb::arg("phi"));
-      // .def("step", &Class::step, nb::arg("y"), nb::arg("phi"), nb::arg("method"));
+        .def(
+            nb::init<float, const Eigen::Vector<T, DIM_P>, const Eigen::Vector<T, DIM_P>>(),
+            nb::arg("dt"),
+            nb::arg("gamma"),
+            nb::arg("theta_init"))
+        .def(
+            nb::init<float, const Eigen::Vector<T, DIM_P>, const Eigen::Vector<T, DIM_P>, float>(),
+            nb::arg("dt"),
+            nb::arg("gamma"),
+            nb::arg("theta_init"),
+            nb::arg("r"))
+        .def(
+            nb::init<
+                float,
+                const Eigen::Vector<T, DIM_P>,
+                const Eigen::Vector<T, DIM_P>,
+                float,
+                parameter_estimators::utils::IntegrationMethod>(),
+            nb::arg("dt"),
+            nb::arg("gamma"),
+            nb::arg("theta_init"),
+            nb::arg("r"),
+            nb::arg("integration_method"))
+        .def("get_estimate", &Class::get_estimate)
+        .def("step", &Class::step, nb::arg("y"), nb::arg("phi"));
+    // .def("step", &Class::step, nb::arg("y"), nb::arg("phi"), nb::arg("method"));
   }
 
-  template <typename T, int32_t DIM_N, int32_t DIM_P>
-  void nb_RegressorExtension(nb::module_ m, const std::string & typestr)
+  template<typename T, std::int32_t DIM_N, std::int32_t DIM_P>
+  void nb_RegressorExtension(nb::module_ m, const std::string& typestr)
   {
     using Class = regressor_extensions::RegressorExtension<T, DIM_N, DIM_P>;
     std::string nbclass_name = std::string("RegressorExtension") + typestr;
 
-    nb::class_<Class>(m, nbclass_name.c_str())
-      .def("getY", &Class::getY)
-      .def("getPhi", &Class::getPhi);
+    nb::class_<Class>(m, nbclass_name.c_str()).def("getY", &Class::getY).def("getPhi", &Class::getPhi);
   }
 
-  template <typename T, int32_t DIM_N, int32_t DIM_P>
-  void nb_Kreisselmeier(nb::module_ m, const std::string & typestr)
+  template<typename T, std::int32_t DIM_N, std::int32_t DIM_P>
+  void nb_Kreisselmeier(nb::module_ m, const std::string& typestr)
   {
     using Class = regressor_extensions::Kreisselmeier<T, DIM_N, DIM_P>;
     using ClassParent = regressor_extensions::RegressorExtension<T, DIM_N, DIM_P>;
     std::string nbclass_name = std::string("Kreisselmeier") + typestr;
 
     nb::class_<Class, ClassParent>(m, nbclass_name.c_str())
-      .def(nb::init<float, float>(),
-        nb::arg("dt"), nb::arg("ell"))
-      .def(nb::init<float, float, parameter_estimators::utils::IntegrationMethod>(),
-        nb::arg("dt"), nb::arg("ell"), nb::arg("integration_method"))
-      .def("step", &Class::step,
-        nb::arg("y"), nb::arg("phi"))
-      .def("reset", &Class::reset);
+        .def(nb::init<float, float>(), nb::arg("dt"), nb::arg("ell"))
+        .def(
+            nb::init<float, float, parameter_estimators::utils::IntegrationMethod>(),
+            nb::arg("dt"),
+            nb::arg("ell"),
+            nb::arg("integration_method"))
+        .def("step", &Class::step, nb::arg("y"), nb::arg("phi"))
+        .def("reset", &Class::reset);
   }
 
-  template <typename T, int32_t DIM_N, int32_t DIM_P>
-  void nb_DREM(nb::module_ m, const std::string & typestr)
+  template<typename T, std::int32_t DIM_N, std::int32_t DIM_P>
+  void nb_DREM(nb::module_ m, const std::string& typestr)
   {
     using Class = parameter_estimators::DREM<T, DIM_N, DIM_P>;
     // using ClassParent = parameter_estimators::ParameterEstimator<T, DIM_N, DIM_P>;
@@ -78,66 +94,91 @@ namespace sdu_estimators
 
     // nb::class_<Class, ClassParent>(m, nbclass_name.c_str())
     nb::class_<Class>(m, nbclass_name.c_str())
-      .def(nb::init<float, const Eigen::Vector<T, DIM_P>, const Eigen::Vector<T, DIM_P>,
-                regressor_extensions::RegressorExtension<T, DIM_N, DIM_P>* >(),
-                nb::arg("dt"), nb::arg("gamma"), nb::arg("theta_init"), nb::arg("reg_ext"))
-      .def(nb::init<float, const Eigen::Vector<T, DIM_P>, const Eigen::Vector<T, DIM_P>,
-                regressor_extensions::RegressorExtension<T, DIM_N, DIM_P>*, float >(),
-                nb::arg("dt"), nb::arg("gamma"), nb::arg("theta_init"), nb::arg("reg_ext"), nb::arg("r"))
-      .def(nb::init<float, const Eigen::Vector<T, DIM_P>, const Eigen::Vector<T, DIM_P>,
-              regressor_extensions::RegressorExtension<T, DIM_N, DIM_P>*, float, parameter_estimators::utils::IntegrationMethod>(),
-              nb::arg("dt"), nb::arg("gamma"), nb::arg("theta_init"), nb::arg("reg_ext"), nb::arg("r"),  nb::arg("integration_method"))
-      .def("get_estimate", &Class::get_estimate)
-      .def("step", &Class::step,
-        nb::arg("y"), nb::arg("phi"));
+        .def(
+            nb::init<
+                float,
+                const Eigen::Vector<T, DIM_P>,
+                const Eigen::Vector<T, DIM_P>,
+                regressor_extensions::RegressorExtension<T, DIM_N, DIM_P>*>(),
+            nb::arg("dt"),
+            nb::arg("gamma"),
+            nb::arg("theta_init"),
+            nb::arg("reg_ext"))
+        .def(
+            nb::init<
+                float,
+                const Eigen::Vector<T, DIM_P>,
+                const Eigen::Vector<T, DIM_P>,
+                regressor_extensions::RegressorExtension<T, DIM_N, DIM_P>*,
+                float>(),
+            nb::arg("dt"),
+            nb::arg("gamma"),
+            nb::arg("theta_init"),
+            nb::arg("reg_ext"),
+            nb::arg("r"))
+        .def(
+            nb::init<
+                float,
+                const Eigen::Vector<T, DIM_P>,
+                const Eigen::Vector<T, DIM_P>,
+                regressor_extensions::RegressorExtension<T, DIM_N, DIM_P>*,
+                float,
+                parameter_estimators::utils::IntegrationMethod>(),
+            nb::arg("dt"),
+            nb::arg("gamma"),
+            nb::arg("theta_init"),
+            nb::arg("reg_ext"),
+            nb::arg("r"),
+            nb::arg("integration_method"))
+        .def("get_estimate", &Class::get_estimate)
+        .def("step", &Class::step, nb::arg("y"), nb::arg("phi"));
   }
 
-  template <typename T, int32_t DIM_N>
-  void nb_Sphere(nb::module_ m, const std::string & typestr)
+  template<typename T, std::int32_t DIM_N>
+  void nb_Sphere(nb::module_ m, const std::string& typestr)
   {
     using Class = math::manifold::Sphere<T, DIM_N>;
     std::string nbclass_name = std::string("Sphere") + typestr;
 
     nb::class_<Class>(m, nbclass_name.c_str())
-      .def(nb::init<>())
-      .def("dist", &Class::dist,
-        nb::arg("point_a"), nb::arg("point_b"))
-      .def("projection", &Class::projection,
-        nb::arg("point"), nb::arg("vector"))
-      .def("euclidean_to_riemannian_gradient", &Class::euclidean_to_riemannian_gradient,
-        nb::arg("point"), nb::arg("euclidean_gradient"))
-      .def("retraction", &Class::retraction,
-        nb::arg("point"), nb::arg("tangent_vector"))
-      .def("exp", &Class::exp,
-        nb::arg("point"), nb::arg("tangent_vector"))
-      .def("log", &Class::log,
-        nb::arg("point_a"), nb::arg("point_b"));
+        .def(nb::init<>())
+        .def("dist", &Class::dist, nb::arg("point_a"), nb::arg("point_b"))
+        .def("projection", &Class::projection, nb::arg("point"), nb::arg("vector"))
+        .def(
+            "euclidean_to_riemannian_gradient",
+            &Class::euclidean_to_riemannian_gradient,
+            nb::arg("point"),
+            nb::arg("euclidean_gradient"))
+        .def("retraction", &Class::retraction, nb::arg("point"), nb::arg("tangent_vector"))
+        .def("exp", &Class::exp, nb::arg("point"), nb::arg("tangent_vector"))
+        .def("log", &Class::log, nb::arg("point_a"), nb::arg("point_b"));
   }
 
-  template <typename T, int32_t DIM_N, int32_t DIM_P>
-  void nb_GradientEstimatorSphere(nb::module_ m, const std::string & typestr)
+  template<typename T, std::int32_t DIM_N, std::int32_t DIM_P>
+  void nb_GradientEstimatorSphere(nb::module_ m, const std::string& typestr)
   {
     using Class = parameter_estimators::GradientEstimatorSphere<T, DIM_N, DIM_P>;
     std::string nbclass_name = std::string("GradientEstimatorSphere") + typestr;
 
     nb::class_<Class>(m, nbclass_name.c_str())
-      .def(nb::init<double, double, const Eigen::Vector<T, DIM_P>>(),
-        nb::arg("dt"), nb::arg("gamma"), nb::arg("theta_init"))
-      .def("step", &Class::step,
-        nb::arg("y"), nb::arg("phi"))
-      .def("get_estimate", &Class::get_estimate)
-      .def("reset", &Class::reset);
+        .def(
+            nb::init<double, double, const Eigen::Vector<T, DIM_P>>(),
+            nb::arg("dt"),
+            nb::arg("gamma"),
+            nb::arg("theta_init"))
+        .def("step", &Class::step, nb::arg("y"), nb::arg("phi"))
+        .def("get_estimate", &Class::get_estimate)
+        .def("reset", &Class::reset);
   }
-
 
   NB_MODULE(_sdu_estimators, m)
   {
     m.doc() = "Python Bindings for sdu_estimators";
 
     nb::enum_<parameter_estimators::utils::IntegrationMethod>(m, "IntegrationMethod")
-      .value("Euler", parameter_estimators::utils::IntegrationMethod::Euler)
-      .value("Trapezoidal", parameter_estimators::utils::IntegrationMethod::Trapezoidal)
-      .export_values();
+        .value("Euler", parameter_estimators::utils::IntegrationMethod::Euler)
+        .value("Trapezoidal", parameter_estimators::utils::IntegrationMethod::Trapezoidal)
+        .export_values();
 
     nb_GradientEstimator<double, 1, 1>(m, "_1x1");
     nb_GradientEstimator<double, 1, 2>(m, "_1x2");
@@ -162,5 +203,5 @@ namespace sdu_estimators
     nb_Sphere<double, 3>(m, "_3");
 
     nb_GradientEstimatorSphere<double, 1, 3>(m, "_1x3");
-  }
+}
 }  // namespace sdu_estimators
