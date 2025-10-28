@@ -6,11 +6,12 @@
 #include <sdu_estimators/parameter_estimators/drem.hpp>
 #include <sdu_estimators/parameter_estimators/gradient_estimator.hpp>
 #include <sdu_estimators/regressor_extensions/regressor_extension.hpp>
+#include <sdu_estimators/state_estimators/momentum_observer.hpp>
 
 // manifold
+#include <cstdint>
 #include <sdu_estimators/math/riemannian_manifolds/sphere.hpp>
 #include <sdu_estimators/parameter_estimators/gradient_estimator_sphere.hpp>
-#include <cstdint>
 
 namespace nb = nanobind;
 
@@ -203,5 +204,46 @@ namespace sdu_estimators
     nb_Sphere<double, 3>(m, "_3");
 
     nb_GradientEstimatorSphere<double, 1, 3>(m, "_1x3");
-}
+
+    nb::class_<sdu_estimators::state_estimators::MomentumObserver>(m, "MomentumObserver")
+        .def(
+            nb::init<
+                std::function<Eigen::MatrixXd(const Eigen::VectorXd&)>,
+                std::function<Eigen::MatrixXd(const Eigen::VectorXd&, const Eigen::VectorXd&)>,
+                std::function<Eigen::MatrixXd(const Eigen::VectorXd&)>,
+                std::function<Eigen::MatrixXd(const Eigen::VectorXd&)>,
+                double,
+                const Eigen::VectorXd&>(),
+            nb::arg("get_inertia_matrix"),
+            nb::arg("get_coriolis"),
+            nb::arg("get_gravity"),
+            nb::arg("get_friction"),
+            nb::arg("dt"),
+            nb::arg("K"))
+        .def("reset", &sdu_estimators::state_estimators::MomentumObserver::reset)
+        .def(
+            "update",
+            (void(sdu_estimators::state_estimators::MomentumObserver::*)(
+                const Eigen::VectorXd&, const Eigen::VectorXd&, const Eigen::VectorXd&)) &
+                sdu_estimators::state_estimators::MomentumObserver::update,
+            nb::arg("q"),
+            nb::arg("qd"),
+            nb::arg("tau"))
+        .def(
+            "update",
+            (void(sdu_estimators::state_estimators::MomentumObserver::*)(
+                const std::vector<double>&, const std::vector<double>&, const std::vector<double>&)) &
+                sdu_estimators::state_estimators::MomentumObserver::update,
+            nb::arg("q"),
+            nb::arg("qd"),
+            nb::arg("tau_m"))
+        .def("estimatedTorques", &sdu_estimators::state_estimators::MomentumObserver::estimatedTorques)
+        .def(
+            "getAccEstimate",
+            &sdu_estimators::state_estimators::MomentumObserver::getAccEstimate,
+            nb::arg("q"),
+            nb::arg("qd"),
+            nb::arg("tau"))
+        .def("zeroExternalFT", &sdu_estimators::state_estimators::MomentumObserver::zeroExternalFT);
+  }
 }  // namespace sdu_estimators
