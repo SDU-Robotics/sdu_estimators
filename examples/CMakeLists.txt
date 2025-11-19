@@ -11,11 +11,12 @@ if(MSVC)
 endif()
 
 
-add_example(example_gradient_estimator ".")
-add_example(example_DREM_estimator ".")
+add_example(example_gradient_estimator "parameter_estimators")
+add_example(example_DREM_estimator "parameter_estimators")
 add_example(example_SS "state_estimators")
 add_example(example_luenberger "state_estimators")
-add_example(example_UIO "state_estimators")
+add_example(example_UIO "disturbance_observers")
+add_example(example_momentum_observer "disturbance_observers")
 
 # increase stack size
 add_example(example_beam "structural_parameters")

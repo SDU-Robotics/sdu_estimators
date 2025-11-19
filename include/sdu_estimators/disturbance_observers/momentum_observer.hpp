@@ -1,11 +1,11 @@
-#ifndef SDU_ESTIMATORS_STATE_ESTIMATORS_MOMENTUM_OBSERVER_HPP
-#define SDU_ESTIMATORS_STATE_ESTIMATORS_MOMENTUM_OBSERVER_HPP
+#ifndef SDU_ESTIMATORS_DISTURBANCE_OBSERVERS_MOMENTUM_OBSERVER_HPP
+#define SDU_ESTIMATORS_DISTURBANCE_OBSERVERS_MOMENTUM_OBSERVER_HPP
 
 #include <Eigen/Core>
 #include <functional>
 #include <memory>  // for std::shared_ptr
 
-namespace sdu_estimators::state_estimators
+namespace sdu_estimators::disturbance_observers
 {
 
   class MomentumObserver
@@ -173,6 +173,6 @@ namespace sdu_estimators::state_estimators
     Eigen::VectorXd _last_q;
     bool _initialized;
   };
-}  // namespace sdu_estimators::state_estimators
+}  // namespace sdu_estimators::disturbance_observers
 
 #endif

@@ -1,11 +1,13 @@
 #ifndef UNKNOWN_INPUT_OBSERVER_HPP
 #define UNKNOWN_INPUT_OBSERVER_HPP
-#include "state_space_model.hpp"
 
-namespace sdu_estimators::state_estimators
+#include <sdu_estimators/state_estimators/state_space_model.hpp>
+#include <sdu_estimators/state_estimators/utils.hpp>
+
+namespace sdu_estimators::disturbance_observers
 {
   template <typename T, int32_t DIM_Nx, int32_t DIM_Nu, int32_t DIM_Ny>
-  class UnknownInputObserver // : public StateSpaceModel
+  class UnknownInputObserver
   {
   public:
 
@@ -29,7 +31,7 @@ namespace sdu_estimators::state_estimators
       Eigen::Matrix<T, DIM_Nx, DIM_Ny> & K,
       Eigen::Matrix<T, DIM_Nx, DIM_Ny> & H,
       float Ts,
-      utils::IntegrationMethod method
+      sdu_estimators::state_estimators::utils::IntegrationMethod method
     )
     {
       Eigen::Matrix<T, DIM_Nx, DIM_Nx> newA, newC;
@@ -40,7 +42,7 @@ namespace sdu_estimators::state_estimators
       newC.setIdentity();
       newD << B * 0, H;
 
-      sys = new StateSpaceModel(newA, newB, newC, newD, Ts, method);
+      sys = new sdu_estimators::state_estimators::StateSpaceModel(newA, newB, newC, newD, Ts, method);
     }
 
     void update(Eigen::Vector<T, DIM_Ny> & y, Eigen::Vector<T, DIM_Nu> & u)
@@ -71,7 +73,7 @@ namespace sdu_estimators::state_estimators
     Eigen::VectorXd yhat_old;
     Eigen::MatrixXd H, Tmat, A1;
 
-    StateSpaceModel<T, DIM_Nx, DIM_Nu + DIM_Ny, DIM_Ny> * sys;
+    sdu_estimators::state_estimators::StateSpaceModel<T, DIM_Nx, DIM_Nu + DIM_Ny, DIM_Ny> * sys;
   };
 }
 

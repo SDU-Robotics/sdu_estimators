@@ -44,3 +44,5 @@ def main():
         tau_m = measure_torque(t, dof)
         observer.update(q, qd, tau_m)
         print(f"Estimated torques at time {t}: {observer.estimated_torques().flatten()}")
+
+main()

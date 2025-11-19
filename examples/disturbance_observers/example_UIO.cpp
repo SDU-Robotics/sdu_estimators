@@ -7,7 +7,7 @@
 #include <sdu_estimators/state_estimators/utils.hpp>
 #include <vector>
 
-#include "sdu_estimators/state_estimators/unknown_input_observer.hpp"
+#include <sdu_estimators/disturbance_observers/unknown_input_observer.hpp>
 
 int main()
 {
@@ -81,7 +81,7 @@ int main()
   std::cout << "Ad\n" << sys.getAd() << std::endl;
   std::cout << "Bd\n" << sys.getBd() << std::endl;
 
-  sdu_estimators::state_estimators::UnknownInputObserver<double, 2, 1, 2> obs(F, Tmat, B, K, H, Ts, method);
+  sdu_estimators::disturbance_observers::UnknownInputObserver<double, 2, 1, 2> obs(F, Tmat, B, K, H, Ts, method);
 
   std::cout << "obs Ad \n" << obs.getAd() << std::endl;
   std::cout << "obs Bd \n" << obs.getBd() << std::endl;

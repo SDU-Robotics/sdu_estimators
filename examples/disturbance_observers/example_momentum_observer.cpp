@@ -1,7 +1,7 @@
 #include <Eigen/Core>
 #include <cmath>
 #include <iostream>
-#include <sdu_estimators/state_estimators/momentum_observer.hpp>
+#include <sdu_estimators/disturbance_observers/momentum_observer.hpp>
 
 #ifndef M_PI
 #define M_PI 3.1415926535897932384626433832
@@ -86,7 +86,7 @@ int main()
 {
   double dt = 0.01;
   size_t dof = 3;
-  sdu_estimators::state_estimators::MomentumObserver observer(
+  sdu_estimators::disturbance_observers::MomentumObserver observer(
       std::make_shared<RobotModel>(dof), dt, Eigen::VectorXd::Constant(dof, 1.0));
 
   int IMax = 1.0 / dt;

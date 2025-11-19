@@ -2,16 +2,20 @@
 // #include <nanobind/ndarray.h>
 #include <nanobind/eigen/dense.h>
 
-// #include <sdu_estimators/parameter_estimators/parameter_estimator.hpp>
+// Parameter Estimators
 #include <sdu_estimators/parameter_estimators/drem.hpp>
 #include <sdu_estimators/parameter_estimators/gradient_estimator.hpp>
+#include <sdu_estimators/parameter_estimators/gradient_estimator_sphere.hpp>
+
+// Regressor Extenders
 #include <sdu_estimators/regressor_extensions/regressor_extension.hpp>
-#include <sdu_estimators/state_estimators/momentum_observer.hpp>
+
+// Disturbance Observers
+#include <sdu_estimators/disturbance_observers/momentum_observer.hpp>
 
 // manifold
 #include <cstdint>
 #include <sdu_estimators/math/riemannian_manifolds/sphere.hpp>
-#include <sdu_estimators/parameter_estimators/gradient_estimator_sphere.hpp>
 
 namespace nb = nanobind;
 
@@ -176,36 +180,48 @@ namespace sdu_estimators
   {
     m.doc() = "Python Bindings for sdu_estimators";
 
-    nb::enum_<parameter_estimators::utils::IntegrationMethod>(m, "IntegrationMethod")
+    nb::module_ m_param_ests = m.def_submodule("parameter_estimators", "Submodule containing general parameter estimators for problems on LRE-form.");
+    nb::module_ m_param_ests_utils = m_param_ests.def_submodule("utils", "");
+
+    nb::module_ m_reg_ext = m.def_submodule("regressor_extensions", "Submodule containing regressor extensions for LRE.");
+    nb::module_ m_math = m.def_submodule("math", "Submodule containing math utilities.");
+    nb::module_ m_riemann = m_math.def_submodule("riemannian_manifolds", "Submodule containing definitions for a selection of Riemannian manifolds.");
+    nb::module_ m_dist_obs = m.def_submodule("disturbance_observers", "Submodule containing definitions for disturbance observers.");
+
+    nb::enum_<parameter_estimators::utils::IntegrationMethod>(m_param_ests_utils, "IntegrationMethod")
         .value("Euler", parameter_estimators::utils::IntegrationMethod::Euler)
         .value("Trapezoidal", parameter_estimators::utils::IntegrationMethod::Trapezoidal)
         .export_values();
 
-    nb_GradientEstimator<double, 1, 1>(m, "_1x1");
-    nb_GradientEstimator<double, 1, 2>(m, "_1x2");
-    nb_GradientEstimator<double, 1, 3>(m, "_1x3");
-    nb_GradientEstimator<double, 3, 6>(m, "_3x6");
+    // Parameter Estimators
+    nb_GradientEstimator<double, 1, 1>(m_param_ests, "_1x1");
+    nb_GradientEstimator<double, 1, 2>(m_param_ests, "_1x2");
+    nb_GradientEstimator<double, 1, 3>(m_param_ests, "_1x3");
+    nb_GradientEstimator<double, 3, 6>(m_param_ests, "_3x6");
 
-    nb_RegressorExtension<double, 1, 1>(m, "_1x1");
-    nb_RegressorExtension<double, 1, 2>(m, "_1x2");
-    nb_RegressorExtension<double, 1, 3>(m, "_1x3");
-    nb_RegressorExtension<double, 3, 6>(m, "_3x6");
+    nb_GradientEstimatorSphere<double, 1, 3>(m_param_ests, "_1x3");
 
-    nb_Kreisselmeier<double, 1, 1>(m, "_1x1");
-    nb_Kreisselmeier<double, 1, 2>(m, "_1x2");
-    nb_Kreisselmeier<double, 1, 3>(m, "_1x3");
-    nb_Kreisselmeier<double, 3, 6>(m, "_3x6");
+    nb_DREM<double, 1, 1>(m_param_ests, "_1x1");
+    nb_DREM<double, 1, 2>(m_param_ests, "_1x2");
+    nb_DREM<double, 1, 3>(m_param_ests, "_1x3");
+    nb_DREM<double, 3, 6>(m_param_ests, "_3x6");
+    
+    // Regressor Extensions
+    nb_RegressorExtension<double, 1, 1>(m_reg_ext, "_1x1");
+    nb_RegressorExtension<double, 1, 2>(m_reg_ext, "_1x2");
+    nb_RegressorExtension<double, 1, 3>(m_reg_ext, "_1x3");
+    nb_RegressorExtension<double, 3, 6>(m_reg_ext, "_3x6");
 
-    nb_DREM<double, 1, 1>(m, "_1x1");
-    nb_DREM<double, 1, 2>(m, "_1x2");
-    nb_DREM<double, 1, 3>(m, "_1x3");
-    nb_DREM<double, 3, 6>(m, "_3x6");
+    nb_Kreisselmeier<double, 1, 1>(m_reg_ext, "_1x1");
+    nb_Kreisselmeier<double, 1, 2>(m_reg_ext, "_1x2");
+    nb_Kreisselmeier<double, 1, 3>(m_reg_ext, "_1x3");
+    nb_Kreisselmeier<double, 3, 6>(m_reg_ext, "_3x6");
 
-    nb_Sphere<double, 3>(m, "_3");
+    // Riemannian Manifolds
+    nb_Sphere<double, 3>(m_riemann, "_3");
 
-    nb_GradientEstimatorSphere<double, 1, 3>(m, "_1x3");
-
-    nb::class_<sdu_estimators::state_estimators::MomentumObserver>(m, "MomentumObserver")
+    // Disturbance Observers
+    nb::class_<sdu_estimators::disturbance_observers::MomentumObserver>(m_dist_obs, "MomentumObserver")
         .def(
             nb::init<
                 std::function<Eigen::MatrixXd(const Eigen::VectorXd&)>,
@@ -220,30 +236,30 @@ namespace sdu_estimators
             nb::arg("get_friction"),
             nb::arg("dt"),
             nb::arg("K"))
-        .def("reset", &sdu_estimators::state_estimators::MomentumObserver::reset)
+        .def("reset", &sdu_estimators::disturbance_observers::MomentumObserver::reset)
         .def(
             "update",
-            (void(sdu_estimators::state_estimators::MomentumObserver::*)(
+            (void(sdu_estimators::disturbance_observers::MomentumObserver::*)(
                 const Eigen::VectorXd&, const Eigen::VectorXd&, const Eigen::VectorXd&)) &
-                sdu_estimators::state_estimators::MomentumObserver::update,
+                sdu_estimators::disturbance_observers::MomentumObserver::update,
             nb::arg("q"),
             nb::arg("qd"),
             nb::arg("tau"))
         .def(
             "update",
-            (void(sdu_estimators::state_estimators::MomentumObserver::*)(
+            (void(sdu_estimators::disturbance_observers::MomentumObserver::*)(
                 const std::vector<double>&, const std::vector<double>&, const std::vector<double>&)) &
-                sdu_estimators::state_estimators::MomentumObserver::update,
+                sdu_estimators::disturbance_observers::MomentumObserver::update,
             nb::arg("q"),
             nb::arg("qd"),
             nb::arg("tau_m"))
-        .def("estimatedTorques", &sdu_estimators::state_estimators::MomentumObserver::estimatedTorques)
+        .def("estimatedTorques", &sdu_estimators::disturbance_observers::MomentumObserver::estimatedTorques)
         .def(
             "getAccEstimate",
-            &sdu_estimators::state_estimators::MomentumObserver::getAccEstimate,
+            &sdu_estimators::disturbance_observers::MomentumObserver::getAccEstimate,
             nb::arg("q"),
             nb::arg("qd"),
             nb::arg("tau"))
-        .def("zeroExternalFT", &sdu_estimators::state_estimators::MomentumObserver::zeroExternalFT);
+        .def("zeroExternalFT", &sdu_estimators::disturbance_observers::MomentumObserver::zeroExternalFT);
   }
 }  // namespace sdu_estimators
