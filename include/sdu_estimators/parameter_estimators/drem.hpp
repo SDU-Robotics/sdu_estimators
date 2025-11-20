@@ -5,7 +5,7 @@
 #include <cstdint>
 #include <sdu_estimators/parameter_estimators/parameter_estimator.hpp>
 // #include <sdu_estimators/regressor_extensions/kreisselmeier.hpp>
-#include <Eigen/Sparse>
+#include <Eigen/Dense>
 #include <cmath>
 #include <iostream>
 #include <sdu_estimators/regressor_extensions/regressor_extension.hpp>

@@ -1,3 +1,5 @@
+#!/usr/bin/env python3 
+
 import sdu_estimators
 
 import numpy as np
@@ -76,10 +78,10 @@ class TwoLinkRobot(RobotModel):
 
         grav[1] = self.m2 * self.l2 * self.g * np.cos(q[0] + q[1])
 
-        return grav
+        return grav.flatten()
 
     def get_friction(self, qd: np.ndarray) -> np.ndarray:
-        return np.zeros(self.dof).reshape(self.dof, 1)
+        return np.zeros(self.dof).reshape(self.dof, 1).flatten()
 
 
 def get_position_and_velocity(t, size):
@@ -131,6 +133,6 @@ def main():
         print(B, C, grav, fric, sep="\n")
 
         observer.update(q, qd, tau_m)
-        print(f"Estimated torques at time {t}: {observer.estimated_torques().flatten()}")
+        print(f"Estimated torques at time {t}: {observer.estimatedTorques().flatten()}")
 
 main()
