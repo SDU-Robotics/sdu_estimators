@@ -1,12 +1,16 @@
 #!/usr/bin/env python3
-__all__ = (
-    "parameter_estimators",
-    "regressor_extensions",
-    "math",
-    "disturbance_observers"
-)
+# __all__ = (
+#     "parameter_estimators",
+#     "regressor_extensions",
+#     "math",
+#     "disturbance_observers"
+# )
 
 import numpy as np
+
+# import ._sdu_estimators.
+
+from ._sdu_estimators import __doc__
 
 from ._sdu_estimators import parameter_estimators
 from ._sdu_estimators import regressor_extensions

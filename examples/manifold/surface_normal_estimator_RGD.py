@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 import copy
-import numpy as np
 
+import numpy as np
 import sdu_estimators
+
 
 def skew_symmetric(vector):
     x = vector[0].item()
@@ -19,7 +20,7 @@ def skew_symmetric(vector):
 
 
 class SurfaceNormalEstimatorRGD:
-    """ SurfaceNormalEstimatorRGD Class
+    """SurfaceNormalEstimatorRGD Class
     Args:
     """
 
@@ -27,7 +28,7 @@ class SurfaceNormalEstimatorRGD:
         self.dt = dt
         self.gamma = gamma
         self.p_tcp_tip = p_tcp_tip
-        self.Delta = 0.
+        self.Delta = 0.0
 
         if initial_n is None:
             initial_n = [0, 0, 1]
@@ -35,8 +36,12 @@ class SurfaceNormalEstimatorRGD:
         self.initial_n = np.reshape(np.asarray(initial_n), (3, 1))
         self.nc = None
 
-        self.sphere_manifold = sdu_estimators.Sphere_3()
-        self.sphere_est = sdu_estimators.GradientEstimatorSphere_1x3(dt, gamma, self.initial_n.flatten())
+        self.sphere_manifold = sdu_estimators.math.riemannian_manifolds.Sphere_3()
+        self.sphere_est = (
+            sdu_estimators.parameter_estimators.GradientEstimatorSphere_1x3(
+                dt, gamma, self.initial_n.flatten()
+            )
+        )
 
         self.reset()
 
@@ -55,7 +60,7 @@ class SurfaceNormalEstimatorRGD:
         v_tip = v + skew_symmetric(omega) @ R_base_tcp @ self.p_tcp_tip
 
         #
-        #nabla = np.cross(contact_force.flatten(), v_tip.flatten()).reshape((3, 1))
+        # nabla = np.cross(contact_force.flatten(), v_tip.flatten()).reshape((3, 1))
 
         # estimation
         # y = np.array([[0], [0]])
@@ -83,16 +88,17 @@ class SurfaceNormalEstimatorRGD:
         return copy.copy(self.nc)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     # import pandas as pd
-    import matplotlib.pyplot as plt
     import time
 
+    import matplotlib.pyplot as plt
+
     data_path = "data1.csv"
-    data = np.loadtxt(data_path, delimiter=',', skiprows=1)
+    data = np.loadtxt(data_path, delimiter=",", skiprows=1)
     # data = np.vstack([data, data, data])
-    fs = 500.
-    dt = 1. / fs
+    fs = 500.0
+    dt = 1.0 / fs
     # time = data[:, 0]
 
     velocity = data[:, 1:]
@@ -107,11 +113,15 @@ if __name__ == '__main__':
     velocity = twists[:, 0:3]
     R_base_tcp = np.eye(3)
 
-    tmp = np.pi/4.
+    tmp = np.pi / 4.0
     #    def __init__(self, dt, gamma, p_tcp_tip, initial_n=None, ell=0., r=1.):
     # normal_estimator = SurfaceNormalEstimatorDREM(dt, gamma=1e39, p_tcp_tip=np.zeros((3, 1)),
-    normal_estimator = SurfaceNormalEstimatorRGD(dt, gamma=200, p_tcp_tip=np.zeros((3, 1)),
-                                                  initial_n=[0, np.sin(tmp), np.cos(tmp)])
+    normal_estimator = SurfaceNormalEstimatorRGD(
+        dt,
+        gamma=200,
+        p_tcp_tip=np.zeros((3, 1)),
+        initial_n=[0, np.sin(tmp), np.cos(tmp)],
+    )
     normals = np.empty((0, 3), float)
 
     all_Delta = []
@@ -131,7 +141,7 @@ if __name__ == '__main__':
     end = time.time_ns()
     dur = end - start
     print(f"Duration:  {dur * 1e-9:.4f} s")
-    print(f"Duration per iterations: {dur/twists.shape[0]*1e-6:.4f} ms/it")
+    print(f"Duration per iterations: {dur / twists.shape[0] * 1e-6:.4f} ms/it")
 
     fig1, axes1 = plt.subplots(nrows=1, ncols=3)
     axes1[0].plot(tvec, normals[:, 0], label="x")

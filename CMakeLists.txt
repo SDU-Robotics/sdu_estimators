@@ -4,7 +4,7 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 # Set a name and a version number for your project:
 project(
   sdu_estimators
-  VERSION 0.0.1
+  VERSION 0.0.3
   LANGUAGES CXX)
 
 # Initialize some default paths
@@ -48,6 +48,7 @@ if(BUILD_DOCS)
   # Add the documentation
   add_subdirectory(doc)
 endif()
+
 if(BUILD_PYTHON)
   if(NOT EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/ext/nanobind/CMakeLists.txt)
     message(
@@ -75,19 +76,41 @@ if(BUILD_PYTHON)
 
   target_link_libraries(_sdu_estimators PUBLIC sdu_estimators)
 
-  install(TARGETS _sdu_estimators DESTINATION ".")
-
   nanobind_add_stub(
-    _sdu_estimators
-    INSTALL_TIME
-    MODULE
-    _sdu_estimators
-    OUTPUT
-    _sdu_estimators.pyi
-    MARKER_FILE
-    py.typed
-    PYTHON_PATH
-    ".")
+    _sdu_estimators_stub
+    
+    MODULE _sdu_estimators
+
+    PYTHON_PATH $<TARGET_FILE_DIR:_sdu_estimators>
+    DEPENDS _sdu_estimators 
+    
+    RECURSIVE
+    VERBOSE
+
+    MARKER_FILE "${CMAKE_SOURCE_DIR}/py.typed"
+
+    OUTPUT_PATH "${CMAKE_SOURCE_DIR}/python_stub/_sdu_estimators"
+    OUTPUT 
+      __init__.pyi
+
+    )
+
+  install(TARGETS _sdu_estimators DESTINATION ".")
+  # install(FILES "${CMAKE_SOURCE_DIR}/_sdu_estimators/_sdu_estimators/__init__.pyi" DESTINATION ".")
+  install(
+    DIRECTORY "${CMAKE_SOURCE_DIR}/python_stub/_sdu_estimators/_sdu_estimators"
+    DESTINATION "_sdu_estimators"
+    FILES_MATCHING 
+      PATTERN "*.pyi"
+      PATTERN "py.typed")
+
+  install(FILES "${CMAKE_CURRENT_BINARY_DIR}/py.typed" DESTINATION ".")
+  
+
+  # install(FILES py.typed _sdu_estimators.pyi DESTINATION ".")  
+  # install(FILES "${CMAKE_SOURCE_DIRE}/") 
+
+  # install(FILES py.typed _sdu_estimators.pyi DESTINATION ".")  
 
   # nanobind_add_stub( _sdu_estimators_stub INSTALL_TIME MODULE _sdu_estimators
   # OUTPUT _sdu_estimators.pyi PYTHON_PATH $<TARGET_FILE_DIR:_sdu_estimators>

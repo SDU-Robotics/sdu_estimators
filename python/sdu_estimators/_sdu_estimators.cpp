@@ -226,8 +226,8 @@ namespace sdu_estimators
             nb::init<
                 std::function<Eigen::MatrixXd(const Eigen::VectorXd&)>,
                 std::function<Eigen::MatrixXd(const Eigen::VectorXd&, const Eigen::VectorXd&)>,
-                std::function<Eigen::MatrixXd(const Eigen::VectorXd&)>,
-                std::function<Eigen::MatrixXd(const Eigen::VectorXd&)>,
+                std::function<Eigen::VectorXd(const Eigen::VectorXd&)>,
+                std::function<Eigen::VectorXd(const Eigen::VectorXd&)>,
                 double,
                 const Eigen::VectorXd&>(),
             nb::arg("get_inertia_matrix"),

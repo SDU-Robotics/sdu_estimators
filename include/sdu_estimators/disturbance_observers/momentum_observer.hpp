@@ -53,8 +53,8 @@ namespace sdu_estimators::disturbance_observers
     MomentumObserver(
         const std::function<Eigen::MatrixXd(const Eigen::VectorXd&)>& get_inertia_matrix,
         const std::function<Eigen::MatrixXd(const Eigen::VectorXd&, const Eigen::VectorXd&)>& get_coriolis,
-        const std::function<Eigen::MatrixXd(const Eigen::VectorXd&)>& get_gravity,
-        const std::function<Eigen::MatrixXd(const Eigen::VectorXd&)>& get_friction,
+        const std::function<Eigen::VectorXd(const Eigen::VectorXd&)>& get_gravity,
+        const std::function<Eigen::VectorXd(const Eigen::VectorXd&)>& get_friction,
         double dt,
         const Eigen::VectorXd& K)
         : get_inertia_matrix(get_inertia_matrix),
@@ -95,7 +95,7 @@ namespace sdu_estimators::disturbance_observers
     void update(const Eigen::VectorXd& q, const Eigen::VectorXd& qd, const Eigen::VectorXd& tau)
     {
       Eigen::MatrixXd B = get_inertia_matrix(q), C = get_coriolis(q, qd), g = get_gravity(q);
-      Eigen::MatrixXd friction = get_friction(qd);
+      Eigen::VectorXd friction = get_friction(qd);
 
       Eigen::VectorXd beta = g - C.transpose() * qd + friction;
       Eigen::MatrixXd Feq = C * qd + g;  // Compute the equivalent force
