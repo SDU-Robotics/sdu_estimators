@@ -40,27 +40,33 @@ class TwoLinkRobot(RobotModel):
 
         self.g = 9.82
 
-    def get_inertia(self, q):
+    def get_inertia(self, q: np.ndarray) -> np.ndarray:
         b11 = (self.Il1 + self.m1 * self.l1**2 + self.Il2 
             + self.m2 * (self.a1**2 + self.l2**2 + 2 * self.a1 * self.l2 * np.cos(q[1]))
         )
         b12 = self.Il2 + self.m2 * (self.l2**2 + self.a1 * self.l2 * np.cos(q[1]))
         b22 = self.Il2 + self.m2 * self.l2**2
 
-        return np.array([[b11, b12], 
-                         [b12, b22]])
+        B = np.zeros([2, 2])
+        B[0, 0] = b11
+        B[0, 1] = b12
+        B[1, 0] = b12
+        B[1, 1] = b22
 
-    def get_coriolis(self, q, qd):
+        return B
+
+    def get_coriolis(self, q: np.ndarray, qd: np.ndarray) -> np.ndarray:
         h = -self.m1 * self.a1 * self.l2 * np.sin(q[1])
 
         C = np.zeros([2, 2])
         C[0, 0] = h * qd[1]
         C[0, 1] = h * (qd[0] + qd[1])
         C[1, 0] = -h * qd[0]
+        C[1, 1] = 0.
 
         return C
 
-    def get_gravity(self, q):
+    def get_gravity(self, q: np.ndarray) -> np.ndarray:
         grav = np.ones(self.dof).reshape(self.dof, 1)
 
         grav[0] = (
@@ -72,26 +78,25 @@ class TwoLinkRobot(RobotModel):
 
         return grav
 
-    def get_friction(self, qd):
+    def get_friction(self, qd: np.ndarray) -> np.ndarray:
         return np.zeros(self.dof).reshape(self.dof, 1)
 
 
 def get_position_and_velocity(t, size):
-    q = np.sin(t) * np.ones(size)
-    qd = np.cos(t) * np.ones(size)
+    q = np.sin(t) * np.ones([size, 1])
+    qd = np.cos(t) * np.ones([size, 1])
     return q, qd
 
 def measure_torque(t, size):
-    tau = np.sin(t) * np.ones(size)
+    tau = np.sin(t) * np.ones([size, 1])
     return tau
 
 def main():
     dt = 0.001
     dof = 2
 
-    K = np.ones(dof)
+    K = np.ones([dof, 1])
 
-    # robot_model = RobotModel(dof)
     l1 = 0.5
     l2 = 0.5
     m1 = 50.
@@ -101,7 +106,9 @@ def main():
     a1 = 1.
     a2 = 1.
 
+    # robot_model = RobotModel(dof)
     robot_model = TwoLinkRobot(l1, l2, m1, m2, Il1, Il2, a1, a2)
+    print(robot_model)
 
     observer = sdu_estimators.disturbance_observers.MomentumObserver(
         robot_model.get_inertia,
@@ -109,7 +116,7 @@ def main():
         robot_model.get_gravity,
         robot_model.get_friction,
         dt, 
-        K
+        K.flatten()
     )
 
     for i in range(int(1 / dt)):
@@ -121,7 +128,8 @@ def main():
         grav = robot_model.get_gravity(q)
         fric = robot_model.get_friction(q)
 
-        print(B, C, grav, fric)
+        print(B, C, grav, fric, sep="\n")
+
         observer.update(q, qd, tau_m)
         print(f"Estimated torques at time {t}: {observer.estimated_torques().flatten()}")
 

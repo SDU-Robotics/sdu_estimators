@@ -1,7 +1,8 @@
 #include <nanobind/nanobind.h>
-// #include <nanobind/ndarray.h>
+#include <nanobind/ndarray.h>
 #include <nanobind/eigen/dense.h>
 #include <nanobind/stl/function.h> 
+#include <nanobind/stl/vector.h>
 
 // Parameter Estimators
 #include <sdu_estimators/parameter_estimators/drem.hpp>
