@@ -94,11 +94,12 @@ namespace sdu_estimators::disturbance_observers
      */
     void update(const Eigen::VectorXd& q, const Eigen::VectorXd& qd, const Eigen::VectorXd& tau)
     {
-      Eigen::MatrixXd B = get_inertia_matrix(q), C = get_coriolis(q, qd), g = get_gravity(q);
+      Eigen::MatrixXd B = get_inertia_matrix(q), C = get_coriolis(q, qd);
+      Eigen::VectorXd g = get_gravity(q);
       Eigen::VectorXd friction = get_friction(qd);
 
       Eigen::VectorXd beta = g - C.transpose() * qd + friction;
-      Eigen::MatrixXd Feq = C * qd + g;  // Compute the equivalent force
+      Eigen::VectorXd Feq = C * qd + g;  // Compute the equivalent force
       Eigen::VectorXd momentum = B * qd;
 
       if (!_initialized)
