@@ -76,7 +76,6 @@ class TwoLinkRobot(RobotModel):
         return np.zeros(self.dof).reshape(self.dof, 1)
 
 
-
 def get_position_and_velocity(t, size):
     q = np.sin(t) * np.ones(size)
     qd = np.cos(t) * np.ones(size)
@@ -117,6 +116,12 @@ def main():
         t = i * dt
         q, qd = get_position_and_velocity(t, dof)
         tau_m = measure_torque(t, dof)
+        B = robot_model.get_inertia(q)
+        C = robot_model.get_coriolis(q, qd)
+        grav = robot_model.get_gravity(q)
+        fric = robot_model.get_friction(q)
+
+        print(B, C, grav, fric)
         observer.update(q, qd, tau_m)
         print(f"Estimated torques at time {t}: {observer.estimated_torques().flatten()}")
 

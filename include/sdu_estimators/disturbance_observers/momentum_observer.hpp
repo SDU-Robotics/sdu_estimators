@@ -16,8 +16,8 @@ namespace sdu_estimators::disturbance_observers
      * It is assumed that the model provides the following methods:
      * - get_inertia_matrix(const Eigen::VectorXd& q) -> Eigen::MatrixXd
      * - get_coriolis(const Eigen::VectorXd& q, const Eigen::VectorXd& qd) -> Eigen::MatrixXd
-     * - get_gravity(const Eigen::VectorXd& q) -> Eigen::MatrixXd
-     * - get_friction(const Eigen::VectorXd& qd) -> Eigen::MatrixXd
+     * - get_gravity(const Eigen::VectorXd& q) -> Eigen::VectorXd
+     * - get_friction(const Eigen::VectorXd& qd) -> Eigen::VectorXd
      *
      * Which should return the torque contributions for the given state.
      *
@@ -145,8 +145,11 @@ namespace sdu_estimators::disturbance_observers
      */
     Eigen::VectorXd getAccEstimate(const Eigen::VectorXd& q, const Eigen::VectorXd& qd, const Eigen::VectorXd& tau) const
     {
-      Eigen::MatrixXd B = get_inertia_matrix(q), C = get_coriolis(q, qd), g = get_gravity(q);
-      Eigen::MatrixXd friction = get_friction(qd);
+      Eigen::MatrixXd B = get_inertia_matrix(q), C = get_coriolis(q, qd);
+      
+      Eigen::VectorXd g = get_gravity(q);
+      Eigen::VectorXd friction = get_friction(qd);
+
       Eigen::VectorXd ddq = B.inverse() * (tau - C * qd - g - friction + estimatedTorques());
       return ddq;
     }
@@ -163,8 +166,8 @@ namespace sdu_estimators::disturbance_observers
    private:
     std::function<Eigen::MatrixXd(const Eigen::VectorXd&)> get_inertia_matrix;
     std::function<Eigen::MatrixXd(const Eigen::VectorXd&, const Eigen::VectorXd&)> get_coriolis;
-    std::function<Eigen::MatrixXd(const Eigen::VectorXd&)> get_gravity;
-    std::function<Eigen::MatrixXd(const Eigen::VectorXd&)> get_friction;
+    std::function<Eigen::VectorXd(const Eigen::VectorXd&)> get_gravity;
+    std::function<Eigen::VectorXd(const Eigen::VectorXd&)> get_friction;
 
     double _dt;
     Eigen::MatrixXd _K;  // Gain matrix for the observer

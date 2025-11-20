@@ -1,6 +1,7 @@
 #include <nanobind/nanobind.h>
 // #include <nanobind/ndarray.h>
 #include <nanobind/eigen/dense.h>
+#include <nanobind/stl/function.h> 
 
 // Parameter Estimators
 #include <sdu_estimators/parameter_estimators/drem.hpp>
@@ -26,6 +27,7 @@ namespace nb = nanobind;
 
 namespace sdu_estimators
 {
+    
   template<typename T, std::int32_t DIM_N, std::int32_t DIM_P>
   void nb_GradientEstimator(nb::module_ m, const std::string& typestr)
   {
