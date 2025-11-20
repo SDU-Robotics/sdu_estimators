@@ -35,6 +35,7 @@ It assumes that your current working directory is the top-level directory
 of the freshly cloned repository:
 
 ```
+git submodule update --init --recursive
 mkdir build
 cd build
 cmake -DCMAKE_BUILD_TYPE=Release ..
