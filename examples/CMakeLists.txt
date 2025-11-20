@@ -13,6 +13,7 @@ endif()
 
 add_example(example_gradient_estimator "parameter_estimators")
 add_example(example_DREM_estimator "parameter_estimators")
+add_example(example_cascadedDREM_estimator "parameter_estimators")
 add_example(example_SS "state_estimators")
 add_example(example_luenberger "state_estimators")
 add_example(example_UIO "disturbance_observers")
