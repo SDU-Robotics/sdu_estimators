@@ -87,19 +87,18 @@ if(BUILD_PYTHON)
     RECURSIVE
     VERBOSE
 
-    MARKER_FILE "${CMAKE_SOURCE_DIR}/py.typed"
+    MARKER_FILE "py.typed"
 
     OUTPUT_PATH "${CMAKE_SOURCE_DIR}/python_stub/_sdu_estimators"
     OUTPUT 
       __init__.pyi
-
     )
 
   install(TARGETS _sdu_estimators DESTINATION ".")
   # install(FILES "${CMAKE_SOURCE_DIR}/_sdu_estimators/_sdu_estimators/__init__.pyi" DESTINATION ".")
   install(
     DIRECTORY "${CMAKE_SOURCE_DIR}/python_stub/_sdu_estimators/_sdu_estimators"
-    DESTINATION "_sdu_estimators"
+    DESTINATION "."
     FILES_MATCHING 
       PATTERN "*.pyi"
       PATTERN "py.typed")

@@ -24,7 +24,7 @@ __version__ = metadata.version(__package__)
 del metadata
 
 
-def _DREM(dt, gamma, theta_init, regressor_extension, r = 1.):
+def _DREM(dt, gamma, theta_init, regressor_extension, r = 1., method=parameter_estimators.utils.Euler):
     # assert gamma.size() == theta_init.size()
     dim_p = 1
     if isinstance(theta_init, (np.ndarray, list)):
@@ -34,20 +34,31 @@ def _DREM(dt, gamma, theta_init, regressor_extension, r = 1.):
         case 1:
             theta_init = np.asarray([theta_init])
             gamma = np.asarray([gamma])
-            return parameter_estimators.DREM_1x1(dt, gamma, theta_init, regressor_extension, r)
+            return parameter_estimators.DREM_1x1(dt, gamma, theta_init, regressor_extension, r, method)
 
         case 2:
             # print()
-            return parameter_estimators.DREM_1x2(dt, gamma, theta_init, regressor_extension, r)
+            return parameter_estimators.DREM_1x2(dt, gamma, theta_init, regressor_extension, r, method)
 
         case 3:
-            return parameter_estimators.DREM_1x3(dt, gamma, theta_init, regressor_extension, r)
+            return parameter_estimators.DREM_1x3(dt, gamma, theta_init, regressor_extension, r, method)
 
         case _:
             raise ValueError(f"Wrong p-dimension. {dim_p} is not supported.")
 
 
 parameter_estimators.DREM = _DREM
+
+
+def _CascadedDREM(dt, a, DIM_N, DIM_P, method=parameter_estimators.utils.Euler):
+    match DIM_N:
+        case 4:
+            match DIM_P:
+                case 2:
+                    return parameter_estimators.CascadedDREM_4x2(dt, a, method)
+
+
+parameter_estimators.CascadedDREM = _CascadedDREM
 
 
 def _Gradient(dt, gamma, theta_init, r = 1., method=parameter_estimators.utils.Euler):

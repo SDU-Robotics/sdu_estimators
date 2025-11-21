@@ -6,6 +6,7 @@
 
 // Parameter Estimators
 #include <sdu_estimators/parameter_estimators/drem.hpp>
+#include <sdu_estimators/parameter_estimators/cascaded_drem.hpp>
 #include <sdu_estimators/parameter_estimators/gradient_estimator.hpp>
 #include <sdu_estimators/parameter_estimators/gradient_estimator_sphere.hpp>
 
@@ -21,14 +22,8 @@
 
 namespace nb = nanobind;
 
-#define DIM_N_1 1
-
-#define DIM_P_2 2
-#define DIM_P_3 3
-
 namespace sdu_estimators
 {
-    
   template<typename T, std::int32_t DIM_N, std::int32_t DIM_P>
   void nb_GradientEstimator(nb::module_ m, const std::string& typestr)
   {
@@ -142,6 +137,27 @@ namespace sdu_estimators
         .def("step", &Class::step, nb::arg("y"), nb::arg("phi"));
   }
 
+  template<typename T, std::int32_t DIM_N, std::int32_t DIM_P>
+  void nb_CascadedDREM(nb::module_ m, const std::string& typestr)
+  {
+    using Class = parameter_estimators::CascadedDREM<T, DIM_N, DIM_P>;
+    std::string nbclass_name = std::string("CascadedDREM") + typestr;
+
+    nb::class_<Class>(m, nbclass_name.c_str())
+        .def(
+            nb::init<
+                float,
+                float,
+                parameter_estimators::utils::IntegrationMethod
+            >(),
+            nb::arg("dt"),
+            nb::arg("a"),
+            nb::arg("integration_method"))
+        .def("get_estimate", &Class::get_estimate)
+        .def("set_dy_dphi", &Class::set_dy_dphi, nb::arg("dy"), nb::arg("dphi"))
+        .def("step", &Class::step, nb::arg("y"), nb::arg("phi"));
+  }
+
   template<typename T, std::int32_t DIM_N>
   void nb_Sphere(nb::module_ m, const std::string& typestr)
   {
@@ -208,6 +224,8 @@ namespace sdu_estimators
     nb_DREM<double, 1, 2>(m_param_ests, "_1x2");
     nb_DREM<double, 1, 3>(m_param_ests, "_1x3");
     nb_DREM<double, 3, 6>(m_param_ests, "_3x6");
+
+    nb_CascadedDREM<double, 4, 2>(m_param_ests, "_4x2");
     
     // Regressor Extensions
     nb_RegressorExtension<double, 1, 1>(m_reg_ext, "_1x1");

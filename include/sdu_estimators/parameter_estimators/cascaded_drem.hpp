@@ -36,6 +36,8 @@ namespace sdu_estimators::parameter_estimators
             dHc_state_old.setZero();
             dy.setZero();
             dphi.setZero();
+
+            eps = 1e-10;
         }
 
         /**
@@ -55,8 +57,6 @@ namespace sdu_estimators::parameter_estimators
             reg_ext_second->step(y, phi);
             reg_ext_first->step(y_ext, phi_ext);
 
-            // std::cout << "phi_f " << reg_ext_second->getPhi() << std::endl;
-
             // Inner loop where we find an estimate of dtheta_ext.
             Eigen::Matrix<T, 2*DIM_P, 1> y_ext_f = reg_ext_first->getY();
             Eigen::Matrix<T, 2*DIM_P, 2*DIM_P> phi_ext_f = reg_ext_first->getPhi();
@@ -69,7 +69,7 @@ namespace sdu_estimators::parameter_estimators
 
             Yvar_ext = lu_ext.solve(Delta_ext * y_ext_f);
             
-            if (Delta_ext > 1e-10)
+            if (Delta_ext > eps)
                 theta_est_ext = Yvar_ext / Delta_ext;
 
             // Now we have an estimate of the derivative of the parameter, theta
@@ -78,8 +78,7 @@ namespace sdu_estimators::parameter_estimators
 
             // 
             Eigen::Matrix<T, DIM_P, 1> y_f = reg_ext_second->getY();
-            Eigen::Matrix<T, DIM_P, DIM_P> phi_f = reg_ext_second->getPhi();
-            
+            Eigen::Matrix<T, DIM_P, DIM_P> phi_f = reg_ext_second->getPhi(); 
 
             //
             Eigen::FullPivLU<Eigen::Matrix<T, DIM_P, DIM_P>> lu(phi_f);
@@ -107,7 +106,7 @@ namespace sdu_estimators::parameter_estimators
             Yvar = lu.solve(Delta * y_f);  // To compute phi_f^{-1} * Delta * y_f.
             Vvar_est = lu.solve(Delta * Hc_out);
 
-            if (Delta > 1e-10)
+            if (Delta > eps)
                 theta_est = Yvar / Delta - Vvar_est / Delta;
         }
 
@@ -118,8 +117,8 @@ namespace sdu_estimators::parameter_estimators
          */
         void set_dy_dphi(const Eigen::Matrix<T, DIM_N, 1> &dy, const Eigen::Matrix<T, DIM_P, DIM_N> &dphi)
         {
-            this->dy << dy;
-            this->dphi << dphi;
+            this->dy = dy;
+            this->dphi = dphi;
         }
 
         /**
@@ -143,6 +142,14 @@ namespace sdu_estimators::parameter_estimators
             dHc_state_old.setZero();
         }
 
+        /**
+         * @brief Set the lower bound on the Delta value before dividing with it.
+         */
+        void set_eps(double eps)
+        {
+            this->eps = eps;
+        }
+
     private:
         regressor_extensions::Kreisselmeier<T, DIM_N, DIM_P> * reg_ext_second;
         regressor_extensions::Kreisselmeier<T, 2*DIM_N, 2*DIM_P> * reg_ext_first;
@@ -162,6 +169,8 @@ namespace sdu_estimators::parameter_estimators
 
         Eigen::Matrix<T, DIM_N, 1> dy;
         Eigen::Matrix<T, DIM_P, DIM_N> dphi;
+
+        double eps;
     };
 }
 

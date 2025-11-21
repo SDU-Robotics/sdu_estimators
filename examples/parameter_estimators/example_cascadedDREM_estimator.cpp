@@ -14,7 +14,7 @@ using namespace sdu_estimators;
 int main()
 {
     float dt = 0.001;
-    float tend = 30 / dt; 
+    float tend = 12 / dt; 
 
     Eigen::Matrix<double, DIM_P, 1> theta_init, theta_true, dtheta;
     // theta_init.resize(2);
