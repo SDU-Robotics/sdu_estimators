@@ -9,10 +9,12 @@
 #define DIM_N 4
 #define DIM_P 2
 
+using namespace sdu_estimators;
+
 int main()
 {
     float dt = 0.001;
-    float tend = 1 / dt;  // 10s
+    float tend = 30 / dt; 
 
     Eigen::Matrix<double, DIM_P, 1> theta_init, theta_true, dtheta;
     // theta_init.resize(2);
@@ -26,9 +28,16 @@ int main()
 
     float a = 10;
 
-    sdu_estimators::parameter_estimators::CascadedDREM<double, DIM_N, DIM_P> solver(dt, a);
+    sdu_estimators::parameter_estimators::utils::IntegrationMethod method = 
+        sdu_estimators::parameter_estimators::utils::IntegrationMethod::Trapezoidal;
+
+    sdu_estimators::parameter_estimators::CascadedDREM<double, DIM_N, DIM_P> solver(dt, a, method);
+    sdu_estimators::parameter_estimators::CascadedDREM<double, DIM_N, DIM_P> solver_standard(dt, a, method);
+
     // sdu_estimators::parameter_estimators::GradientEstimator grad_est(dt, gamma, theta_init);
     std::vector<Eigen::VectorXd> all_theta_est;
+    std::vector<Eigen::VectorXd> all_theta_est_standard;
+
     std::vector<Eigen::VectorXd> all_theta_true;
     Eigen::VectorXd y, dy;
     Eigen::MatrixXd phi, dphi;
@@ -60,12 +69,20 @@ int main()
 
         dy << dphi.transpose() * theta_true + phi.transpose() * dtheta;
 
-        solver.step(y, dy, phi, dphi);
+        solver.set_dy_dphi(dy, dphi);
+        solver.step(y, phi);
+
+        // solver_standard.set_dy_dphi(dy, dphi); // no derivatives means the cascade simplifies to standard DREM
+        solver_standard.step(y, phi);
+
         Eigen::VectorXd tmp = solver.get_estimate();
+        Eigen::VectorXd tmp_standard = solver_standard.get_estimate();
 
         // save data
         all_theta_est.push_back(tmp);
+        all_theta_est_standard.push_back(tmp_standard);
         all_theta_true.push_back(theta_true);
+        
         // std::cout << tmp.transpose() << std::endl;
     }
 
@@ -80,12 +97,13 @@ int main()
     std::ofstream outfile;
     outfile.open("data_cascadedDREM.csv");
 
-    outfile << "timestamp,theta_est_1,theta_est_2,theta_act_1,theta_act_2" << std::endl;
+    outfile << "timestamp,theta_est_1,theta_est_2,theta_est_standard_1,theta_est_standard_2,theta_act_1,theta_act_2" << std::endl;
 
     for (int i = 0; i < tend; ++i)
     {
     outfile << i * dt << "," 
             << all_theta_est[i][0] << "," << all_theta_est[i][1] << "," 
+            << all_theta_est_standard[i][0] << "," << all_theta_est_standard[i][1] << "," 
             << all_theta_true[i][0] << "," << all_theta_true[i][1] << std::endl;
     }
 

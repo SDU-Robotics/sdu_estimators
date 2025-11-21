@@ -13,3 +13,5 @@ This page contains the API documentation of ``sdu_estimators``. The following cl
 .. include:: api_math.irst
 
 .. include:: api_state_estimators.irst
+
+.. include:: api_disturbance_observers.irst

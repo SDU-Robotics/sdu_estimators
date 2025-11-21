@@ -15,35 +15,51 @@ namespace sdu_estimators::parameter_estimators
     /**
      * @brief Cascaded DREM
      * 
-     * An implementation of the cascaded DREM estimator, recently precented in 
+     * An implementation of the cascaded DREM estimator, recently described in 
      * \verbatim embed:rst:inline :cite:`Diget2026` \endverbatim
      */
 
     template<typename T, std::int32_t DIM_N, std::int32_t DIM_P>
-    class CascadedDREM // : public ParameterEstimator<T, DIM_N, DIM_P>
+    class CascadedDREM : public ParameterEstimator<T, DIM_N, DIM_P>
     {
     public:
         CascadedDREM(float dt, float a,
-            parameter_estimators::utils::IntegrationMethod method = parameter_estimators::utils::IntegrationMethod::Euler) :
-                dt(dt), a(a), intg_method(intg_method)
+            utils::IntegrationMethod method = utils::IntegrationMethod::Euler) :
+                dt(dt), a(a), intg_method(method)
         {
-            reg_ext_outer = new regressor_extensions::Kreisselmeier<T, DIM_N, DIM_P>(dt, a, intg_method);
-            reg_ext_inner = new regressor_extensions::Kreisselmeier<T, 2*DIM_N, 2*DIM_P>(dt, a, intg_method);
+            reg_ext_second = new regressor_extensions::Kreisselmeier<T, DIM_N, DIM_P>(dt, a, intg_method);
+            reg_ext_first = new regressor_extensions::Kreisselmeier<T, 2*DIM_N, 2*DIM_P>(dt, a, intg_method);
+            
+            phi_ext.setZero();
+            Hc_state.setZero();
+            dHc_state.setZero();
+            dHc_state_old.setZero();
+            dy.setZero();
+            dphi.setZero();
         }
 
-        void step(const Eigen::Matrix<T, DIM_N, 1> &y, const Eigen::Matrix<T, DIM_N, 1> &dy, 
-                  const Eigen::Matrix<T, DIM_P, DIM_N> &phi, const Eigen::Matrix<T, DIM_P, DIM_N> &dphi)
+        /**
+         * @brief Step the execution of the estimator (must be called in a loop externally).
+         */
+        //void step(const Eigen::Matrix<T, DIM_N, 1> &y, const Eigen::Matrix<T, DIM_N, 1> &dy)
+                  //const Eigen::Matrix<T, DIM_P, DIM_N> &phi, const Eigen::Matrix<T, DIM_P, DIM_N> &dphi) 
+        void step(const Eigen::Matrix<T, DIM_N, 1> &y, const Eigen::Matrix<T, DIM_P, DIM_N> &phi)
         {
+            // Set up the extended regressor equation
             y_ext << y, dy;
-            phi_ext << phi.transpose(), phi.transpose()*0,
-                       dphi.transpose(), phi.transpose();
+            
+            phi_ext(Eigen::seqN(0, DIM_P), Eigen::seqN(0, DIM_N)) << phi;
+            phi_ext(Eigen::seqN(0, DIM_P), Eigen::seqN(DIM_N, DIM_N)) << dphi;
+            phi_ext(Eigen::seqN(DIM_P, DIM_P), Eigen::seqN(DIM_N, DIM_N)) << phi;
 
-            reg_ext_outer->step(y, phi);
-            reg_ext_inner->step(y_ext, phi_ext);
+            reg_ext_second->step(y, phi);
+            reg_ext_first->step(y_ext, phi_ext);
+
+            // std::cout << "phi_f " << reg_ext_second->getPhi() << std::endl;
 
             // Inner loop where we find an estimate of dtheta_ext.
-            Eigen::Matrix<T, 2*DIM_P, 1> y_ext_f = reg_ext_inner->getY();
-            Eigen::Matrix<T, 2*DIM_P, 2*DIM_P> phi_ext_f = reg_ext_inner->getPhi();
+            Eigen::Matrix<T, 2*DIM_P, 1> y_ext_f = reg_ext_first->getY();
+            Eigen::Matrix<T, 2*DIM_P, 2*DIM_P> phi_ext_f = reg_ext_first->getPhi();
 
             Eigen::FullPivLU<Eigen::Matrix<T, 2*DIM_P, 2*DIM_P>> lu_ext(phi_ext_f);
             T Delta_ext = lu_ext.determinant();
@@ -54,24 +70,56 @@ namespace sdu_estimators::parameter_estimators
             Yvar_ext = lu_ext.solve(Delta_ext * y_ext_f);
             
             if (Delta_ext > 1e-10)
-                theta_est_ext = Yvar_ext / Delta_ext;    
+                theta_est_ext = Yvar_ext / Delta_ext;
 
-            std::cout << "i\n" << theta_est_ext << std::endl;
+            // Now we have an estimate of the derivative of the parameter, theta
+            // theta_est_ext = [hat_theta_ext, hat_dtheta_ext]
+            dtheta_ext << theta_est_ext(Eigen::seqN(DIM_P, DIM_P), 0);
 
             // 
-            Eigen::Matrix<T, DIM_P, 1> y_f = reg_ext_outer->getY();
-            Eigen::Matrix<T, DIM_P, DIM_P> phi_f = reg_ext_outer->getPhi();
+            Eigen::Matrix<T, DIM_P, 1> y_f = reg_ext_second->getY();
+            Eigen::Matrix<T, DIM_P, DIM_P> phi_f = reg_ext_second->getPhi();
+            
 
+            //
             Eigen::FullPivLU<Eigen::Matrix<T, DIM_P, DIM_P>> lu(phi_f);
             T Delta = lu.determinant();
 
             if (!std::isfinite(Delta))
                 Delta = 0;
 
+            // Hc filter
+            dHc_state = -a * Hc_state + phi_f * dtheta_ext;
+
+            if (intg_method == utils::IntegrationMethod::Euler)
+            {
+                Hc_state += dt * dHc_state;
+            }
+            else if (intg_method == utils::IntegrationMethod::Trapezoidal)
+            {
+                Hc_state += dt * (dHc_state + dHc_state_old) / 2.;
+                dHc_state_old = dHc_state;
+            }   
+
+            Hc_out = -Hc_state;   
+
+            // adj(phi_f) = Delta * phi_f^{-1}
             Yvar = lu.solve(Delta * y_f);  // To compute phi_f^{-1} * Delta * y_f.
+            Vvar_est = lu.solve(Delta * Hc_out);
 
             if (Delta > 1e-10)
-                theta_est = Yvar / Delta;
+                theta_est = Yvar / Delta - Vvar_est / Delta;
+        }
+
+        /**
+         * @brief Set the values of the derivative of the LRE components, y and phi.
+         * 
+         * This function should be called *before* step.
+         */
+        void set_dy_dphi(const Eigen::Matrix<T, DIM_N, 1> &dy, const Eigen::Matrix<T, DIM_P, DIM_N> &dphi)
+        {
+            this->dy << dy;
+            this->dphi << dphi;
         }
 
         /**
@@ -88,12 +136,16 @@ namespace sdu_estimators::parameter_estimators
         void reset()
         {
             theta_est = theta_init;
-            reg_ext_inner->reset();
+            reg_ext_second->reset();
+            reg_ext_first->reset();
+            Hc_state.setZero();
+            dHc_state.setZero();
+            dHc_state_old.setZero();
         }
 
     private:
-        regressor_extensions::Kreisselmeier<T, DIM_N, DIM_P> * reg_ext_outer;
-        regressor_extensions::Kreisselmeier<T, 2*DIM_N, 2*DIM_P> * reg_ext_inner;
+        regressor_extensions::Kreisselmeier<T, DIM_N, DIM_P> * reg_ext_second;
+        regressor_extensions::Kreisselmeier<T, 2*DIM_N, 2*DIM_P> * reg_ext_first;
 
         float dt;
         float a;
@@ -101,11 +153,15 @@ namespace sdu_estimators::parameter_estimators
         utils::IntegrationMethod intg_method;
 
         // Variables for computation
-        Eigen::Matrix<T, DIM_P, 1> theta_est, theta_init, Yvar;
+        Eigen::Matrix<T, DIM_P, 1> theta_est, theta_init, Yvar, dtheta_ext, Vvar_est, 
+            Hc_state, dHc_state, dHc_state_old, Hc_out;
         Eigen::Matrix<T, DIM_P*2, 1> theta_est_ext, Yvar_ext;
 
         Eigen::Matrix<T, DIM_N*2, 1> y_ext;
         Eigen::Matrix<T, DIM_P*2, DIM_N*2> phi_ext;
+
+        Eigen::Matrix<T, DIM_N, 1> dy;
+        Eigen::Matrix<T, DIM_P, DIM_N> dphi;
     };
 }
 

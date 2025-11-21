@@ -15,15 +15,7 @@ Luenberger Observer
 .. doxygenclass:: sdu_estimators::state_estimators::LuenbergerObserver
     :project: sdu_estimators
     :members:
-
-
-Unknown Input Observer
-----------------------
-
-.. doxygenclass:: sdu_estimators::state_estimators::UnknownInputObserver
-    :project: sdu_estimators
-    :members:
-
+    
 
 Utility Functions
 -----------------

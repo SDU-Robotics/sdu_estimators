@@ -6,6 +6,8 @@
 #include <sdu_estimators/regressor_extensions/regressor_extension.hpp>
 #include <sdu_estimators/parameter_estimators/utils.hpp>
 
+#include <iostream>
+
 namespace sdu_estimators::regressor_extensions
 {
   /**
@@ -25,6 +27,7 @@ namespace sdu_estimators::regressor_extensions
       first_run = true;
 
       this->intg_method = method;
+      
 
       this->dy_f_old.setZero();
       this->dphi_f_old.setZero();
@@ -57,6 +60,10 @@ namespace sdu_estimators::regressor_extensions
       {
         this->phi_f += dt * (dphi_f + dphi_f_old) / 2.;
         this->y_f += dt * (dy_f + dy_f_old) / 2.;
+      }
+      else
+      {
+        std::cout << "No integration" << std::endl;
       }
 
       dphi_f_old = dphi_f;

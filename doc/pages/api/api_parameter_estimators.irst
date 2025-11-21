@@ -30,6 +30,14 @@ Dynamic Regressor Extension and Mixing (DREM)
     :members:
 
 
+Cascaded Dynamic Regressor Extension and Mixing (DREM)
+------------------------------------------------------
+
+.. doxygenclass:: sdu_estimators::parameter_estimators::CascadedDREM
+    :project: sdu_estimators
+    :members:
+
+
 Utility Functions
 -----------------
 

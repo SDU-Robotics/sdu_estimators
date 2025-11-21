@@ -1,0 +1,18 @@
+Disturbance Observers
+=====================
+
+
+Unknown Input Observer
+----------------------
+
+.. doxygenclass:: sdu_estimators::disturbance_observers::UnknownInputObserver
+    :project: sdu_estimators
+    :members:
+
+
+Momentum Observer
+-----------------
+
+.. doxygenclass:: sdu_estimators::disturbance_observers::MomentumObserver
+    :project: sdu_estimators
+    :members:
