@@ -24,42 +24,42 @@ namespace nb = nanobind;
 
 namespace sdu_estimators
 {
-  template<typename T, std::int32_t DIM_N, std::int32_t DIM_P>
-  void nb_GradientEstimator(nb::module_ m, const std::string& typestr)
-  {
-    using Class = parameter_estimators::GradientEstimator<T, DIM_N, DIM_P>;
-    // using ClassParent = parameter_estimators::ParameterEstimator<T, DIM_N, DIM_P>;
-    std::string nbclass_name = std::string("GradientEstimator") + typestr;
+//   template<typename T, std::int32_t DIM_N, std::int32_t DIM_P>
+//   void nb_GradientEstimator(nb::module_ m, const std::string& typestr)
+//   {
+//     using Class = parameter_estimators::GradientEstimator<T, DIM_N, DIM_P>;
+//     // using ClassParent = parameter_estimators::ParameterEstimator<T, DIM_N, DIM_P>;
+//     std::string nbclass_name = std::string("GradientEstimator") + typestr;
 
-    // nb::class_<Class, ClassParent>(m, nbclass_name.c_str())
-    nb::class_<Class>(m, nbclass_name.c_str())
-        .def(
-            nb::init<float, const Eigen::Vector<T, DIM_P>, const Eigen::Vector<T, DIM_P>>(),
-            nb::arg("dt"),
-            nb::arg("gamma"),
-            nb::arg("theta_init"))
-        .def(
-            nb::init<float, const Eigen::Vector<T, DIM_P>, const Eigen::Vector<T, DIM_P>, float>(),
-            nb::arg("dt"),
-            nb::arg("gamma"),
-            nb::arg("theta_init"),
-            nb::arg("r"))
-        .def(
-            nb::init<
-                float,
-                const Eigen::Vector<T, DIM_P>,
-                const Eigen::Vector<T, DIM_P>,
-                float,
-                utils::IntegrationMethod>(),
-            nb::arg("dt"),
-            nb::arg("gamma"),
-            nb::arg("theta_init"),
-            nb::arg("r"),
-            nb::arg("integration_method"))
-        .def("get_estimate", &Class::get_estimate)
-        .def("step", &Class::step, nb::arg("y"), nb::arg("phi"));
-    // .def("step", &Class::step, nb::arg("y"), nb::arg("phi"), nb::arg("method"));
-  }
+//     // nb::class_<Class, ClassParent>(m, nbclass_name.c_str())
+//     nb::class_<Class>(m, nbclass_name.c_str())
+//         .def(
+//             nb::init<float, const Eigen::Vector<T, DIM_P>, const Eigen::Vector<T, DIM_P>>(),
+//             nb::arg("dt"),
+//             nb::arg("gamma"),
+//             nb::arg("theta_init"))
+//         .def(
+//             nb::init<float, const Eigen::Vector<T, DIM_P>, const Eigen::Vector<T, DIM_P>, float>(),
+//             nb::arg("dt"),
+//             nb::arg("gamma"),
+//             nb::arg("theta_init"),
+//             nb::arg("r"))
+//         .def(
+//             nb::init<
+//                 float,
+//                 const Eigen::Vector<T, DIM_P>,
+//                 const Eigen::Vector<T, DIM_P>,
+//                 float,
+//                 utils::IntegrationMethod>(),
+//             nb::arg("dt"),
+//             nb::arg("gamma"),
+//             nb::arg("theta_init"),
+//             nb::arg("r"),
+//             nb::arg("integration_method"))
+//         .def("get_estimate", &Class::get_estimate)
+//         .def("step", &Class::step, nb::arg("y"), nb::arg("phi"));
+//     // .def("step", &Class::step, nb::arg("y"), nb::arg("phi"), nb::arg("method"));
+//   }
 
   template<typename T, std::int32_t DIM_N, std::int32_t DIM_P>
   void nb_RegressorExtension(nb::module_ m, const std::string& typestr)
@@ -207,16 +207,16 @@ namespace sdu_estimators
     nb::module_ m_riemann = m_math.def_submodule("riemannian_manifolds", "Submodule containing definitions for a selection of Riemannian manifolds.");
     nb::module_ m_dist_obs = m.def_submodule("disturbance_observers", "Submodule containing definitions for disturbance observers.");
 
-    nb::enum_<utils::IntegrationMethod>(m_param_ests_utils, "IntegrationMethod")
-        .value("Euler", utils::IntegrationMethod::Euler)
-        .value("Trapezoidal", utils::IntegrationMethod::Trapezoidal)
-        .export_values();
+    // nb::enum_<utils::IntegrationMethod>(m_param_ests_utils, "IntegrationMethod")
+    //     .value("Euler", utils::IntegrationMethod::Euler)
+    //     .value("Trapezoidal", utils::IntegrationMethod::Trapezoidal)
+    //     .export_values();
 
-    // Parameter Estimators
-    nb_GradientEstimator<double, 1, 1>(m_param_ests, "_1x1");
-    nb_GradientEstimator<double, 1, 2>(m_param_ests, "_1x2");
-    nb_GradientEstimator<double, 1, 3>(m_param_ests, "_1x3");
-    nb_GradientEstimator<double, 3, 6>(m_param_ests, "_3x6");
+    // // Parameter Estimators
+    // nb_GradientEstimator<double, 1, 1>(m_param_ests, "_1x1");
+    // nb_GradientEstimator<double, 1, 2>(m_param_ests, "_1x2");
+    // nb_GradientEstimator<double, 1, 3>(m_param_ests, "_1x3");
+    // nb_GradientEstimator<double, 3, 6>(m_param_ests, "_3x6");
 
     nb_GradientEstimatorSphere<double, 1, 3>(m_param_ests, "_1x3");
 

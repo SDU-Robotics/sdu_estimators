@@ -8,10 +8,13 @@
 // #include "sdu_estimators/regressor_extensions/kreisselmeier.hpp"
 #include "sdu_estimators/regressor_extensions/delay.hpp"
 #include "sdu_estimators/regressor_extensions/lti.hpp"
+#include "sdu_estimators/integrator/integrator.hpp"
+
+using namespace sdu_estimators;
 
 int main()
 {
-  float dt = 0.002;
+  float dt = 0.2;
   float tend = 50 / dt; // 10s
 
   Eigen::Matrix<double, 2, 1> gamma;
@@ -43,8 +46,9 @@ int main()
 
   std::cout << "test" << std::endl;
 
-  float r = 0.5;
-  sdu_estimators::parameter_estimators::DREM<double, 1, 2> DREM(dt, gamma, theta_init, &reg_ext, r);
+  float r = 1;
+  integrator::IntegrationMethod intg_method = integrator::IntegrationMethod::RK2;
+  sdu_estimators::parameter_estimators::DREM<double, 1, 2> DREM(dt, gamma, theta_init, &reg_ext, r, intg_method);
   // sdu_estimators::parameter_estimators::GradientEstimator grad_est(dt, gamma, theta_init);
   std::vector<Eigen::VectorXd> all_theta_est;
   Eigen::VectorXd y;

@@ -11,7 +11,7 @@
 #include <sdu_estimators/regressor_extensions/regressor_extension.hpp>
 #include <type_traits>
 
-#include "sdu_estimators/utils.hpp"
+#include "sdu_estimators/integrator/integrator.hpp"
 #include "sdu_estimators/regressor_extensions/kreisselmeier.hpp"
 
 
@@ -35,7 +35,7 @@ namespace sdu_estimators::parameter_estimators
         const Eigen::Matrix<T, DIM_P, 1> &gamma,
         const Eigen::Matrix<T, DIM_P, 1> &theta_init,
         regressor_extensions::RegressorExtension<T, DIM_N, DIM_P> *reg_ext,
-        utils::IntegrationMethod method = utils::IntegrationMethod::Euler)
+        integrator::IntegrationMethod method = integrator::IntegrationMethod::Euler)
         : DREM(dt, gamma, theta_init, reg_ext, 1.0f, method)
     {
     }
@@ -46,14 +46,12 @@ namespace sdu_estimators::parameter_estimators
         const Eigen::Matrix<T, DIM_P, 1> &theta_init,
         regressor_extensions::RegressorExtension<T, DIM_N, DIM_P> *reg_ext,
         float r,
-        utils::IntegrationMethod method = utils::IntegrationMethod::Euler)
+        integrator::IntegrationMethod method = integrator::IntegrationMethod::Euler)
         : dt(dt),
           gamma(gamma),
           r(r),
           theta_est(theta_init),
           theta_init(theta_init),
-          dtheta(theta_init * 0),
-          dtheta_old(theta_init * 0),
           p(theta_init.size()),
           reg_ext(reg_ext),
           intg_method(method)
@@ -81,25 +79,24 @@ namespace sdu_estimators::parameter_estimators
 
       if (!std::isfinite(Delta))
         Delta = 0;
-
+      
       Yvar = lu.solve(Delta * y_f);  // To compute phi_f^{-1} * Delta * y_f.
 
-      Eigen::Vector<T, DIM_P> y_err = Yvar - Delta * theta_est;
-      Eigen::Vector<T, DIM_P> tmp1 = y_err.array().abs().pow(r);
-      Eigen::Vector<T, DIM_P> tmp2 = y_err.cwiseSign();
-
-      dtheta = gamma.asDiagonal() * Delta * tmp1.cwiseProduct(tmp2);
-
-      if (intg_method == utils::IntegrationMethod::Euler)
+      auto get_dydt = [=](Eigen::Vector<T, DIM_P> theta_est_)
       {
-        theta_est += dt * dtheta;
-      }
-      else if (intg_method == utils::IntegrationMethod::Trapezoidal)
-      {
-        theta_est += (dt / 2.) * (dtheta + dtheta_old);
-      }
+        Eigen::Vector<T, DIM_P> y_err = Yvar - Delta * theta_est_;
+        Eigen::Vector<T, DIM_P> tmp1 = y_err.array().abs().pow(r);
+        Eigen::Vector<T, DIM_P> tmp2 = y_err.cwiseSign();
 
-      dtheta_old = dtheta;
+        Eigen::Vector<T, DIM_P> dtheta = gamma.asDiagonal() * Delta * tmp1.cwiseProduct(tmp2);
+        return dtheta;
+      };
+
+      theta_est = integrator::Integrator<T, DIM_N, DIM_P>::integrate(
+        theta_est, 
+        get_dydt, 
+        dt,
+        intg_method);
     }
 
     /**
@@ -123,7 +120,7 @@ namespace sdu_estimators::parameter_estimators
     float dt;
     Eigen::Matrix<T, DIM_P, 1> gamma;
     float r;
-    Eigen::Matrix<T, DIM_P, 1> theta_est, theta_init, dtheta, dtheta_old, Yvar;
+    Eigen::Matrix<T, DIM_P, 1> theta_est, theta_init, Yvar;
     Eigen::Matrix<T, DIM_N, 1> y_err;
     int p;  // number of parameters
 
@@ -134,7 +131,7 @@ namespace sdu_estimators::parameter_estimators
     // regressor_extensions::Kreisselmeier<T, DIM_N, DIM_P> reg_ext;
     regressor_extensions::RegressorExtension<T, DIM_N, DIM_P> *reg_ext;
 
-    utils::IntegrationMethod intg_method;
+    integrator::IntegrationMethod intg_method;
   };
 }  // namespace sdu_estimators::parameter_estimators
 

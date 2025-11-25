@@ -3,13 +3,16 @@
 #include <cmath>
 #include <fstream>
 #include <iostream>
-#include <sdu_estimators/parameter_estimators/gradient_estimator.hpp>
 #include <vector>
 
+#include "sdu_estimators/parameter_estimators/gradient_estimator.hpp"
+#include "sdu_estimators/integrator/integrator.hpp"
+
+using namespace sdu_estimators;
 
 int main()
 {
-  float dt = 0.002;
+  float dt = 0.001;
   float tend = 50 / dt; // 10s
   Eigen::Vector<double, 2> gamma = {0.5, 0.5};
   float r = 0.5;
@@ -22,8 +25,8 @@ int main()
   theta_true << 1,
                 2;
 
-  sdu_estimators::parameter_estimators::GradientEstimator<double, 1, 2> grad_est(dt, gamma, theta_init, r,
-    sdu_estimators::utils::IntegrationMethod::Trapezoidal);
+  integrator::IntegrationMethod intg_method = integrator::IntegrationMethod::RK4;
+  parameter_estimators::GradientEstimator<double, 1, 2> grad_est(dt, gamma, theta_init, r, intg_method);
   // sdu_estimators::parameter_estimators::GradientEstimator grad_est(dt, gamma, theta_init);
   std::vector<Eigen::VectorXd> all_theta_est;
   Eigen::VectorXd y;

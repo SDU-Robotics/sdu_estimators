@@ -50,24 +50,27 @@ int main()
         };
 
         theta_euler.push_back(
-            integrator::IntegratorEuler<double, 2, 1>::integrate(
+            integrator::Integrator<double, 2, 1>::integrate(
                 theta_euler.back(), 
                 get_dydt_lambda, 
-                dt)
+                dt,
+                integrator::IntegrationMethod::Euler)
         );
 
         theta_rk2.push_back(
-            integrator::IntegratorRK2<double, 2, 1>::integrate(
+            integrator::Integrator<double, 2, 1>::integrate(
                 theta_rk2.back(), 
                 get_dydt_lambda, 
-                dt)
+                dt,
+                integrator::IntegrationMethod::RK2)
         );
 
         theta_rk4.push_back(
-            integrator::IntegratorRK4<double, 2, 1>::integrate(
+            integrator::Integrator<double, 2, 1>::integrate(
                 theta_rk4.back(), 
                 get_dydt_lambda, 
-                dt)
+                dt,
+                integrator::IntegrationMethod::RK4)
         );
     }
 

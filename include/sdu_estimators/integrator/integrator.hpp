@@ -14,9 +14,16 @@ namespace sdu_estimators::integrator {
      * Inspired by the implementation of the integrators in 
      * https://github.com/sfwa/ukf/blob/master/include/UKF/Integrator.h
      */
+    enum class IntegrationMethod
+    {
+      Euler,
+      RK2,
+      RK4
+    };
+
     template <typename T, int32_t DIM_N, int32_t DIM_P>
-    class IntegratorEuler
-    {        
+    class Integrator
+    {
         public:
             using State = Eigen::Matrix<T, DIM_N, DIM_P>;
 
@@ -25,19 +32,45 @@ namespace sdu_estimators::integrator {
                 const std::function<State(
                     const State&
                 )> & get_dydt,
+                float delta,
+                IntegrationMethod method = IntegrationMethod::RK2
+            )
+            {
+                State outval;
+
+                switch (method) 
+                {
+                    case IntegrationMethod::Euler:
+                        outval = integrate_euler(y, get_dydt, delta);
+                        // std::cout << "euler" << std::endl;
+                        break;
+
+                    case IntegrationMethod::RK2:
+                        outval = integrate_rk2(y, get_dydt, delta);
+                        // std::cout << "rk2" << std::endl;
+                        break;
+
+                    case IntegrationMethod::RK4:
+                        outval = integrate_rk4(y, get_dydt, delta);
+                        // std::cout << "rk4" << std::endl;
+                        break;
+                }
+
+                return outval;
+            }
+
+        private:
+            static State integrate_euler(
+                const State & y,
+                const std::function<State(
+                    const State&
+                )> & get_dydt,
                 float delta)
             {
                 return y + delta * get_dydt(y);
             }
-    };
 
-    template <typename T, int32_t DIM_N, int32_t DIM_P>
-    class IntegratorRK2
-    {
-        public:
-            using State = Eigen::Matrix<T, DIM_N, DIM_P>;
-
-            static State integrate(
+            static State integrate_rk2(
                 const State & y,
                 const std::function<State(
                     const State&
@@ -48,15 +81,8 @@ namespace sdu_estimators::integrator {
                 State k2 = delta * get_dydt(y + 0.5 * k1);
                 return y + k2;
             }
-    };
 
-    template <typename T, int32_t DIM_N, int32_t DIM_P>
-    class IntegratorRK4
-    {
-        public:
-            using State = Eigen::Matrix<T, DIM_N, DIM_P>;
-            
-            static State integrate(
+            static State integrate_rk4(
                 const State & y,
                 const std::function<State(
                     const State&

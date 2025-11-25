@@ -20,9 +20,9 @@ add_example(example_UIO "disturbance_observers")
 add_example(example_momentum_observer "disturbance_observers")
 add_example(integrator_example "integrator")
 
-# increase stack size
-add_example(example_beam "structural_parameters")
-target_compile_definitions(example_beam PRIVATE EIGEN_STACK_ALLOCATION_LIMIT=0)
+# # increase stack size
+# add_example(example_beam "structural_parameters")
+# target_compile_definitions(example_beam PRIVATE EIGEN_STACK_ALLOCATION_LIMIT=0)
 
 add_example(example_utils "state_estimators")
 

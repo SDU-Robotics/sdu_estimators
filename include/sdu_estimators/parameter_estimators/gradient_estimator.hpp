@@ -3,8 +3,10 @@
 #define GRADIENT_ESTIMATOR_HPP
 
 #include <cstdint>
-#include <sdu_estimators/parameter_estimators/parameter_estimator.hpp>
-#include <sdu_estimators/utils.hpp>
+
+#include "sdu_estimators/parameter_estimators/parameter_estimator.hpp"
+#include "sdu_estimators/utils.hpp"
+#include "sdu_estimators/integrator/integrator.hpp"
 
 
 namespace sdu_estimators::parameter_estimators
@@ -42,7 +44,7 @@ namespace sdu_estimators::parameter_estimators
         float dt,
         const Eigen::Vector<T, DIM_P> gamma,
         const Eigen::Vector<T, DIM_P> &theta_init,
-        utils::IntegrationMethod method = utils::IntegrationMethod::Euler)
+        integrator::IntegrationMethod method)
         : GradientEstimator(dt, gamma, theta_init, 1.0f, method)
     {
     }
@@ -71,14 +73,12 @@ namespace sdu_estimators::parameter_estimators
         const Eigen::Vector<T, DIM_P> gamma,
         const Eigen::Vector<T, DIM_P> &theta_init,
         float r,
-        utils::IntegrationMethod method = utils::IntegrationMethod::Euler)
+        integrator::IntegrationMethod method)
         : dt(dt),
           r(r),
           gamma(gamma),
           theta_est(theta_init),
           theta_init(theta_init),
-          dtheta_old(theta_init * 0),
-          p(theta_init.size()),
           intg_method(method)
     {
     }
@@ -93,25 +93,24 @@ namespace sdu_estimators::parameter_estimators
     void step(const Eigen::Matrix<T, DIM_N, 1> &y, const Eigen::Matrix<T, DIM_P, DIM_N> &phi)
     // utils::IntegrationMethod method = utils::IntegrationMethod::Euler)
     {
-      y_err = y - phi.transpose() * theta_est;
-
-      Eigen::Vector<T, DIM_N> tmp1 = y_err.array().abs().pow(r);
-      Eigen::Vector<T, DIM_N> tmp2 = y_err.cwiseSign();
-
-      // std::cout << tmp1 << " " << tmp2 << std::endl;
-
-      dtheta = gamma.asDiagonal() * phi * (tmp1.cwiseProduct(tmp2));
-
-      if (intg_method == utils::IntegrationMethod::Euler)
+      auto get_dydt = [=](Eigen::Vector<T, DIM_P> theta_est_)
       {
-        theta_est += dt * dtheta;
-      }
-      else if (intg_method == utils::IntegrationMethod::Trapezoidal)
-      {
-        theta_est += (dt / 2.) * (dtheta + dtheta_old);
-      }
+        Eigen::Vector<T, DIM_N> y_err = y - phi.transpose() * theta_est_;
 
-      dtheta_old = dtheta;
+        Eigen::Vector<T, DIM_N> tmp1 = y_err.array().abs().pow(r);
+        Eigen::Vector<T, DIM_N> tmp2 = y_err.cwiseSign();
+
+        // std::cout << tmp1 << " " << tmp2 << std::endl;
+
+        Eigen::Vector<T, DIM_P> dtheta = gamma.asDiagonal() * phi * (tmp1.cwiseProduct(tmp2));
+        return dtheta;
+      };
+
+      theta_est = integrator::Integrator<T, DIM_N, DIM_P>::integrate(
+        theta_est, 
+        get_dydt, 
+        dt, 
+        intg_method);
     }
 
     /**
@@ -137,11 +136,9 @@ namespace sdu_estimators::parameter_estimators
    private:
     float dt;
     float r;
-    Eigen::Vector<T, DIM_P> theta_est, theta_init, dtheta, dtheta_old, gamma;
-    Eigen::Vector<T, DIM_N> y_err;
-    int p;  // number of parameters
+    Eigen::Vector<T, DIM_P> theta_est, theta_init, gamma;
 
-    utils::IntegrationMethod intg_method;
+    integrator::IntegrationMethod intg_method;
   };
 }  // namespace sdu_estimators::parameter_estimators
 

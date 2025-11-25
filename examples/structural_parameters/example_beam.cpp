@@ -2,9 +2,10 @@
 #include <iostream>
 #include <iomanip>
 
-#include <sdu_estimators/parameter_estimators/gradient_estimator.hpp>
+#include "sdu_estimators/parameter_estimators/gradient_estimator.hpp"
 #include "sdu_estimators/regressor_extensions/kreisselmeier.hpp"
-#include <sdu_estimators/parameter_estimators/drem.hpp>
+#include "sdu_estimators/parameter_estimators/drem.hpp"
+#include "sdu_estimators/integrator/integrator.hpp"
 
 
 Eigen::Matrix<long double, 182, 13> getBeamPhi(Eigen::Vector<long double, 13> x, Eigen::Vector<long double, 13> ddx)
@@ -142,10 +143,11 @@ int main()
   Eigen::Vector<long double, 182> gamma;
   gamma.setOnes();
 
-  gamma *= 1e6;
-  float r = 1;
-  sdu_estimators::parameter_estimators::GradientEstimator<long double, 13, 182> estimator(dt, gamma, theta_init, r);
+  gamma *= 1e8;
+  float r = 0.5;
 
+  sdu_estimators::integrator::IntegrationMethod intg_method = sdu_estimators::integrator::IntegrationMethod::RK4;
+  sdu_estimators::parameter_estimators::GradientEstimator<long double, 13, 182> estimator(dt, gamma, theta_init, r, intg_method);
 
   /*
   float ell = 0.001;
