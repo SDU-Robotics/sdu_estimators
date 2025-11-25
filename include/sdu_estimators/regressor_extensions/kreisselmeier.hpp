@@ -4,7 +4,7 @@
 #define KREISSELMEIER_HPP
 
 #include <sdu_estimators/regressor_extensions/regressor_extension.hpp>
-#include <sdu_estimators/parameter_estimators/utils.hpp>
+#include <sdu_estimators/utils.hpp>
 
 #include <iostream>
 
@@ -19,7 +19,7 @@ namespace sdu_estimators::regressor_extensions
   {
   public:
     Kreisselmeier(float dt, float ell,
-      parameter_estimators::utils::IntegrationMethod method = parameter_estimators::utils::IntegrationMethod::Euler)
+      utils::IntegrationMethod method = utils::IntegrationMethod::Euler)
     {
       this->dt = dt;
       this->ell = ell;
@@ -51,12 +51,12 @@ namespace sdu_estimators::regressor_extensions
       dphi_f = -ell * this->phi_f + phi * phi.transpose();
       dy_f = -ell * this->y_f + phi * y;
 
-      if (intg_method == parameter_estimators::utils::IntegrationMethod::Euler)
+      if (intg_method == utils::IntegrationMethod::Euler)
       {
         this->phi_f += dt * dphi_f;
         this->y_f += dt * dy_f;
       }
-      else if (intg_method == parameter_estimators::utils::IntegrationMethod::Trapezoidal)
+      else if (intg_method == utils::IntegrationMethod::Trapezoidal)
       {
         this->phi_f += dt * (dphi_f + dphi_f_old) / 2.;
         this->y_f += dt * (dy_f + dy_f_old) / 2.;
@@ -86,7 +86,7 @@ namespace sdu_estimators::regressor_extensions
 
     bool first_run{};
 
-    parameter_estimators::utils::IntegrationMethod intg_method;
+    utils::IntegrationMethod intg_method;
 
     Eigen::Matrix<T, DIM_P, 1> dy_f, dy_f_old; //
     Eigen::Matrix<T, DIM_P, DIM_P> dphi_f, dphi_f_old; //

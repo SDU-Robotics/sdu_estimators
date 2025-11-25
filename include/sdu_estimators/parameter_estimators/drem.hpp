@@ -11,8 +11,9 @@
 #include <sdu_estimators/regressor_extensions/regressor_extension.hpp>
 #include <type_traits>
 
-#include "sdu_estimators/parameter_estimators/utils.hpp"
+#include "sdu_estimators/utils.hpp"
 #include "sdu_estimators/regressor_extensions/kreisselmeier.hpp"
+
 
 namespace sdu_estimators::parameter_estimators
 {

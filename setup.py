@@ -9,5 +9,6 @@ setup(
         "-DBUILD_TESTING=OFF",
         "-DBUILD_DOCS=OFF",
     ],
-    cmake_install_dir="python/sdu_estimators",
+    cmake_install_dir="python/sdu_estimators"
 )
+

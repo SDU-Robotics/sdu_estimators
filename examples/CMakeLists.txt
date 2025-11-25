@@ -18,6 +18,7 @@ add_example(example_SS "state_estimators")
 add_example(example_luenberger "state_estimators")
 add_example(example_UIO "disturbance_observers")
 add_example(example_momentum_observer "disturbance_observers")
+add_example(integrator_example "integrator")
 
 # increase stack size
 add_example(example_beam "structural_parameters")

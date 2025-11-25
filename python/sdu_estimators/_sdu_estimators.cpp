@@ -50,7 +50,7 @@ namespace sdu_estimators
                 const Eigen::Vector<T, DIM_P>,
                 const Eigen::Vector<T, DIM_P>,
                 float,
-                parameter_estimators::utils::IntegrationMethod>(),
+                utils::IntegrationMethod>(),
             nb::arg("dt"),
             nb::arg("gamma"),
             nb::arg("theta_init"),
@@ -80,7 +80,7 @@ namespace sdu_estimators
     nb::class_<Class, ClassParent>(m, nbclass_name.c_str())
         .def(nb::init<float, float>(), nb::arg("dt"), nb::arg("ell"))
         .def(
-            nb::init<float, float, parameter_estimators::utils::IntegrationMethod>(),
+            nb::init<float, float, utils::IntegrationMethod>(),
             nb::arg("dt"),
             nb::arg("ell"),
             nb::arg("integration_method"))
@@ -126,7 +126,7 @@ namespace sdu_estimators
                 const Eigen::Vector<T, DIM_P>,
                 regressor_extensions::RegressorExtension<T, DIM_N, DIM_P>*,
                 float,
-                parameter_estimators::utils::IntegrationMethod>(),
+                utils::IntegrationMethod>(),
             nb::arg("dt"),
             nb::arg("gamma"),
             nb::arg("theta_init"),
@@ -148,7 +148,7 @@ namespace sdu_estimators
             nb::init<
                 float,
                 float,
-                parameter_estimators::utils::IntegrationMethod
+                utils::IntegrationMethod
             >(),
             nb::arg("dt"),
             nb::arg("a"),
@@ -207,9 +207,9 @@ namespace sdu_estimators
     nb::module_ m_riemann = m_math.def_submodule("riemannian_manifolds", "Submodule containing definitions for a selection of Riemannian manifolds.");
     nb::module_ m_dist_obs = m.def_submodule("disturbance_observers", "Submodule containing definitions for disturbance observers.");
 
-    nb::enum_<parameter_estimators::utils::IntegrationMethod>(m_param_ests_utils, "IntegrationMethod")
-        .value("Euler", parameter_estimators::utils::IntegrationMethod::Euler)
-        .value("Trapezoidal", parameter_estimators::utils::IntegrationMethod::Trapezoidal)
+    nb::enum_<utils::IntegrationMethod>(m_param_ests_utils, "IntegrationMethod")
+        .value("Euler", utils::IntegrationMethod::Euler)
+        .value("Trapezoidal", utils::IntegrationMethod::Trapezoidal)
         .export_values();
 
     // Parameter Estimators

@@ -28,8 +28,7 @@ int main()
 
     float a = 10;
 
-    sdu_estimators::parameter_estimators::utils::IntegrationMethod method = 
-        sdu_estimators::parameter_estimators::utils::IntegrationMethod::Trapezoidal;
+    sdu_estimators::utils::IntegrationMethod method = sdu_estimators::utils::IntegrationMethod::Trapezoidal;
 
     sdu_estimators::parameter_estimators::CascadedDREM<double, DIM_N, DIM_P> solver(dt, a, method);
     sdu_estimators::parameter_estimators::CascadedDREM<double, DIM_N, DIM_P> solver_standard(dt, a, method);

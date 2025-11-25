@@ -1,7 +1,7 @@
 #ifndef SDU_ESTIMATORS_DISTURBANCE_OBSERVERS_MOMENTUM_OBSERVER_HPP
 #define SDU_ESTIMATORS_DISTURBANCE_OBSERVERS_MOMENTUM_OBSERVER_HPP
 
-#include <Eigen/Core>
+#include <Eigen/Dense>
 #include <functional>
 #include <memory>  // for std::shared_ptr
 

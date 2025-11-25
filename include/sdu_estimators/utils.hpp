@@ -1,12 +1,12 @@
 #pragma once
-#ifndef PARAMETER_ESTIMATORS_UTILS_HPP
-#define PARAMETER_ESTIMATORS_UTILS_HPP
+#ifndef UTILS_HPP
+#define UTILS_HPP
 
 #include <Eigen/Dense>
 #include <cmath>
 
 
-namespace sdu_estimators::parameter_estimators::utils
+namespace sdu_estimators::utils
 {
     // https://gist.github.com/redpony/fc8a0db6b20f7b1a3f23
 
