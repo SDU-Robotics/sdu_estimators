@@ -10,7 +10,7 @@ using namespace sdu_estimators;
 
 using Vector = Eigen::Matrix<double, 2, 1>;
 
-Vector get_dydt(double t, Vector y, Vector u)
+Vector get_dydt(Vector & y, double u)
 {
     Vector out;
 
@@ -22,8 +22,8 @@ Vector get_dydt(double t, Vector y, Vector u)
 
 int main()
 {
-    double dt = 0.1;
-    double end_time = 12;
+    double dt = 0.01;
+    double end_time = 120;
     int steps = end_time / dt;
 
     std::cout << "steps " << steps << std::endl;
@@ -36,8 +36,7 @@ int main()
     theta_rk2.push_back(theta0);
     theta_rk4.push_back(theta0);
 
-    Vector u;
-    u.setZero();
+    double u = 0;
 
     float t;
 
@@ -45,25 +44,30 @@ int main()
     {
         t = dt * i;
 
+        auto get_dydt_lambda = [u](Vector y) 
+        {
+            return get_dydt(y, u);
+        };
+
         theta_euler.push_back(
-            integrator::IntegratorEuler<double, 2, 1>::integrate(t, 
+            integrator::IntegratorEuler<double, 2, 1>::integrate(
                 theta_euler.back(), 
-                get_dydt, 
-                u, dt)
+                get_dydt_lambda, 
+                dt)
         );
 
         theta_rk2.push_back(
-            integrator::IntegratorRK2<double, 2, 1>::integrate(t, 
+            integrator::IntegratorRK2<double, 2, 1>::integrate(
                 theta_rk2.back(), 
-                get_dydt, 
-                u, dt)
+                get_dydt_lambda, 
+                dt)
         );
 
         theta_rk4.push_back(
-            integrator::IntegratorRK4<double, 2, 1>::integrate(t, 
+            integrator::IntegratorRK4<double, 2, 1>::integrate(
                 theta_rk4.back(), 
-                get_dydt, 
-                u, dt)
+                get_dydt_lambda, 
+                dt)
         );
     }
 

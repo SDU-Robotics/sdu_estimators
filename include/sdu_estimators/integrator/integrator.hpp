@@ -16,66 +16,60 @@ namespace sdu_estimators::integrator {
      */
     template <typename T, int32_t DIM_N, int32_t DIM_P>
     class IntegratorEuler
-    {
+    {        
         public:
-        static Eigen::Matrix<T, DIM_N, DIM_P> integrate(
-            float t, 
-            const Eigen::Matrix<T, DIM_N, DIM_P> & y,
-            const std::function<Eigen::Matrix<T, DIM_N, DIM_P>(
-                double,
-                const Eigen::Matrix<T, DIM_N, DIM_P>&,
-                const Eigen::Matrix<T, DIM_N, DIM_P>&
-            )> & get_dydt,
-            const Eigen::Matrix<T, DIM_N, DIM_P> & u,
-            float delta)
-        {
-            return y + delta * get_dydt(t, y, u);
-        }
+            using State = Eigen::Matrix<T, DIM_N, DIM_P>;
+
+            static State integrate(
+                const State & y,
+                const std::function<State(
+                    const State&
+                )> & get_dydt,
+                float delta)
+            {
+                return y + delta * get_dydt(y);
+            }
     };
 
     template <typename T, int32_t DIM_N, int32_t DIM_P>
     class IntegratorRK2
     {
         public:
-        static Eigen::Matrix<T, DIM_N, DIM_P> integrate(
-            float t, 
-            const Eigen::Matrix<T, DIM_N, DIM_P> & y,
-            const std::function<Eigen::Matrix<T, DIM_N, DIM_P>(
-                double,
-                const Eigen::Matrix<T, DIM_N, DIM_P>&,
-                const Eigen::Matrix<T, DIM_N, DIM_P>&
-            )> & get_dydt,
-            const Eigen::Matrix<T, DIM_N, DIM_P> & u,
-            float delta)
-        {
-            Eigen::Matrix<T, DIM_N, DIM_P> k1 = delta * get_dydt(t, y, u);
-            Eigen::Matrix<T, DIM_N, DIM_P> k2 = delta * get_dydt(t + 0.5 * delta, y + 0.5 * k1, u);
-            return y + k2;
-        }
+            using State = Eigen::Matrix<T, DIM_N, DIM_P>;
+
+            static State integrate(
+                const State & y,
+                const std::function<State(
+                    const State&
+                )> & get_dydt,
+                float delta)
+            {
+                State k1 = delta * get_dydt(y);
+                State k2 = delta * get_dydt(y + 0.5 * k1);
+                return y + k2;
+            }
     };
 
     template <typename T, int32_t DIM_N, int32_t DIM_P>
     class IntegratorRK4
     {
         public:
-        static Eigen::Matrix<T, DIM_N, DIM_P> integrate(
-            float t, 
-            const Eigen::Matrix<T, DIM_N, DIM_P> & y,
-            const std::function<Eigen::Matrix<T, DIM_N, DIM_P>(
-                double,
-                const Eigen::Matrix<T, DIM_N, DIM_P>&,
-                const Eigen::Matrix<T, DIM_N, DIM_P>&
-            )> & get_dydt,
-            const Eigen::Matrix<T, DIM_N, DIM_P> & u,
-            float delta)
-        {
-            Eigen::Matrix<T, DIM_N, DIM_P> k1 = delta * get_dydt(t, y, u);
-            Eigen::Matrix<T, DIM_N, DIM_P> k2 = delta * get_dydt(t + 0.5 * delta, y + 0.5 * k1, u);
-            Eigen::Matrix<T, DIM_N, DIM_P> k3 = delta * get_dydt(t + 0.5 * delta, y + 0.5 * k2, u);
-            Eigen::Matrix<T, DIM_N, DIM_P> k4 = delta * get_dydt(t + delta, y + k3, u);
+            using State = Eigen::Matrix<T, DIM_N, DIM_P>;
+            
+            static State integrate(
+                const State & y,
+                const std::function<State(
+                    const State&
+                )> & get_dydt,
+                float delta)
+            {
+                State k1 = delta * get_dydt(y);
+                State k2 = delta * get_dydt(y + 0.5 * k1);
+                State k3 = delta * get_dydt(y + 0.5 * k2);
+                State k4 = delta * get_dydt(y + k3);
 
-            return y + (k1 + 2 * k2 + 2 * k3 + k4) / 6.;
-        }
+                return y + (k1 + 2 * k2 + 2 * k3 + k4) / 6.;
+            }
     };
 }
 
