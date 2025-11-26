@@ -38,11 +38,11 @@ namespace sdu_estimators::utils
         return ld;
     }
 
-    enum class IntegrationMethod
-    {
-      Euler,
-      Trapezoidal
-    };
+    // enum class IntegrationMethod
+    // {
+    //   Euler,
+    //   Trapezoidal
+    // };
 }
 
 #endif

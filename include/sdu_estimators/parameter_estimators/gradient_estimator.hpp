@@ -44,7 +44,7 @@ namespace sdu_estimators::parameter_estimators
         float dt,
         const Eigen::Vector<T, DIM_P> gamma,
         const Eigen::Vector<T, DIM_P> &theta_init,
-        integrator::IntegrationMethod method)
+        integrator::IntegrationMethod method = integrator::IntegrationMethod::RK4)
         : GradientEstimator(dt, gamma, theta_init, 1.0f, method)
     {
     }
@@ -73,7 +73,7 @@ namespace sdu_estimators::parameter_estimators
         const Eigen::Vector<T, DIM_P> gamma,
         const Eigen::Vector<T, DIM_P> &theta_init,
         float r,
-        integrator::IntegrationMethod method)
+        integrator::IntegrationMethod method = integrator::IntegrationMethod::RK4)
         : dt(dt),
           r(r),
           gamma(gamma),
@@ -106,7 +106,7 @@ namespace sdu_estimators::parameter_estimators
         return dtheta;
       };
 
-      theta_est = integrator::Integrator<T, DIM_N, DIM_P>::integrate(
+      theta_est = integrator::Integrator<T, DIM_P, 1>::integrate(
         theta_est, 
         get_dydt, 
         dt, 

@@ -4,9 +4,10 @@
 
 #include <Eigen/Core>
 #include <cstdint>
-#include <sdu_estimators/math/riemannian_manifolds/sphere.hpp>
-#include <sdu_estimators/parameter_estimators/parameter_estimator.hpp>
-#include <sdu_estimators/utils.hpp>
+
+#include "sdu_estimators/math/riemannian_manifolds/sphere.hpp"
+#include "sdu_estimators/parameter_estimators/parameter_estimator.hpp"
+#include "sdu_estimators/utils.hpp"
 
 
 namespace sdu_estimators::parameter_estimators

@@ -72,53 +72,40 @@ if(BUILD_PYTHON)
   add_subdirectory(ext/nanobind)
 
   # Compile the nanobind module
-  nanobind_add_module(_sdu_estimators python/sdu_estimators/_sdu_estimators.cpp)
+  # nanobind_add_module(_sdu_estimators python/sdu_estimators/_sdu_estimators.cpp)
+  nanobind_add_module(_sdu_estimators 
+                      python/sdu_estimators/_sdu_estimators.cpp
+                      python/sdu_estimators/_parameter_estimators.cpp
+                      python/sdu_estimators/_regressor_extensions.cpp
+                      python/sdu_estimators/_riemannian_manifolds.cpp
+                      python/sdu_estimators/_disturbance_observers.cpp)
 
   target_link_libraries(_sdu_estimators PUBLIC sdu_estimators)
 
-  nanobind_add_stub(
-    _sdu_estimators_stub
-    
-    MODULE _sdu_estimators
-
-    PYTHON_PATH $<TARGET_FILE_DIR:_sdu_estimators>
-    DEPENDS _sdu_estimators 
-    
-    RECURSIVE
-    VERBOSE
-
-    MARKER_FILE "py.typed"
-
-    OUTPUT_PATH "${CMAKE_SOURCE_DIR}/python_stub/_sdu_estimators"
-    OUTPUT 
-      __init__.pyi
-    )
-
   install(TARGETS _sdu_estimators DESTINATION ".")
-  # install(FILES "${CMAKE_SOURCE_DIR}/_sdu_estimators/_sdu_estimators/__init__.pyi" DESTINATION ".")
-  install(
-    DIRECTORY "${CMAKE_SOURCE_DIR}/python_stub/_sdu_estimators/_sdu_estimators"
-    DESTINATION "."
-    FILES_MATCHING 
-      PATTERN "*.pyi"
-      PATTERN "py.typed")
 
-  install(FILES "${CMAKE_CURRENT_BINARY_DIR}/py.typed" DESTINATION ".")
-  
+  # nanobind_add_stub(
+  #   sdu_estimators_stub
+    
+  #   MODULE sdu_estimators
 
-  # install(FILES py.typed _sdu_estimators.pyi DESTINATION ".")  
-  # install(FILES "${CMAKE_SOURCE_DIRE}/") 
+  #   PYTHON_PATH $<TARGET_FILE_DIR:sdu_estimators>
+  #   DEPENDS _sdu_estimators 
+    
+  #   RECURSIVE
+  #   VERBOSE
 
-  # install(FILES py.typed _sdu_estimators.pyi DESTINATION ".")  
+  #   MARKER_FILE py.typed
 
-  # nanobind_add_stub( _sdu_estimators_stub INSTALL_TIME MODULE _sdu_estimators
-  # OUTPUT _sdu_estimators.pyi PYTHON_PATH $<TARGET_FILE_DIR:_sdu_estimators>
-  # DEPENDS _sdu_estimators MARKER_FILE ${CMAKE_CURRENT_SOURCE_DIR}/py.typed )
+  #   OUTPUT_PATH _sdu_estimators
+  #   OUTPUT 
+  #     _sdu_estimators/__init__pyi
+  #   )
 
-  # Install the Python module shared library
-
-  # install(FILES py.typed _sdu_estimators.pyi DESTINATION ".")
-
+  #   install(TARGETS _sdu_estimators DESTINATION ".")
+  #   install(FILES py.typed _sdu_estimators/__init__.pyi DESTINATION ".")
+  #   # install(FILES ${CMAKE_CURRENT_BINARY_DIR}/sdu_estimators.pyi
+  #   #         ${CMAKE_CURRENT_BINARY_DIR}/py.typed DESTINATION .)
 endif()
 
 # Add an alias target for use if this project is included as a subproject in
