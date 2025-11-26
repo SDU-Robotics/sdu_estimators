@@ -5,7 +5,6 @@ import sdu_estimators
 import numpy as np
 import matplotlib.pyplot as plt
 
-
 def main():
     dt = 0.01
     tend = int(50 / dt)

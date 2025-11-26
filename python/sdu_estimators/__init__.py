@@ -1,6 +1,10 @@
 #!/usr/bin/env python3
 
-from ._sdu_estimators import *
+from ._sdu_estimators import parameter_estimators
+from ._sdu_estimators import regressor_extensions
+from ._sdu_estimators import math
+from ._sdu_estimators import disturbance_observers
+from ._sdu_estimators import integrator
 
 from importlib import metadata
 
