@@ -3,11 +3,10 @@
 #include <cmath>
 #include <fstream>
 #include <iostream>
-#include <sdu_estimators/parameter_estimators/drem.hpp>
 #include <vector>
-// #include "sdu_estimators/regressor_extensions/kreisselmeier.hpp"
-#include "sdu_estimators/regressor_extensions/delay.hpp"
-#include "sdu_estimators/regressor_extensions/lti.hpp"
+
+#include "sdu_estimators/parameter_estimators/drem.hpp"
+#include "sdu_estimators/regressor_extensions/kreisselmeier.hpp"
 #include "sdu_estimators/integrator/integrator.hpp"
 
 using namespace sdu_estimators;
@@ -47,7 +46,7 @@ int main()
   std::cout << "test" << std::endl;
 
   float r = 1;
-  integrator::IntegrationMethod intg_method = integrator::IntegrationMethod::Euler;
+  integrator::IntegrationMethod intg_method = integrator::IntegrationMethod::RK4;
   sdu_estimators::parameter_estimators::DREM<double, 1, 2> DREM(dt, gamma, theta_init, &reg_ext, r, intg_method);
   // sdu_estimators::parameter_estimators::GradientEstimator grad_est(dt, gamma, theta_init);
   std::vector<Eigen::VectorXd> all_theta_est;

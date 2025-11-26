@@ -11,6 +11,7 @@
 #include "sdu_estimators/regressor_extensions/kreisselmeier.hpp"
 #include "sdu_estimators/integrator/integrator.hpp"
 
+
 namespace sdu_estimators::parameter_estimators
 {
     /**
@@ -25,7 +26,7 @@ namespace sdu_estimators::parameter_estimators
     {
     public:
         CascadedDREM(float dt, float a,
-            integrator::IntegrationMethod method = integrator::IntegrationMethod::Euler) :
+            integrator::IntegrationMethod method = integrator::IntegrationMethod::RK4) :
                 dt(dt), a(a), intg_method(method)
         {
             reg_ext_second = new regressor_extensions::Kreisselmeier<T, DIM_N, DIM_P>(dt, a, intg_method);
@@ -88,20 +89,32 @@ namespace sdu_estimators::parameter_estimators
             if (!std::isfinite(Delta))
                 Delta = 0;
 
-            // Hc filter
-            dHc_state = -a * Hc_state + phi_f * dtheta_ext;
+            // // Hc filter
+            // dHc_state = -a * Hc_state + phi_f * dtheta_ext;
 
-            if (intg_method == integrator::IntegrationMethod::Euler)
-            {
-                Hc_state += dt * dHc_state;
-            }
-            else if (intg_method == integrator::IntegrationMethod::RK2)
-            {
-                Hc_state += dt * (dHc_state + dHc_state_old) / 2.;
-                dHc_state_old = dHc_state;
-            }   
+            // if (intg_method == integrator::IntegrationMethod::Euler)
+            // {
+            //     Hc_state += dt * dHc_state;
+            // }
+            // else if (intg_method == integrator::IntegrationMethod::RK2)
+            // {
+            //     Hc_state += dt * (dHc_state + dHc_state_old) / 2.;
+            //     dHc_state_old = dHc_state;
+            // } 
 
-            Hc_out = -Hc_state;   
+            auto get_dHc_state = [=](Eigen::Matrix<T, DIM_P, 1> Hc_state_)
+            {
+                Eigen::Matrix<T, DIM_P, 1> dHc_state = -a * Hc_state + phi_f * dtheta_ext;
+                return dHc_state;
+            };
+            
+            Hc_state = integrator::Integrator<T, DIM_P, 1>::integrate(
+                Hc_state,
+                get_dHc_state,
+                dt,
+                intg_method
+            );
+            Hc_out = -Hc_state;
 
             // adj(phi_f) = Delta * phi_f^{-1}
             Yvar = lu.solve(Delta * y_f);  // To compute phi_f^{-1} * Delta * y_f.

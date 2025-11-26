@@ -3,16 +3,15 @@
 #define DREM_HPP
 
 #include <cstdint>
-#include <sdu_estimators/parameter_estimators/parameter_estimator.hpp>
 // #include <sdu_estimators/regressor_extensions/kreisselmeier.hpp>
 #include <Eigen/Dense>
 #include <cmath>
 #include <iostream>
-#include <sdu_estimators/regressor_extensions/regressor_extension.hpp>
 #include <type_traits>
 
+#include "sdu_estimators/parameter_estimators/parameter_estimator.hpp"
+#include "sdu_estimators/regressor_extensions/regressor_extension.hpp"
 #include "sdu_estimators/integrator/integrator.hpp"
-#include "sdu_estimators/regressor_extensions/kreisselmeier.hpp"
 
 
 namespace sdu_estimators::parameter_estimators
@@ -92,7 +91,7 @@ namespace sdu_estimators::parameter_estimators
         return dtheta;
       };
 
-      theta_est = integrator::Integrator<T, DIM_N, DIM_P>::integrate(
+      theta_est = integrator::Integrator<T, DIM_P, 1>::integrate(
         theta_est, 
         get_dydt, 
         dt,
