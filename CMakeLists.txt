@@ -78,7 +78,8 @@ if(BUILD_PYTHON)
                       python/sdu_estimators/_parameter_estimators.cpp
                       python/sdu_estimators/_regressor_extensions.cpp
                       python/sdu_estimators/_riemannian_manifolds.cpp
-                      python/sdu_estimators/_disturbance_observers.cpp)
+                      python/sdu_estimators/_disturbance_observers.cpp
+                      python/sdu_estimators/_integrator.cpp)
 
   target_link_libraries(_sdu_estimators PUBLIC sdu_estimators)
 

@@ -17,7 +17,7 @@ def main():
     theta_init = np.zeros((2, 1)).flatten()
     theta_true = np.array([[1.], [2.]]).flatten()
 
-    method = sdu_estimators.parameter_estimators.utils.Euler
+    method = sdu_estimators.integrator.RK4
 
     solver = sdu_estimators.parameter_estimators.Gradient(dt, gamma, theta_init, r, method)
 

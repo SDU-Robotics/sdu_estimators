@@ -16,7 +16,7 @@ def main():
 
     DIM_N = 4
     DIM_P = 2
-    method = sdu_estimators.parameter_estimators.utils.Trapezoidal
+    method = sdu_estimators.integrator.RK4
 
     solver_cascade = sdu_estimators.parameter_estimators.CascadedDREM(dt, a, DIM_N, DIM_P, method)
     solver_standard = sdu_estimators.parameter_estimators.CascadedDREM(dt, a, DIM_N, DIM_P, method)
@@ -37,15 +37,26 @@ def main():
         dphi = np.array([[-2.*np.sin(t), np.sin(t+1.), -6.*np.sin(2.*t+1./2.), -2.*np.sin(t/3. + 1.)/3],
                         [-2.*np.sin(2.*t), -np.sin(t/2.)/2., -3.*np.sin(3.*t/2. + 3./4.), 4.*np.sin(4.*t/3.)]])
 
-        dtheta = np.array([
-            theta_true[1],
-            (2. - theta_true[0]**2) * theta_true[1] / 3. - theta_true[0]
+        # dtheta = np.array([
+        #     theta_true[1],
+        #     (2. - theta_true[0]**2) * theta_true[1] / 3. - theta_true[0]
+        # ])
+
+        get_dtheta = lambda theta_ : np.array([
+            theta_[1],
+            (2. - theta_[0]**2) * theta_[1] / 3. - theta_[0]
         ])
 
-        theta_true = theta_true + dt * dtheta
+        # theta_true = theta_true + dt * dtheta
+        theta_true = sdu_estimators.integrator.integrate_2x1(
+            theta_true,
+            get_dtheta,
+            dt,
+            method
+        )
 
         y = phi.T @ theta_true
-        dy = dphi.T @ theta_true + phi.T @ dtheta
+        dy = dphi.T @ theta_true + phi.T @ get_dtheta(theta_true)
         
         # print(dy)
         # print(dphi)
@@ -66,6 +77,15 @@ def main():
     plt.plot(tvec, all_theta_true, label="Actual")
     # plt.ylim([-5,5])
     plt.legend()
+    plt.grid()
+
+    ##
+    err_norm_cascade = np.linalg.norm(all_theta_est_cascade - all_theta_true, axis=1)
+    err_norm_standard = np.linalg.norm(all_theta_est_standard - all_theta_true, axis=1)
+
+    plt.figure()
+    plt.plot(tvec, err_norm_cascade)
+    plt.plot(tvec, err_norm_standard)
     plt.grid()
 
     plt.show()

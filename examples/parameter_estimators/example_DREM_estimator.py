@@ -7,20 +7,22 @@ import matplotlib.pyplot as plt
 
 
 def main():
-    dt = 0.002
+    dt = 0.01
     tend = int(50 / dt)
 
-    gamma = np.array([[10.], [10.]]).flatten()
+    gamma = np.array([[10.], [10.]]).flatten() * 2e6
 
-    ell = 0.95
-    r = 0.5
+    ell = 10.
+    r = 1.
 
     theta_init = np.zeros((2, 1)).flatten()
     theta_true = np.array([[1.], [2.]]).flatten()
 
-    reg_ext = sdu_estimators.regressor_extensions.Kreisselmeier_1x2(dt, ell)
+    intg_method = sdu_estimators.integrator.RK4
 
-    solver = sdu_estimators.parameter_estimators.DREM(dt, gamma, theta_init, reg_ext, r)
+    reg_ext = sdu_estimators.regressor_extensions.Kreisselmeier_1x2(dt, ell, intg_method)
+
+    solver = sdu_estimators.parameter_estimators.DREM(dt, gamma, theta_init, reg_ext, r, intg_method)
 
     all_theta_est = np.zeros((tend, 2))
 
