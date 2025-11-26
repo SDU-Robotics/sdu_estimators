@@ -3,8 +3,9 @@
 #include <cmath>
 #include <fstream>
 #include <iostream>
-#include <sdu_estimators/parameter_estimators/cascaded_drem.hpp>
 #include <vector>
+
+#include "sdu_estimators/parameter_estimators/cascaded_drem.hpp"
 
 #define DIM_N 4
 #define DIM_P 2
@@ -28,7 +29,7 @@ int main()
 
     float a = 10;
 
-    sdu_estimators::utils::IntegrationMethod method = sdu_estimators::utils::IntegrationMethod::Trapezoidal;
+    sdu_estimators::integrator::IntegrationMethod method = sdu_estimators::integrator::IntegrationMethod::RK2;
 
     sdu_estimators::parameter_estimators::CascadedDREM<double, DIM_N, DIM_P> solver(dt, a, method);
     sdu_estimators::parameter_estimators::CascadedDREM<double, DIM_N, DIM_P> solver_standard(dt, a, method);

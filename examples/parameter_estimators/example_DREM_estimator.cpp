@@ -14,7 +14,7 @@ using namespace sdu_estimators;
 
 int main()
 {
-  float dt = 0.2;
+  float dt = 0.001;
   float tend = 50 / dt; // 10s
 
   Eigen::Matrix<double, 2, 1> gamma;
@@ -47,7 +47,7 @@ int main()
   std::cout << "test" << std::endl;
 
   float r = 1;
-  integrator::IntegrationMethod intg_method = integrator::IntegrationMethod::RK2;
+  integrator::IntegrationMethod intg_method = integrator::IntegrationMethod::Euler;
   sdu_estimators::parameter_estimators::DREM<double, 1, 2> DREM(dt, gamma, theta_init, &reg_ext, r, intg_method);
   // sdu_estimators::parameter_estimators::GradientEstimator grad_est(dt, gamma, theta_init);
   std::vector<Eigen::VectorXd> all_theta_est;

@@ -7,8 +7,9 @@
 #include <cmath>
 #include <iostream>
 
-#include <sdu_estimators/parameter_estimators/parameter_estimator.hpp>
-#include <sdu_estimators/regressor_extensions/kreisselmeier.hpp>
+#include "sdu_estimators/parameter_estimators/parameter_estimator.hpp"
+#include "sdu_estimators/regressor_extensions/kreisselmeier.hpp"
+#include "sdu_estimators/integrator/integrator.hpp"
 
 namespace sdu_estimators::parameter_estimators
 {
@@ -24,7 +25,7 @@ namespace sdu_estimators::parameter_estimators
     {
     public:
         CascadedDREM(float dt, float a,
-            utils::IntegrationMethod method = utils::IntegrationMethod::Euler) :
+            integrator::IntegrationMethod method = integrator::IntegrationMethod::Euler) :
                 dt(dt), a(a), intg_method(method)
         {
             reg_ext_second = new regressor_extensions::Kreisselmeier<T, DIM_N, DIM_P>(dt, a, intg_method);
@@ -90,11 +91,11 @@ namespace sdu_estimators::parameter_estimators
             // Hc filter
             dHc_state = -a * Hc_state + phi_f * dtheta_ext;
 
-            if (intg_method == utils::IntegrationMethod::Euler)
+            if (intg_method == integrator::IntegrationMethod::Euler)
             {
                 Hc_state += dt * dHc_state;
             }
-            else if (intg_method == utils::IntegrationMethod::Trapezoidal)
+            else if (intg_method == integrator::IntegrationMethod::RK2)
             {
                 Hc_state += dt * (dHc_state + dHc_state_old) / 2.;
                 dHc_state_old = dHc_state;
@@ -157,7 +158,7 @@ namespace sdu_estimators::parameter_estimators
         float dt;
         float a;
 
-        utils::IntegrationMethod intg_method;
+        integrator::IntegrationMethod intg_method;
 
         // Variables for computation
         Eigen::Matrix<T, DIM_P, 1> theta_est, theta_init, Yvar, dtheta_ext, Vvar_est, 

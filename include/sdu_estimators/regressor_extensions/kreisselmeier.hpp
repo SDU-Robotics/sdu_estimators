@@ -4,7 +4,7 @@
 #define KREISSELMEIER_HPP
 
 #include <sdu_estimators/regressor_extensions/regressor_extension.hpp>
-#include <sdu_estimators/utils.hpp>
+#include <sdu_estimators/integrator/integrator.hpp>
 
 #include <iostream>
 
@@ -19,18 +19,14 @@ namespace sdu_estimators::regressor_extensions
   {
   public:
     Kreisselmeier(float dt, float ell,
-      utils::IntegrationMethod method = utils::IntegrationMethod::Euler)
+      integrator::IntegrationMethod method = integrator::IntegrationMethod::RK4)
     {
       this->dt = dt;
       this->ell = ell;
 
-      first_run = true;
-
       this->intg_method = method;
-      
 
-      this->dy_f_old.setZero();
-      this->dphi_f_old.setZero();
+      reset();
     }
 
     ~Kreisselmeier()
@@ -48,26 +44,33 @@ namespace sdu_estimators::regressor_extensions
         first_run = false;
       }
 
-      dphi_f = -ell * this->phi_f + phi * phi.transpose();
       dy_f = -ell * this->y_f + phi * y;
 
-      if (intg_method == utils::IntegrationMethod::Euler)
+      auto get_dphifdt = [=](Eigen::Matrix<T, DIM_P, DIM_P> phi_f_)
       {
-        this->phi_f += dt * dphi_f;
-        this->y_f += dt * dy_f;
-      }
-      else if (intg_method == utils::IntegrationMethod::Trapezoidal)
-      {
-        this->phi_f += dt * (dphi_f + dphi_f_old) / 2.;
-        this->y_f += dt * (dy_f + dy_f_old) / 2.;
-      }
-      else
-      {
-        std::cout << "No integration" << std::endl;
-      }
+        Eigen::Matrix<T, DIM_P, DIM_P> dphi_f = -ell * phi_f_ + phi * phi.transpose();
+        return dphi_f;
+      };
 
-      dphi_f_old = dphi_f;
-      dy_f_old = dy_f;
+      auto get_dyfdt = [=](Eigen::Matrix<T, DIM_P, 1> y_f_)
+      {
+        Eigen::Matrix<T, DIM_P, 1> dy_f = -ell * y_f_ + phi * y;
+        return dy_f;
+      };
+
+      this->phi_f = integrator::Integrator<T, DIM_P, DIM_P>::integrate(
+        this->phi_f,
+        get_dphifdt,
+        dt,
+        intg_method
+      );
+
+      this->y_f = integrator::Integrator<T, DIM_P, 1>::integrate(
+        this->y_f,
+        get_dyfdt,
+        dt,
+        intg_method
+      );
     }
 
     // Eigen::VectorXd getY() override; // get filtered states
@@ -75,7 +78,6 @@ namespace sdu_estimators::regressor_extensions
 
     void reset()
     {
-      first_run = true;
       this->y_f *= 0;
       this->phi_f *= 0;
     }
@@ -86,10 +88,10 @@ namespace sdu_estimators::regressor_extensions
 
     bool first_run{};
 
-    utils::IntegrationMethod intg_method;
+    integrator::IntegrationMethod intg_method;
 
-    Eigen::Matrix<T, DIM_P, 1> dy_f, dy_f_old; //
-    Eigen::Matrix<T, DIM_P, DIM_P> dphi_f, dphi_f_old; //
+    Eigen::Matrix<T, DIM_P, 1> dy_f; //
+    Eigen::Matrix<T, DIM_P, DIM_P> dphi_f; //
 };
 
 } // sdu_estimators
