@@ -130,7 +130,8 @@ namespace sdu_estimators
                 nb::arg("integration_method"))
             .def("get_estimate", &Class::get_estimate)
             .def("set_dy_dphi", &Class::set_dy_dphi, nb::arg("dy"), nb::arg("dphi"))
-            .def("step", &Class::step, nb::arg("y"), nb::arg("phi"));
+            .def("step", &Class::step, nb::arg("y"), nb::arg("phi"))
+            .def("set_eps", &Class::set_eps, nb::arg("eps"));
     }
 
     template<typename T, std::int32_t DIM_N, std::int32_t DIM_P>

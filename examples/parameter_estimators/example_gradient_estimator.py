@@ -7,6 +7,10 @@ import matplotlib.pyplot as plt
 
 
 def main():
+    print(sdu_estimators.parameter_estimators.__doc__)
+    print(sdu_estimators.parameter_estimators.__name__)
+    print(dir(sdu_estimators.parameter_estimators))
+
     dt = 0.002
     tend = int(50 / dt)
 
@@ -17,9 +21,10 @@ def main():
     theta_init = np.zeros((2, 1)).flatten()
     theta_true = np.array([[1.], [2.]]).flatten()
 
-    method = sdu_estimators.integrator.RK4
+    method = sdu_estimators.integrator.IntegrationMethod.RK4
 
-    solver = sdu_estimators.parameter_estimators.Gradient(dt, gamma, theta_init, r, method)
+    # solver = sdu_estimators.parameter_estimators.GradientEstimator(dt, gamma, theta_init, r, method)
+    solver = sdu_estimators.parameter_estimators.GradientEstimator_1x2(dt, gamma, theta_init, r, method)
 
     all_theta_est = np.zeros((tend, 2))
 

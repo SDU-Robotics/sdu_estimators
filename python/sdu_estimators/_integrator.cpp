@@ -30,6 +30,15 @@ namespace sdu_estimators
             nb::arg("method"));
 
         // nb::class_<Class>(m, nbclass_name.c_str())
+        //     .def_static("integrate",
+        //         &Class::integrate,
+        //         nb::arg("state"),
+        //         nb::arg("get_dydt"),
+        //         nb::arg("delta"),
+        //         nb::arg("method")
+        //     );
+
+        // nb::class_<Class>(m, nbclass_name.c_str())
         //     .def("integrate", 
         //         (State(Class::*)(
         //             const State &,
@@ -48,8 +57,7 @@ namespace sdu_estimators
         nb::enum_<integrator::IntegrationMethod>(m, "IntegrationMethod")
             .value("Euler", integrator::IntegrationMethod::Euler)
             .value("RK2", integrator::IntegrationMethod::RK2)
-            .value("RK4", integrator::IntegrationMethod::RK4)
-            .export_values();
+            .value("RK4", integrator::IntegrationMethod::RK4);
             
         nb_IntegratorClass<double, 2, 1>(m);
     }

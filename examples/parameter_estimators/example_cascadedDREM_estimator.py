@@ -4,6 +4,7 @@ import sdu_estimators
 
 import numpy as np
 import matplotlib.pyplot as plt
+import time
 
 
 def main():
@@ -16,16 +17,22 @@ def main():
 
     DIM_N = 4
     DIM_P = 2
-    method = sdu_estimators.integrator.RK4
+    method = sdu_estimators.integrator.IntegrationMethod.RK4
 
-    solver_cascade = sdu_estimators.parameter_estimators.CascadedDREM(dt, a, DIM_N, DIM_P, method)
-    solver_standard = sdu_estimators.parameter_estimators.CascadedDREM(dt, a, DIM_N, DIM_P, method)
+    # solver_cascade = sdu_estimators.parameter_estimators.CascadedDREM(dt, a, DIM_N, DIM_P, method)
+    # solver_standard = sdu_estimators.parameter_estimators.CascadedDREM(dt, a, DIM_N, DIM_P, method)
+
+    # sdu_estimators.parameter_estimators.CascadedDREM_4x2(dt, a, method) # if this line is not run, then solver_cascade will return nan estimates.
+    solver_cascade = sdu_estimators.parameter_estimators.CascadedDREM_4x2(dt, a, method)
+    solver_standard = sdu_estimators.parameter_estimators.CascadedDREM_4x2(dt, a, method)
 
     all_theta_est_cascade = np.zeros((tend, 2))
     all_theta_est_standard = np.zeros((tend, 2))
     all_theta_true = np.zeros((tend, 2))
 
     tvec = []
+
+    t_begin = time.time_ns()
 
     for i in range(tend):
         t = i * dt
@@ -55,8 +62,16 @@ def main():
             method
         )
 
+        dtheta = get_dtheta(theta_true)
+        # print(dtheta)
+
         y = phi.T @ theta_true
-        dy = dphi.T @ theta_true + phi.T @ get_dtheta(theta_true)
+        dy = dphi.T @ theta_true + phi.T @ dtheta
+
+        # print("y", y)
+        # print("dy", dy)
+        # print("phi", phi)
+        # print("dphi", dphi)
         
         # print(dy)
         # print(dphi)
@@ -64,12 +79,22 @@ def main():
         solver_cascade.set_dy_dphi(dy, dphi)
         solver_cascade.step(y, phi)
 
+        solver_standard.set_dy_dphi(np.zeros_like(dy), np.zeros_like(dphi))
         solver_standard.step(y, phi)
 
         all_theta_est_cascade[i, :] = solver_cascade.get_estimate()
         all_theta_est_standard[i, :] = solver_standard.get_estimate()
+
+        # print("Cascade:", all_theta_est_cascade[i, :])
+        # print("Standard:", all_theta_est_standard[i, :])
         
         all_theta_true[i, :] = theta_true
+
+    t_end = time.time_ns()
+    t_dur = t_end - t_begin
+
+    print(f"Loop duration: {1e-6 * t_dur} ms.")
+    print(f"Time per iteration: {1e-6 * t_dur/tend} ms/it")
 
     plt.figure()
     plt.plot(tvec, all_theta_est_cascade, label="Estimated, cascade")

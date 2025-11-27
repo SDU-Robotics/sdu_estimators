@@ -83,31 +83,41 @@ if(BUILD_PYTHON)
 
   target_link_libraries(_sdu_estimators PUBLIC sdu_estimators)
 
-  # install(TARGETS _sdu_estimators DESTINATION ".")
-  install(TARGETS _sdu_estimators LIBRARY DESTINATION sdu_estimators)
+  install(TARGETS _sdu_estimators DESTINATION ".")
+  # install(TARGETS _sdu_estimators LIBRARY DESTINATION sdu_estimators)
 
-  # nanobind_add_stub(
-  #   sdu_estimators_stub
+  nanobind_add_stub(
+    _sdu_estimators_stub
     
-  #   MODULE sdu_estimators
+    MODULE _sdu_estimators
 
-  #   PYTHON_PATH $<TARGET_FILE_DIR:sdu_estimators>
-  #   DEPENDS _sdu_estimators 
+    PYTHON_PATH $<TARGET_FILE_DIR:_sdu_estimators>
+    DEPENDS _sdu_estimators 
     
-  #   RECURSIVE
-  #   VERBOSE
+    RECURSIVE
+    VERBOSE
 
-  #   MARKER_FILE py.typed
+    MARKER_FILE py.typed
 
-  #   OUTPUT_PATH _sdu_estimators
-  #   OUTPUT 
-  #     _sdu_estimators/__init__pyi
-  #   )
+    OUTPUT_PATH "${CMAKE_SOURCE_DIR}/python/sdu_estimators-stubs"
+    OUTPUT 
+      __init__.pyi
+    )
 
-  #   install(TARGETS _sdu_estimators DESTINATION ".")
-  #   install(FILES py.typed _sdu_estimators/__init__.pyi DESTINATION ".")
-  #   # install(FILES ${CMAKE_CURRENT_BINARY_DIR}/sdu_estimators.pyi
-  #   #         ${CMAKE_CURRENT_BINARY_DIR}/py.typed DESTINATION .)
+    install(
+      DIRECTORY "${CMAKE_SOURCE_DIR}/python/sdu_estimators-stubs/_sdu_estimators"
+      DESTINATION "."
+      FILES_MATCHING
+        PATTERN "*.pyi"
+        PATTERN "py.typed"
+    )
+
+    install(FILES "${CMAKE_CURRENT_BINARY_DIR}/py.typed" DESTINATION ".")
+
+    # install(TARGETS _sdu_estimators DESTINATION ".")
+    # install(FILES py.typed sdu_estimators/__init__.pyi DESTINATION ".")
+    # install(FILES ${CMAKE_CURRENT_BINARY_DIR}/sdu_estimators.pyi
+    #         ${CMAKE_CURRENT_BINARY_DIR}/py.typed DESTINATION .)
 endif()
 
 # Add an alias target for use if this project is included as a subproject in

@@ -26,6 +26,7 @@ namespace sdu_estimators::regressor_extensions
 
       this->intg_method = method;
 
+      
       reset();
     }
 
@@ -68,15 +69,13 @@ namespace sdu_estimators::regressor_extensions
 
     void reset()
     {
-      this->y_f *= 0;
-      this->phi_f *= 0;
+      this->phi_f.setZero();
+      this->y_f.setZero();
     }
 
   private:
-    float dt{};
-    float ell{};
-
-    bool first_run{};
+    float dt;
+    float ell;
 
     integrator::IntegrationMethod intg_method;
 

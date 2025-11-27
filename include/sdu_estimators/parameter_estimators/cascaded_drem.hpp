@@ -38,6 +38,7 @@ namespace sdu_estimators::parameter_estimators
             dHc_state_old.setZero();
             dy.setZero();
             dphi.setZero();
+            theta_est.setZero();
 
             eps = 1e-10;
         }
@@ -52,9 +53,9 @@ namespace sdu_estimators::parameter_estimators
             // Set up the extended regressor equation
             y_ext << y, dy;
             
-            phi_ext(Eigen::seqN(0, DIM_P), Eigen::seqN(0, DIM_N)) << phi;
-            phi_ext(Eigen::seqN(0, DIM_P), Eigen::seqN(DIM_N, DIM_N)) << dphi;
-            phi_ext(Eigen::seqN(DIM_P, DIM_P), Eigen::seqN(DIM_N, DIM_N)) << phi;
+            phi_ext(Eigen::seqN(0, DIM_P), Eigen::seqN(0, DIM_N)) = phi;
+            phi_ext(Eigen::seqN(0, DIM_P), Eigen::seqN(DIM_N, DIM_N)) = dphi;
+            phi_ext(Eigen::seqN(DIM_P, DIM_P), Eigen::seqN(DIM_N, DIM_N)) = phi;
 
             reg_ext_second->step(y, phi);
             reg_ext_first->step(y_ext, phi_ext);
@@ -76,7 +77,7 @@ namespace sdu_estimators::parameter_estimators
 
             // Now we have an estimate of the derivative of the parameter, theta
             // theta_est_ext = [hat_theta_ext, hat_dtheta_ext]
-            dtheta_ext << theta_est_ext(Eigen::seqN(DIM_P, DIM_P), 0);
+            dtheta_ext << theta_est_ext(Eigen::seqN(DIM_P, DIM_P));
 
             // 
             Eigen::Matrix<T, DIM_P, 1> y_f = reg_ext_second->getY();
@@ -88,19 +89,6 @@ namespace sdu_estimators::parameter_estimators
 
             if (!std::isfinite(Delta))
                 Delta = 0;
-
-            // // Hc filter
-            // dHc_state = -a * Hc_state + phi_f * dtheta_ext;
-
-            // if (intg_method == integrator::IntegrationMethod::Euler)
-            // {
-            //     Hc_state += dt * dHc_state;
-            // }
-            // else if (intg_method == integrator::IntegrationMethod::RK2)
-            // {
-            //     Hc_state += dt * (dHc_state + dHc_state_old) / 2.;
-            //     dHc_state_old = dHc_state;
-            // } 
 
             auto get_dHc_state = [=](Eigen::Matrix<T, DIM_P, 1> Hc_state_)
             {
@@ -131,6 +119,7 @@ namespace sdu_estimators::parameter_estimators
          */
         void set_dy_dphi(const Eigen::Matrix<T, DIM_N, 1> &dy, const Eigen::Matrix<T, DIM_P, DIM_N> &dphi)
         {
+            // std::cout << dy << " " << dphi << std::endl;
             this->dy = dy;
             this->dphi = dphi;
         }
@@ -174,14 +163,14 @@ namespace sdu_estimators::parameter_estimators
         integrator::IntegrationMethod intg_method;
 
         // Variables for computation
-        Eigen::Matrix<T, DIM_P, 1> theta_est, theta_init, Yvar, dtheta_ext, Vvar_est, 
+        Eigen::Vector<T, DIM_P> theta_est, theta_init, Yvar, dtheta_ext, Vvar_est, 
             Hc_state, dHc_state, dHc_state_old, Hc_out;
-        Eigen::Matrix<T, DIM_P*2, 1> theta_est_ext, Yvar_ext;
+        Eigen::Vector<T, DIM_P*2> theta_est_ext, Yvar_ext;
 
-        Eigen::Matrix<T, DIM_N*2, 1> y_ext;
+        Eigen::Vector<T, DIM_N*2> y_ext;
         Eigen::Matrix<T, DIM_P*2, DIM_N*2> phi_ext;
 
-        Eigen::Matrix<T, DIM_N, 1> dy;
+        Eigen::Vector<T, DIM_N> dy;
         Eigen::Matrix<T, DIM_P, DIM_N> dphi;
 
         double eps;
