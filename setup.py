@@ -11,6 +11,11 @@ setup(
     ],
     cmake_install_dir="python/sdu_estimators",
     include_package_data=True,
-    package_data={"sdu_estimators-stubs": ["*.pyi"]}
+    package_data={
+        "sdu_estimators-stubs": [
+            "*.pyi",
+            "_sdu_estimators/*.pyi",
+            "_sdu_estimators/math/*.pyi",
+        ]},
 )
 

@@ -16,7 +16,7 @@ namespace nb = nanobind;
 namespace sdu_estimators 
 {
     template<typename T, std::int32_t DIM_N, std::int32_t DIM_P>
-    void nb_RegressorExtension(nb::module_ m)
+    void nb_RegressorExtension(nb::module_ & m)
     {
         std::string typestr;
         typestr = "_" + std::to_string(DIM_N) + "x" + std::to_string(DIM_P);
@@ -28,7 +28,7 @@ namespace sdu_estimators
     }
 
     template<typename T, std::int32_t DIM_N, std::int32_t DIM_P>
-    void nb_Kreisselmeier(nb::module_ m)
+    void nb_Kreisselmeier(nb::module_ & m)
     {
         std::string typestr;
         typestr = "_" + std::to_string(DIM_N) + "x" + std::to_string(DIM_P);
@@ -48,18 +48,20 @@ namespace sdu_estimators
             .def("reset", &Class::reset);
     }
 
-    void nb_regressor_extensions(nb::module_ m)
+    void nb_regressor_extensions(nb::module_ & m)
     {
-        m.doc() = "The regressor extensions submodule";
-        
-        nb_RegressorExtension<double, 1, 1>(m);
-        nb_RegressorExtension<double, 1, 2>(m);
-        nb_RegressorExtension<double, 1, 3>(m);
-        nb_RegressorExtension<double, 3, 6>(m);
+        nb::module_ m_reg_ext = m.def_submodule("regressor_extensions", "Submodule containing regressor extensions for LRE.");
 
-        nb_Kreisselmeier<double, 1, 1>(m);
-        nb_Kreisselmeier<double, 1, 2>(m);
-        nb_Kreisselmeier<double, 1, 3>(m);
-        nb_Kreisselmeier<double, 3, 6>(m);
+        m_reg_ext.doc() = "The regressor extensions submodule";
+        
+        nb_RegressorExtension<double, 1, 1>(m_reg_ext);
+        nb_RegressorExtension<double, 1, 2>(m_reg_ext);
+        nb_RegressorExtension<double, 1, 3>(m_reg_ext);
+        nb_RegressorExtension<double, 3, 6>(m_reg_ext);
+
+        nb_Kreisselmeier<double, 1, 1>(m_reg_ext);
+        nb_Kreisselmeier<double, 1, 2>(m_reg_ext);
+        nb_Kreisselmeier<double, 1, 3>(m_reg_ext);
+        nb_Kreisselmeier<double, 3, 6>(m_reg_ext);
     }
 }

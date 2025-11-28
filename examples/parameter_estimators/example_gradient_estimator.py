@@ -23,8 +23,8 @@ def main():
 
     method = sdu_estimators.integrator.IntegrationMethod.RK4
 
-    # solver = sdu_estimators.parameter_estimators.GradientEstimator(dt, gamma, theta_init, r, method)
-    solver = sdu_estimators.parameter_estimators.GradientEstimator_1x2(dt, gamma, theta_init, r, method)
+    solver = sdu_estimators.parameter_estimators.GradientEstimator(dt, gamma, theta_init, r, method)
+    # solver = sdu_estimators.parameter_estimators.GradientEstimator_1x2(dt, gamma, theta_init, r, method)
 
     all_theta_est = np.zeros((tend, 2))
 

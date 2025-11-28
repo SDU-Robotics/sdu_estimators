@@ -19,7 +19,7 @@ namespace nb = nanobind;
 namespace sdu_estimators 
 {
     template<typename T, std::int32_t DIM_N, std::int32_t DIM_P>
-    void nb_GradientEstimator(nb::module_ m)
+    void nb_GradientEstimator(nb::module_ & m)
     {
         std::string typestr;
         typestr = "_" + std::to_string(DIM_N) + "x" + std::to_string(DIM_P);
@@ -58,7 +58,7 @@ namespace sdu_estimators
     }
 
     template<typename T, std::int32_t DIM_N, std::int32_t DIM_P>
-    void nb_DREM(nb::module_ m)
+    void nb_DREM(nb::module_ & m)
     {
         std::string typestr;
         typestr = "_" + std::to_string(DIM_N) + "x" + std::to_string(DIM_P);
@@ -110,7 +110,7 @@ namespace sdu_estimators
     }
 
     template<typename T, std::int32_t DIM_N, std::int32_t DIM_P>
-    void nb_CascadedDREM(nb::module_ m)
+    void nb_CascadedDREM(nb::module_ & m)
     {
         std::string typestr;
         typestr = "_" + std::to_string(DIM_N) + "x" + std::to_string(DIM_P);
@@ -135,7 +135,7 @@ namespace sdu_estimators
     }
 
     template<typename T, std::int32_t DIM_N, std::int32_t DIM_P>
-    void nb_GradientEstimatorSphere(nb::module_ m)
+    void nb_GradientEstimatorSphere(nb::module_ & m)
     {
         std::string typestr;
         typestr = "_" + std::to_string(DIM_N) + "x" + std::to_string(DIM_P);
@@ -155,22 +155,24 @@ namespace sdu_estimators
     }
 
 
-    void nb_parameter_estimators(nb::module_ m)
+    void nb_parameter_estimators(nb::module_ & m)
     {
-        m.doc() = "The parameter estimation submodule";
+        nb::module_ m_param_ests = m.def_submodule("parameter_estimators", "Submodule containing general parameter estimators for problems on LRE-form.");
+
+        m_param_ests.doc() = "The parameter estimation submodule";
         
-        nb_GradientEstimator<double, 1, 1>(m);
-        nb_GradientEstimator<double, 1, 2>(m);
-        nb_GradientEstimator<double, 1, 3>(m);
-        nb_GradientEstimator<double, 3, 6>(m);
+        nb_GradientEstimator<double, 1, 1>(m_param_ests);
+        nb_GradientEstimator<double, 1, 2>(m_param_ests);
+        nb_GradientEstimator<double, 1, 3>(m_param_ests);
+        nb_GradientEstimator<double, 3, 6>(m_param_ests);
 
-        nb_DREM<double, 1, 1>(m);
-        nb_DREM<double, 1, 2>(m);
-        nb_DREM<double, 1, 3>(m);
-        nb_DREM<double, 3, 6>(m);
+        nb_DREM<double, 1, 1>(m_param_ests);
+        nb_DREM<double, 1, 2>(m_param_ests);
+        nb_DREM<double, 1, 3>(m_param_ests);
+        nb_DREM<double, 3, 6>(m_param_ests);
 
-        nb_CascadedDREM<double, 4, 2>(m);
+        nb_CascadedDREM<double, 4, 2>(m_param_ests);
 
-        nb_GradientEstimatorSphere<double, 1, 3>(m);
+        nb_GradientEstimatorSphere<double, 1, 3>(m_param_ests);
     }
 }

@@ -13,9 +13,11 @@ namespace nb = nanobind;
 
 namespace sdu_estimators 
 {
-    void nb_disturbance_observers(nb::module_ m)
+    void nb_disturbance_observers(nb::module_ & m)
     {
-        m.doc() = "The disturbance observer submodule";
+        nb::module_ m_dist_obs = m.def_submodule("disturbance_observers", "Submodule containing definitions for disturbance observers.");
+
+        m_dist_obs.doc() = "The disturbance observer submodule";
 
         nb::class_<sdu_estimators::disturbance_observers::MomentumObserver>(m, "MomentumObserver")
         .def(

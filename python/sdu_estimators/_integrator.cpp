@@ -12,7 +12,7 @@ namespace nb = nanobind;
 namespace sdu_estimators 
 {
     template <typename T, int32_t DIM_N, int32_t DIM_P>
-    void nb_IntegratorClass(nb::module_ m)
+    void nb_IntegratorClass(nb::module_ & m)
     {
         std::string typestr;
         typestr = "_" + std::to_string(DIM_N) + "x" + std::to_string(DIM_P);
@@ -52,13 +52,15 @@ namespace sdu_estimators
         //         nb::arg("method"));
     }
 
-    void nb_integrator(nb::module_ m)
+    void nb_integrator(nb::module_ & m)
     {
-        nb::enum_<integrator::IntegrationMethod>(m, "IntegrationMethod")
+        nb::module_ m_intg = m.def_submodule("integrator", "Submodule containing definitions for disturbance observers.");
+
+        nb::enum_<integrator::IntegrationMethod>(m_intg, "IntegrationMethod")
             .value("Euler", integrator::IntegrationMethod::Euler)
             .value("RK2", integrator::IntegrationMethod::RK2)
             .value("RK4", integrator::IntegrationMethod::RK4);
             
-        nb_IntegratorClass<double, 2, 1>(m);
+        nb_IntegratorClass<double, 2, 1>(m_intg);
     }
 }

@@ -102,15 +102,21 @@ if(BUILD_PYTHON)
     OUTPUT_PATH "${CMAKE_SOURCE_DIR}/python/sdu_estimators-stubs"
     OUTPUT 
       __init__.pyi
+      disturbance_observers.pyi
+      integrator.pyi
+      riemannian_manifolds.pyi
+      parameter_estimators.pyi
+      regressor_extensions.pyi
+      _sdu_estimators.pyi
     )
 
-    install(
-      DIRECTORY "${CMAKE_SOURCE_DIR}/python/sdu_estimators-stubs/_sdu_estimators"
-      DESTINATION "."
-      FILES_MATCHING
-        PATTERN "*.pyi"
-        PATTERN "py.typed"
-    )
+    # install(
+    #   DIRECTORY "${CMAKE_SOURCE_DIR}/python/sdu_estimators-stubs/_sdu_estimators"
+    #   DESTINATION "."
+    #   FILES_MATCHING
+    #     PATTERN "*.pyi"
+    #     PATTERN "py.typed"
+    # )
 
     install(FILES "${CMAKE_CURRENT_BINARY_DIR}/py.typed" DESTINATION ".")
 

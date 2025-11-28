@@ -9,15 +9,15 @@ def main():
     dt = 0.01
     tend = int(50 / dt)
 
-    gamma = np.array([[10.], [10.]]).flatten() * 2e6
+    gamma = np.array([[1.], [1.]]).flatten() * 10.
 
-    ell = 10.
+    ell = 1.
     r = 1.
 
     theta_init = np.zeros((2, 1)).flatten()
     theta_true = np.array([[1.], [2.]]).flatten()
 
-    intg_method = sdu_estimators.integrator.RK4
+    intg_method = sdu_estimators.integrator.IntegrationMethod.RK4
 
     reg_ext = sdu_estimators.regressor_extensions.Kreisselmeier_1x2(dt, ell, intg_method)
 

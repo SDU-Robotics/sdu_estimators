@@ -16,7 +16,7 @@ namespace nb = nanobind;
 namespace sdu_estimators 
 {
     template<typename T, std::int32_t DIM_N>
-    void nb_Sphere(nb::module_ m)
+    void nb_Sphere(nb::module_ & m)
     {
         std::string typestr;
         typestr = "_" + std::to_string(DIM_N);
@@ -38,10 +38,13 @@ namespace sdu_estimators
             .def("log", &Class::log, nb::arg("point_a"), nb::arg("point_b"));
     }
 
-    void nb_riemannian_manifolds(nb::module_ m)
+    void nb_riemannian_manifolds(nb::module_ & m)
     {
-        m.doc() = "The Riemannain manifold submodule";
+        nb::module_ m_math = m.def_submodule("math", "Submodule containing math utilities.");
+        nb::module_ m_riemann = m_math.def_submodule("riemannian_manifolds", "Submodule containing definitions for a selection of Riemannian manifolds.");
 
-        nb_Sphere<double, 3>(m);
+        m_riemann.doc() = "The Riemannain manifold submodule";
+
+        nb_Sphere<double, 3>(m_riemann);
     }
 }
