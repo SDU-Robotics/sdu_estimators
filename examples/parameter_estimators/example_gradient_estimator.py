@@ -16,7 +16,7 @@ def main():
 
     gamma = np.array([[0.5], [0.5]]).flatten()
 
-    r = 0.5
+    r = 1.
 
     theta_init = np.zeros((2, 1)).flatten()
     theta_true = np.array([[1.], [2.]]).flatten()
