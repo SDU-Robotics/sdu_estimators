@@ -17,7 +17,7 @@ namespace sdu_estimators::disturbance_observers
      *    MATLAB or Python.
      *
      * @param F
-     * @param T
+     * @param Tmat
      * @param B
      * @param K
      * @param H

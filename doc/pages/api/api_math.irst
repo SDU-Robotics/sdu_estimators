@@ -26,3 +26,11 @@ Manifold of Symmetric and Positive Definite Matrices
 .. doxygenclass:: sdu_estimators::math::manifold::SymmetricPositiveDefinite
     :project: sdu_estimators
     :members:
+
+
+Persistencty of Excitation
+--------------------------
+
+.. doxygenclass:: sdu_estimators::math::PersistencyOfExcitation
+    :project: sdu_estimators
+    :members:

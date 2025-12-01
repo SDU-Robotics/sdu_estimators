@@ -1,6 +1,9 @@
 Parameter Estimator
 ===================
 
+Parameter Estimator Base Class
+------------------------------
+
 .. doxygenclass:: sdu_estimators::parameter_estimators::ParameterEstimator
     :project: sdu_estimators
     :members:
@@ -37,10 +40,3 @@ Cascaded Dynamic Regressor Extension and Mixing (DREM)
     :project: sdu_estimators
     :members:
 
-
-Utility Functions
------------------
-
-.. doxygennamespace:: sdu_estimators::parameter_estimators::utils
-    :project: sdu_estimators
-    :members:

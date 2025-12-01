@@ -15,16 +15,14 @@ namespace sdu_estimators::parameter_estimators
    * A simple gradient-based parameter estimator as described in e.g.,
    * \verbatim embed:rst:inline :cite:`Sastry1989` \endverbatim.
    *
-   * Test `:role:"content of the role"`
-   *
    * The parameter \f$ \theta \f$ can be estimated by \f$ \hat{\theta} \f$ with the following update rule:
    *
    * \f{equation}{
-   *    \dot{\hat{\theta}}(t) = \gamma \phi(t) (y(t) - \phi^\intercal(t) \hat{\theta}(t)),
+   *    \dot{\hat{\theta}}(t) = \gamma \phi(t) \left( y(t) - \phi^\intercal(t) \hat{\theta}(t) \right),
    * \f}
    *
    * where \f$ \gamma > 0 \f$ is a tuning parameter, \f$ y : \mathbb{R}_+ \to \mathbb{R}^n \f$ is the output, \f$ \phi :
-   * \mathbb{R}_+ \to \mathbb{R}^{m \times n} \f$ is, the regressor matrix and \f$ \theta : \mathbb{R}_+ \to \mathbb{R}^m \f$
+   * \mathbb{R}_+ \to \mathbb{R}^{p \times n} \f$ is, the regressor matrix and \f$ \theta : \mathbb{R}_+ \to \mathbb{R}^p \f$
    * is the parameter vector.
    *
    */
@@ -48,11 +46,6 @@ namespace sdu_estimators::parameter_estimators
         : GradientEstimator(dt, gamma, theta_init, 1.0f, method)
     {
     }
-    //
-    // *
-    //      * \f$  \dot{\hat{\theta}}(t) = \gamma \phi(t) \lceil y(t) - \phi^\intercal(t) \hat{\theta}(t) \rfloor^r, \f$
-    //      *
-    //      * where \f$ \lceil x \rfloor^r = \lvert x \rvert^r \text{sign}(x) \f$, \f$r \in (0,1) \f$.
 
     /**
      * @brief Constructor for the gradient-based finite-time update rule.

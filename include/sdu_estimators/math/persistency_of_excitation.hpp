@@ -1,11 +1,10 @@
 #pragma once
 
-#include <Eigen/src/Core/Matrix.h>
-#include <Eigen/src/Eigenvalues/EigenSolver.h>
+#include <functional>
 #ifndef PERSISTENCY_OF_EXCITATION_HPP
 #define PERSISTENCY_OF_EXCITATION_HPP
 
-#include <Eigen/Dense>
+#include <Eigen/Core>
 #include <cstdint>
 #include <deque>
 #include <numeric>
@@ -16,7 +15,8 @@ namespace sdu_estimators::math
 {
     /**
      * @brief A class for computing the persistency of excitation integral online. 
-     * The definition can be seen in 
+     *
+     * The definition can be seen in e.g.,
      * \verbatim embed:rst:inline :cite:`Sastry1989` \endverbatim.
      * 
      * **Defintion** (Persistency of Excitation):
@@ -26,7 +26,7 @@ namespace sdu_estimators::math
      * 
      * \f{equation}{
      *      \int_{t}^{t + \gamma} \phi(\tau) \phi^\intercal(\tau) \, \mathrm{d}\tau 
-     *      \geq \beta_1 I_n , 
+     *      \geq \beta I_n , 
      *      \qquad t \geq 0,
      * \f}
      *
@@ -76,6 +76,8 @@ namespace sdu_estimators::math
                 circular_array.push_back(elem);
                 integral_sum += elem;
 
+                // std::cout << "integral_sum\n" << integral_sum << std::endl;
+
                 /** Calculate the integral using the extended Trapezoidal rule.
                  * \f{equation}{
                  *      \int_{t}^{t + \gamma} \phi(\tau) \phi^\intercal(\tau) \, \mathrm{d}\tau 
@@ -93,14 +95,24 @@ namespace sdu_estimators::math
                 integral_sum_internal -= 0.5 * dt * circular_array.at(0);
                 integral_sum_internal -= 0.5 * dt * circular_array.at(N-1);
 
-                // std::cout << "integral_sum" << std::endl;
-                // std::cout << integral_sum << std::endl;
+                // std::cout << "integral_sum_internal" << std::endl;
+                // std::cout << integral_sum_internal << std::endl;
 
                 // Compute the eigenvalues
-                Eigen::EigenSolver<Eigen::Matrix<T, DIM_P, DIM_P>> es(integral_sum_internal, false);
-                auto eig_vals = es.eigenvalues();
+                eig_vals = integral_sum_internal.eigenvalues().real();
 
-                // std::cout << eig_vals.transpose() << std::endl;
+                // std::cout << "eig_vals\n" << eig_vals << std::endl;
+            }
+
+            /**
+             * @brief Return the vector of eigenvalues of the current value of the PE-integral.
+             * 
+             * @return Eigen::Vector<T, DIM_P> A vector of eigenvalues sorted in descending order.
+             */
+            Eigen::Vector<T, DIM_P> get_eigen_values()
+            {
+                std::sort(eig_vals.begin(), eig_vals.end(), std::greater<T>());
+                return eig_vals;
             }
 
         private:
@@ -110,6 +122,8 @@ namespace sdu_estimators::math
 
             Eigen::Matrix<T, DIM_P, DIM_P> integral_sum;
             std::deque<Eigen::Matrix<T, DIM_P, DIM_P>> circular_array;
+
+            Eigen::Vector<T, DIM_P> eig_vals;
     };
 }
 
