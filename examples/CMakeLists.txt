@@ -12,6 +12,7 @@ endif()
 
 
 add_example(example_gradient_estimator "parameter_estimators")
+add_example(example_gradient_estimator_PE "parameter_estimators")
 add_example(example_DREM_estimator "parameter_estimators")
 add_example(example_cascadedDREM_estimator "parameter_estimators")
 add_example(example_SS "state_estimators")
