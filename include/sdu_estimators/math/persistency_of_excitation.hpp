@@ -60,6 +60,7 @@ namespace sdu_estimators::math
                 }
 
                 integral_sum.setZero();
+                integral_sum_internal.setZero();
             }
 
             ~PersistencyOfExcitation(){};
@@ -88,7 +89,6 @@ namespace sdu_estimators::math
                 // Eigen::Matrix<T, DIM_P, DIM_P> integral_sum = 
                 //     dt * std::reduce(circular_array.begin(), circular_array.end());
 
-                Eigen::Matrix<T, DIM_P, DIM_P> integral_sum_internal;
                 integral_sum_internal = dt * integral_sum;
 
                 // Remove 1/2 of the last and the first element from the sum.
@@ -115,12 +115,17 @@ namespace sdu_estimators::math
                 return eig_vals;
             }
 
+            Eigen::Matrix<T, DIM_P, DIM_P> get_integral()
+            {
+                return integral_sum_internal;
+            }
+
         private:
             float dt;
             int N;
             integrator::IntegrationMethod method;
 
-            Eigen::Matrix<T, DIM_P, DIM_P> integral_sum;
+            Eigen::Matrix<T, DIM_P, DIM_P> integral_sum, integral_sum_internal;
             std::deque<Eigen::Matrix<T, DIM_P, DIM_P>> circular_array;
 
             Eigen::Vector<T, DIM_P> eig_vals;
