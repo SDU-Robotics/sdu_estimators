@@ -38,6 +38,7 @@ int main()
   Eigen::Matrix<double, DIM_P, DIM_N> phi;
 
   std::vector<Eigen::VectorXd> all_eig_vals;
+  std::vector<bool> all_is_ready;
 
   math::PersistencyOfExcitation<double, DIM_N, DIM_P> pe_calc(dt, 500);
 
@@ -68,6 +69,8 @@ int main()
     // calculate PE
     pe_calc.step(phi);
     all_eig_vals.push_back(pe_calc.get_eigen_values());
+
+    all_is_ready.push_back(pe_calc.is_ready());
   }
 
   std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
@@ -79,13 +82,14 @@ int main()
   std::ofstream outfile;
   outfile.open ("data_gradient_PE.csv");
 
-  outfile << "timestamp,theta_est_1,theta_est_2,theta_act_1,theta_act_2,eig_val_1,eig_val_2" << std::endl;
+  outfile << "timestamp,theta_est_1,theta_est_2,theta_act_1,theta_act_2,eig_val_1,eig_val_2,pe_is_ready" << std::endl;
 
   for (int i = 0; i < tend; ++i)
   {
     outfile << i * dt << "," << all_theta_est[i][0] << "," << all_theta_est[i][1]
             << "," << theta_true[0] << "," << theta_true[1] << "," 
-            << all_eig_vals[i][0] << "," << all_eig_vals[i][1] << std::endl;
+            << all_eig_vals[i][0] << "," << all_eig_vals[i][1] << ","
+            << (all_is_ready[i] ? 1 : 0) << std::endl;
   }
 
   outfile.close();

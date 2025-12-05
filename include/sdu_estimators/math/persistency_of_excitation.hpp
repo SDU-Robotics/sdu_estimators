@@ -61,12 +61,21 @@ namespace sdu_estimators::math
 
                 integral_sum.setZero();
                 integral_sum_internal.setZero();
+
+                is_ready_ = false;
+                iterations = 0;
             }
 
             ~PersistencyOfExcitation(){};
 
             void step(const Eigen::Matrix<T, DIM_P, DIM_N> &phi)
             {
+                if (!is_ready_)
+                    iterations++;
+
+                if (iterations > N)
+                    is_ready_ = true;
+
                 // Remove one element of the circular array.
                 integral_sum -= circular_array.at(0);
                 circular_array.pop_front();
@@ -120,15 +129,22 @@ namespace sdu_estimators::math
                 return integral_sum_internal;
             }
 
+            bool is_ready()
+            {
+                return is_ready_;
+            }
+
         private:
             float dt;
-            int N;
+            int N, iterations;
             integrator::IntegrationMethod method;
 
             Eigen::Matrix<T, DIM_P, DIM_P> integral_sum, integral_sum_internal;
             std::deque<Eigen::Matrix<T, DIM_P, DIM_P>> circular_array;
 
             Eigen::Vector<T, DIM_P> eig_vals;
+
+            bool is_ready_;
     };
 }
 
