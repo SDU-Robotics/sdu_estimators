@@ -8,6 +8,8 @@
 #include "sdu_estimators/utils.hpp"
 #include "sdu_estimators/integrator/integrator.hpp"
 
+#include "sdu_estimators/typedefs.hpp"
+
 
 namespace sdu_estimators::parameter_estimators
 {

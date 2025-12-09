@@ -5,6 +5,8 @@
 #define PERSISTENCY_OF_EXCITATION_HPP
 
 #include <Eigen/Core>
+#include <Eigen/Eigenvalues> 
+
 #include <cstdint>
 #include <deque>
 #include <numeric>

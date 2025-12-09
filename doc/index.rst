@@ -53,3 +53,4 @@ In this documentation
   pages/how_to_guides/index
   pages/api/api
   pages/explanation/index
+  pages/bibliography

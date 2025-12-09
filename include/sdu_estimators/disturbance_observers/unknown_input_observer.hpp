@@ -1,8 +1,10 @@
 #ifndef UNKNOWN_INPUT_OBSERVER_HPP
 #define UNKNOWN_INPUT_OBSERVER_HPP
 
-#include <sdu_estimators/state_estimators/state_space_model.hpp>
-#include <sdu_estimators/state_estimators/utils.hpp>
+#include "sdu_estimators/state_estimators/state_space_model.hpp"
+#include "sdu_estimators/state_estimators/utils.hpp"
+
+#include "sdu_estimators/typedefs.hpp"
 
 namespace sdu_estimators::disturbance_observers
 {

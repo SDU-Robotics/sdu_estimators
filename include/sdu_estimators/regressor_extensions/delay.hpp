@@ -6,6 +6,8 @@
 #include "sdu_estimators/regressor_extensions/regressor_extension.hpp"
 #include "sdu_estimators/state_estimators/state_space_model.hpp"
 
+#include "sdu_estimators/typedefs.hpp"
+
 #include <deque>
 
 namespace sdu_estimators::regressor_extensions

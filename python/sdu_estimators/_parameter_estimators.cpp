@@ -165,6 +165,7 @@ namespace sdu_estimators
         nb_GradientEstimator<double, 1, 2>(m_param_ests);
         nb_GradientEstimator<double, 1, 3>(m_param_ests);
         nb_GradientEstimator<double, 3, 6>(m_param_ests);
+        nb_GradientEstimator<double, 4, 2>(m_param_ests);
 
         nb_DREM<double, 1, 1>(m_param_ests);
         nb_DREM<double, 1, 2>(m_param_ests);

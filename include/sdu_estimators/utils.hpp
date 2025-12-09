@@ -2,7 +2,7 @@
 #ifndef UTILS_HPP
 #define UTILS_HPP
 
-#include <Eigen/Dense>
+#include <Eigen/Core>
 #include <cmath>
 
 

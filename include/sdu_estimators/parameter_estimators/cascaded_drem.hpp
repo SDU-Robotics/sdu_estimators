@@ -2,8 +2,10 @@
 #ifndef CASCADED_DREM_HPP
 #define CASCADED_DREM_HPP
 
+#include <Eigen/Core>
+#include <Eigen/LU>
+
 #include <cstdint>
-#include <Eigen/Dense>
 #include <cmath>
 #include <iostream>
 
@@ -11,6 +13,7 @@
 #include "sdu_estimators/regressor_extensions/kreisselmeier.hpp"
 #include "sdu_estimators/integrator/integrator.hpp"
 
+#include "sdu_estimators/typedefs.hpp"
 
 namespace sdu_estimators::parameter_estimators
 {

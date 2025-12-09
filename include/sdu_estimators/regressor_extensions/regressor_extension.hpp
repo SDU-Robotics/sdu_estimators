@@ -3,7 +3,9 @@
 #ifndef REGRESSOR_EXTENSION_HPP
 #define REGRESSOR_EXTENSION_HPP
 
-#include <Eigen/Dense>
+#include <Eigen/Core>
+
+#include "sdu_estimators/typedefs.hpp"
 
 namespace sdu_estimators::regressor_extensions
 {

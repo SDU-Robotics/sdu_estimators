@@ -3,7 +3,7 @@
 #ifndef UTIL_HPP
 #define UTIL_HPP
 
-#include <Eigen/Dense>
+#include <Eigen/Core>
 #include <iostream>
 #include <unsupported/Eigen/MatrixFunctions>
 

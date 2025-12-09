@@ -3,8 +3,8 @@
 #ifndef KREISSELMEIER_HPP
 #define KREISSELMEIER_HPP
 
-#include <sdu_estimators/regressor_extensions/regressor_extension.hpp>
-#include <sdu_estimators/integrator/integrator.hpp>
+#include "sdu_estimators/regressor_extensions/regressor_extension.hpp"
+#include "sdu_estimators/integrator/integrator.hpp"
 
 #include <iostream>
 

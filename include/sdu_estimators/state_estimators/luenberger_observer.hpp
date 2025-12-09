@@ -1,6 +1,10 @@
+#pragma once
 #ifndef LUENBERGER_OBSERVER_HPP
 #define LUENBERGER_OBSERVER_HPP
+
 #include "state_space_model.hpp"
+
+#include "sdu_estimators/typedefs.hpp"
 
 namespace sdu_estimators::state_estimators
 {

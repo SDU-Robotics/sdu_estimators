@@ -2,9 +2,10 @@
 #ifndef DREM_HPP
 #define DREM_HPP
 
+#include <Eigen/Core>
+#include <Eigen/LU>
+
 #include <cstdint>
-// #include <sdu_estimators/regressor_extensions/kreisselmeier.hpp>
-#include <Eigen/Dense>
 #include <cmath>
 #include <iostream>
 #include <type_traits>
@@ -13,6 +14,7 @@
 #include "sdu_estimators/regressor_extensions/regressor_extension.hpp"
 #include "sdu_estimators/integrator/integrator.hpp"
 
+#include "sdu_estimators/typedefs.hpp"
 
 namespace sdu_estimators::parameter_estimators
 {
@@ -71,7 +73,7 @@ namespace sdu_estimators::parameter_estimators
       Eigen::Matrix<T, DIM_P, 1> y_f = reg_ext->getY();
       Eigen::Matrix<T, DIM_P, DIM_P> phi_f = reg_ext->getPhi();
 
-      Eigen::HouseholderQR<Eigen::Matrix<T, DIM_P, DIM_P>> qr(phi_f);
+      // Eigen::HouseholderQR<Eigen::Matrix<T, DIM_P, DIM_P>> qr(phi_f);
 
       Eigen::FullPivLU<Eigen::Matrix<T, DIM_P, DIM_P>> lu(phi_f);
       T Delta = lu.determinant();

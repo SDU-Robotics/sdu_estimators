@@ -1,4 +1,4 @@
-#include <Eigen/Dense>
+#include <Eigen/Core>
 #include "sdu_estimators/integrator/integrator.hpp"
 
 #include <vector>

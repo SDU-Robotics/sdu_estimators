@@ -3,7 +3,9 @@
 #ifndef LTI_HPP
 #define LTI_HPP
 
-#include <sdu_estimators/regressor_extensions/regressor_extension.hpp>
+#include "sdu_estimators/regressor_extensions/regressor_extension.hpp"
+
+#include "sdu_estimators/typedefs.hpp"
 
 namespace sdu_estimators::regressor_extensions
 {

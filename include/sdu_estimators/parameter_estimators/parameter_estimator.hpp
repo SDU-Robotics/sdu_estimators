@@ -6,6 +6,7 @@
 #include <cstdint>
 #include <Eigen/Core>
 
+#include "sdu_estimators/typedefs.hpp"
 
 namespace sdu_estimators::parameter_estimators
 {

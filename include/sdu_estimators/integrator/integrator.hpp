@@ -3,9 +3,11 @@
 #ifndef INTEGRAGOR_HPP
 #define INTEGRAGOR_HPP
 
-#include <Eigen/Dense>
+#include <Eigen/Core>
 #include <functional>
 #include <iostream>
+
+#include "sdu_estimators/typedefs.hpp"
 
 namespace sdu_estimators::integrator {
     /**

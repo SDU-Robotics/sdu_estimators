@@ -1,4 +1,4 @@
-#include <Eigen/Dense>
+#include <Eigen/Core>
 #include <cmath>
 #include <iostream>
 #include <sdu_estimators/disturbance_observers/momentum_observer.hpp>

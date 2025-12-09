@@ -1,8 +1,10 @@
+#pragma once
 #ifndef STATE_SPACE_MODEL_HPP
 #define STATE_SPACE_MODEL_HPP
 
-#include <Eigen/Dense>
+#include <Eigen/Core>
 #include "sdu_estimators/state_estimators/utils.hpp"
+#include "sdu_estimators/typedefs.hpp"
 
 namespace sdu_estimators::state_estimators
 {

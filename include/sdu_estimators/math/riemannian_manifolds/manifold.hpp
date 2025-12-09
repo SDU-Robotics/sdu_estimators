@@ -3,7 +3,9 @@
 #ifndef MANIFOLD_HPP
 #define MANIFOLD_HPP
 
-#include <Eigen/Dense>
+#include <Eigen/Core>
+
+#include "sdu_estimators/typedefs.hpp"
 
 namespace sdu_estimators::math::manifold
 {

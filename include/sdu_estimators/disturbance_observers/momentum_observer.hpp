@@ -1,9 +1,11 @@
 #ifndef SDU_ESTIMATORS_DISTURBANCE_OBSERVERS_MOMENTUM_OBSERVER_HPP
 #define SDU_ESTIMATORS_DISTURBANCE_OBSERVERS_MOMENTUM_OBSERVER_HPP
 
-#include <Eigen/Dense>
+#include <Eigen/Core>
 #include <functional>
 #include <memory>  // for std::shared_ptr
+
+#include "sdu_estimators/typedefs.hpp"
 
 namespace sdu_estimators::disturbance_observers
 {

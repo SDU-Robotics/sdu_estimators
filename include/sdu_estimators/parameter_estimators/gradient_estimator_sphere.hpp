@@ -9,6 +9,7 @@
 #include "sdu_estimators/parameter_estimators/parameter_estimator.hpp"
 #include "sdu_estimators/utils.hpp"
 
+#include "sdu_estimators/typedefs.hpp"
 
 namespace sdu_estimators::parameter_estimators
 {
