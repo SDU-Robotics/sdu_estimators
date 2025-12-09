@@ -1,3 +1,7 @@
+
+sdu_estimators
+==============
+
 |License badge| |Build badge| |Docs badge|
 
 .. |License badge| image:: https://img.shields.io/badge/License-MIT-yellow.svg
@@ -9,17 +13,43 @@
 .. |Docs badge| image:: https://readthedocs.org/projects/sdu_estimators/badge/
   :target: https://sdu-estimators.readthedocs.io/
 
-sdu_estimators
-==============
+sdu_estimators is a C++ library containing online parameter estimation methods for general as well as specific applications developed at University of Southern Denmark (SDU).
+The library is developed and maintained by Emil Lykke Diget of the `SDU Robotics <https://www.sdu.dk/en/forskning/sdurobotics>`_ group at University of Southern Denmark (SDU).
+Python bindings are supplied for most of the functionality such that it can be used as a Python library.
 
-A C++ library containing online parameter estimation methods for general as well as specific applications developed at University of Southern Denmark (SDU).
+---------------------
+In this documentation
+---------------------
+
+.. grid:: 1 1 2 2
+  
+  .. grid-item:: :doc:`Tutorial <pages/tutorial/index>`
+
+    **Start here**: A hands-on introduction to sdu_estimators for new users.
+
+  .. grid-item:: :doc:`How-to guides <pages/how_to_guides/index>`
+
+    **Step-by-step guides**: Covering common tasks and key functionalities.
+
+.. grid:: 1 1 2 2
+  :reverse:
+
+  .. grid-item:: :doc:`Reference <pages/api/api>` 
+
+    **Technical Information** - specification, APIs, architecture.
+
+  .. grid-item:: :doc:`Explanation <pages/explanation/index>`
+
+    **Discussion and clarification** of key topics.
+
+---------------------
 
 .. toctree::
-  :maxdepth: 2
+  :hidden:
+  :maxdepth: 3
   :caption: Table of Contents
 
-  pages/getting_started/getting_started
-  pages/installation/installation
-  pages/examples/examples
+  pages/tutorial/index
+  pages/how_to_guides/index
   pages/api/api
-  pages/bibliography
+  pages/explanation/index

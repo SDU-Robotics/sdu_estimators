@@ -24,7 +24,7 @@ from pybtex.style.labels import BaseLabelStyle
 # -- Project information -----------------------------------------------------
 
 project = "sdu_estimators"
-copyright = "2024, Emil Lykke Diget"
+copyright = "2025, Emil Lykke Diget"
 author = "Emil Lykke Diget"
 
 # -- General configuration ---------------------------------------------------
@@ -35,15 +35,23 @@ author = "Emil Lykke Diget"
 extensions = [
     "breathe",
     "sphinx_copybutton",
-    "sphinx_inline_tabs",
+    "sphinx_tabs.tabs",
     "sphinx_rtd_theme",
     "sphinx_book_theme",
+    "sphinx_design",
+    "sphinxcontrib.icon",
     "sphinxcontrib.bibtex",
 ]
 
 # Bibliography
 bibtex_bibfiles = ['refs.bib']
 #  bibtex_default_style = 'plain'
+
+sphinx_tabs_valid_builders = ['linkcheck']
+
+# panels hacks
+#panels_add_bootstrap_css = False
+panels_add_fontawesome_css = True
 
 bibtex_default_style = "mystyle"
 
@@ -61,6 +69,8 @@ class MyStyle(UnsrtStyle):
 
 
 register_plugin("pybtex.style.formatting", "mystyle", MyStyle)
+
+
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = []
@@ -85,6 +95,13 @@ html_theme = "sphinx_book_theme"
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ["_static"]
+
+html_theme_options = {
+    "repository_url": "https://github.com/SDU-Robotics/sdu_estimators",
+    "use_repository_button": True,
+    "show_toc_level": 2,
+    "use_sidenotes": True
+}
 
 # Logo
 html_logo = "_static/sdu_estimators_logo.png"
