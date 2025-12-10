@@ -28,11 +28,11 @@ int main()
   integrator::IntegrationMethod intg_method = integrator::IntegrationMethod::RK4;
   parameter_estimators::GradientEstimator<double, 1, 2> grad_est(dt, gamma, theta_init, r, intg_method);
 
-  // Eigen::Vector<double, 2> theta_lower_bound, theta_upper_bound;
-  // theta_lower_bound << 1.4, 1.5;
-  // theta_upper_bound << 1.5, 2.5;
+  Eigen::Vector<double, 2> theta_lower_bound, theta_upper_bound;
+  theta_lower_bound << 1.4, 1.5;
+  theta_upper_bound << 1.5, 2.5;
 
-  // grad_est.set_theta_bounds(theta_lower_bound, theta_upper_bound);
+  grad_est.set_theta_bounds(theta_lower_bound, theta_upper_bound);
 
   // sdu_estimators::parameter_estimators::GradientEstimator grad_est(dt, gamma, theta_init);
   std::vector<Eigen::VectorXd> all_theta_est;

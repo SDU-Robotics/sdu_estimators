@@ -38,7 +38,6 @@ extensions = [
     "breathe",
     "sphinx_copybutton",
     "sphinx_tabs.tabs",
-    "sphinx_rtd_theme",
     "sphinx_book_theme",
     "sphinx_design",
     "sphinxcontrib.icon",

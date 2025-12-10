@@ -54,7 +54,9 @@ namespace sdu_estimators
                 nb::arg("r"),
                 nb::arg("integration_method"))
             .def("get_estimate", &Class::get_estimate)
-            .def("step", &Class::step, nb::arg("y"), nb::arg("phi"));
+            .def("step", &Class::step, nb::arg("y"), nb::arg("phi"))
+            .def("set_theta_bounds", &Class::set_theta_bounds, nb::arg("theta_lower_bound"), 
+                nb::arg("theta_upper_bound"));
     }
 
     template<typename T, std::int32_t DIM_N, std::int32_t DIM_P>
