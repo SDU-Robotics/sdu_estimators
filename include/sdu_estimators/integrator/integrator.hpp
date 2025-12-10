@@ -9,7 +9,9 @@
 
 #include "sdu_estimators/typedefs.hpp"
 
-namespace sdu_estimators::integrator {
+
+namespace sdu_estimators::integrator 
+{
     /**
      * @brief Utility functions for integrating different methods.
      *  

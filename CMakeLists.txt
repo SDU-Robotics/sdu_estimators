@@ -19,6 +19,7 @@ set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 # Compilation options
 option(BUILD_PYTHON "Enable building of Python bindings" ON)
 option(BUILD_DOCS "Enable building of documentation" ON)
+option(BUILD_EXAMPLES "Enable building of examples" ON)
 
 # find dependencies
 find_package(Eigen3 3.4 REQUIRED NO_MODULE)

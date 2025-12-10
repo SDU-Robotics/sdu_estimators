@@ -1,3 +1,5 @@
+ # -*- coding: utf-8 -*-
+
 # Configuration file for the Sphinx documentation builder.
 #
 # This file only contains a selection of the most common options. For a full
@@ -105,6 +107,9 @@ html_theme_options = {
 
 # Logo
 html_logo = "_static/sdu_estimators_logo.png"
+
+source_encoding = 'utf-8-sig'
+html_output_encoding = 'utf-8'
 
 # The default language to highlight source code.
 highlight_language = 'cpp'
