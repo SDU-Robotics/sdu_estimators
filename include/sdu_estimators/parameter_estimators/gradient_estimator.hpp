@@ -125,13 +125,13 @@ namespace sdu_estimators::parameter_estimators
                 if (use_normalisation)
                 {
                     Eigen::Matrix<T, DIM_P, DIM_P> phi_sqr = phi * phi.transpose();
-                    // double factor = (1 + normalisation_gamma * phi_sqr.norm());
-                    // std::cout << factor << ", " << phi_sqr.norm() << std::endl;
+                    
                     Eigen::Matrix<T, DIM_P, DIM_P> factor = 
                         Eigen::Matrix<T, DIM_P, DIM_P>::Identity() + normalisation_gamma * phi_sqr;
 
-                    if (abs(factor.determinant()) > 1e-10)
-                        dtheta = factor.inverse() * dtheta;
+                    // std::cout << factor << std::endl;
+
+                    dtheta = factor.inverse() * dtheta;
                 }
 
                 return dtheta;

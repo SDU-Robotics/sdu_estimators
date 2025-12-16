@@ -56,7 +56,9 @@ namespace sdu_estimators
             .def("get_estimate", &Class::get_estimate)
             .def("step", &Class::step, nb::arg("y"), nb::arg("phi"))
             .def("set_theta_bounds", &Class::set_theta_bounds, nb::arg("theta_lower_bound"), 
-                nb::arg("theta_upper_bound"));
+                nb::arg("theta_upper_bound"))
+            .def("enable_normalisation", &Class::enable_normalisation, nb::arg("normalisation_gamma"))
+            .def("disable_normalisation", &Class::disable_normalisation);
     }
 
     template<typename T, std::int32_t DIM_N, std::int32_t DIM_P>
