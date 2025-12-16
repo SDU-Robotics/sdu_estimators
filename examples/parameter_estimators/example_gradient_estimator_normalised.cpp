@@ -17,7 +17,8 @@ int main()
 {
   float dt = 0.001;
   float tend = 50 / dt; // 10s
-  double gamma_ = 1;
+
+  double gamma_ = 10;
   Eigen::Vector<double, 2> gamma = {gamma_, gamma_};
   float r = 1.;
   Eigen::Matrix<double, 2, 1> theta_init, theta_true;
@@ -38,6 +39,8 @@ int main()
 
   grad_est.set_theta_bounds(theta_lower_bound, theta_upper_bound);
 
+  grad_est.enable_normalisation(1);
+
   // sdu_estimators::parameter_estimators::GradientEstimator grad_est(dt, gamma, theta_init);
   std::vector<Eigen::VectorXd> all_theta_est;
   Eigen::Vector<double, DIM_N> y;
@@ -54,8 +57,6 @@ int main()
     //        std::cos(t);
     phi << 2.*std::cos(t), -std::cos(t+1.), 3.*std::cos(2.*t+1./2.), 2.*std::cos(t/3. + 1.),
             std::cos(2.*t), std::cos(t/2.), 2.*std::cos(3.*t/2. + 3./4.), -3.*std::cos(4.*t/3.);
-
-           
     y << phi.transpose() * theta_true;
 
     grad_est.step(y, phi);
@@ -75,7 +76,7 @@ int main()
 
   // Write all_theta_est to file
   std::ofstream outfile;
-  outfile.open ("data_gradient.csv");
+  outfile.open ("data_gradient_normalised.csv");
 
   outfile << "timestamp,theta_est_1,theta_est_2,theta_act_1,theta_act_2" << std::endl;
 

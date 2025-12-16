@@ -10,6 +10,8 @@
 
 #include "sdu_estimators/typedefs.hpp"
 
+#include <Eigen/LU>
+
 
 namespace sdu_estimators::parameter_estimators
 {
@@ -83,6 +85,8 @@ namespace sdu_estimators::parameter_estimators
             intg_method(method)
         {
             type = GradientEstimatorType::Standard;
+            use_normalisation = false;
+            normalisation_gamma = 1.;
         }
 
         ~GradientEstimator()
@@ -118,6 +122,18 @@ namespace sdu_estimators::parameter_estimators
                     }
                 }
 
+                if (use_normalisation)
+                {
+                    Eigen::Matrix<T, DIM_P, DIM_P> phi_sqr = phi * phi.transpose();
+                    // double factor = (1 + normalisation_gamma * phi_sqr.norm());
+                    // std::cout << factor << ", " << phi_sqr.norm() << std::endl;
+                    Eigen::Matrix<T, DIM_P, DIM_P> factor = 
+                        Eigen::Matrix<T, DIM_P, DIM_P>::Identity() + normalisation_gamma * phi_sqr;
+
+                    if (abs(factor.determinant()) > 1e-10)
+                        dtheta = factor.inverse() * dtheta;
+                }
+
                 return dtheta;
             };
 
@@ -126,6 +142,19 @@ namespace sdu_estimators::parameter_estimators
                 get_dydt, 
                 dt, 
                 intg_method);
+
+            // Cap estimate within bounds
+            if (type == GradientEstimatorType::Projected)
+            {
+                for (int i = 0; i < DIM_P; ++i)
+                {
+                    if (theta_est[i] < theta_lower_bound_[i])
+                        theta_est[i] = theta_lower_bound_[i];
+
+                    else if (theta_est[i] > theta_upper_bound_[i])
+                        theta_est[i] = theta_upper_bound_[i];
+                }
+            }
         }
 
         /**
@@ -193,6 +222,16 @@ namespace sdu_estimators::parameter_estimators
             theta_est = theta_init;
         }
 
+        void enable_normalisation(float normalisation_gamma_)
+        {
+            use_normalisation = true;
+            normalisation_gamma = normalisation_gamma_;
+        }
+
+        void disable_normalisation()
+        {
+            use_normalisation = false;
+        }
 
     private:
         float dt;
@@ -204,6 +243,9 @@ namespace sdu_estimators::parameter_estimators
         integrator::IntegrationMethod intg_method;
 
         GradientEstimatorType type;
+
+        bool use_normalisation;
+        float normalisation_gamma;
     };
 }  // namespace sdu_estimators::parameter_estimators
 
