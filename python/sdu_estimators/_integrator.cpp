@@ -4,7 +4,7 @@
 #include <nanobind/stl/function.h> 
 #include <nanobind/stl/vector.h>
 
-// Parameter Estimators
+// Integrator
 #include "sdu_estimators/integrator/integrator.hpp"
 
 namespace nb = nanobind;
@@ -28,33 +28,11 @@ namespace sdu_estimators
             nb::arg("get_dydt"),
             nb::arg("delta"),
             nb::arg("method"));
-
-        // nb::class_<Class>(m, nbclass_name.c_str())
-        //     .def_static("integrate",
-        //         &Class::integrate,
-        //         nb::arg("state"),
-        //         nb::arg("get_dydt"),
-        //         nb::arg("delta"),
-        //         nb::arg("method")
-        //     );
-
-        // nb::class_<Class>(m, nbclass_name.c_str())
-        //     .def("integrate", 
-        //         (State(Class::*)(
-        //             const State &,
-        //             const std::function<State(const State &)>,
-        //             float,
-        //             integrator::IntegrationMethod)) &
-        //             Class::integrate,
-        //         nb::arg("state"),
-        //         nb::arg("get_dydt"),
-        //         nb::arg("delta"),
-        //         nb::arg("method"));
     }
 
     void nb_integrator(nb::module_ & m)
     {
-        nb::module_ m_intg = m.def_submodule("integrator", "Submodule containing definitions for disturbance observers.");
+        nb::module_ m_intg = m.def_submodule("integrator", "Submodule containing definitions for integrators.");
 
         nb::enum_<integrator::IntegrationMethod>(m_intg, "IntegrationMethod")
             .value("Euler", integrator::IntegrationMethod::Euler)
