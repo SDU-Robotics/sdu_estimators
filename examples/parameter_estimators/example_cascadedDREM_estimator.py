@@ -6,12 +6,11 @@ import numpy as np
 import matplotlib.pyplot as plt
 import time
 
+import sys
 
 def main():
     dt = 0.001
-    tend = int(12 / dt)
-
-    a = 10.
+    tend = int(12 / dt) * 3
 
     theta_true = np.array([3., 0.])
 
@@ -23,8 +22,12 @@ def main():
     # solver_standard = sdu_estimators.parameter_estimators.CascadedDREM(dt, a, DIM_N, DIM_P, method)
 
     # sdu_estimators.parameter_estimators.CascadedDREM_4x2(dt, a, method) # if this line is not run, then solver_cascade will return nan estimates.
-    solver_cascade = sdu_estimators.parameter_estimators.CascadedDREM_4x2(dt, a, method)
-    solver_standard = sdu_estimators.parameter_estimators.CascadedDREM_4x2(dt, a, method)
+    constant_gain = (sys.argv[1].lower() == "true") if len(sys.argv) > 1 else False
+    print(constant_gain)
+    a = 10.
+
+    solver_cascade = sdu_estimators.parameter_estimators.CascadedDREM_4x2(dt, a, method, constant_gain)
+    solver_standard = sdu_estimators.parameter_estimators.CascadedDREM_4x2(dt, a, method, constant_gain)
 
     all_theta_est_cascade = np.zeros((tend, 2))
     all_theta_est_standard = np.zeros((tend, 2))
@@ -109,9 +112,10 @@ def main():
     err_norm_standard = np.linalg.norm(all_theta_est_standard - all_theta_true, axis=1)
 
     plt.figure()
-    plt.plot(tvec, err_norm_cascade)
-    plt.plot(tvec, err_norm_standard)
+    plt.plot(tvec, err_norm_cascade, label="Cascade")
+    plt.plot(tvec, err_norm_standard, label="Standard")
     plt.grid()
+    plt.legend()
 
     plt.show()
 

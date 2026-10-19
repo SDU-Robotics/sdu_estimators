@@ -92,9 +92,6 @@ namespace sdu_estimators::state_estimators
     {}
 
   private:
-    int state_size{};
-    int input_size{};
-    int output_size{};
     Eigen::Matrix<T, DIM_Nx, DIM_Nx> A, Ad;
     Eigen::Matrix<T, DIM_Nx, DIM_Nu> B, Bd;
     Eigen::Matrix<T, DIM_Ny, DIM_Nx> C;
@@ -102,8 +99,6 @@ namespace sdu_estimators::state_estimators
     Eigen::Vector<T, DIM_Nx> x;
     Eigen::Vector<T, DIM_Ny> y;
     float Ts;
-
-    void check_inputs();
   };
 }
 

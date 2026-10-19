@@ -127,11 +127,13 @@ namespace sdu_estimators
                 nb::init<
                     float,
                     float,
-                    integrator::IntegrationMethod
+                    integrator::IntegrationMethod,
+                    bool
                 >(),
                 nb::arg("dt"),
                 nb::arg("a"),
-                nb::arg("integration_method"))
+                nb::arg("integration_method"),
+                nb::arg("constant_gain"))
             .def("get_estimate", &Class::get_estimate)
             .def("set_dy_dphi", &Class::set_dy_dphi, nb::arg("dy"), nb::arg("dphi"))
             .def("step", &Class::step, nb::arg("y"), nb::arg("phi"))

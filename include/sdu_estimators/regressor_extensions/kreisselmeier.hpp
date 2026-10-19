@@ -19,13 +19,15 @@ namespace sdu_estimators::regressor_extensions
   {
   public:
     Kreisselmeier(float dt, float ell,
-      integrator::IntegrationMethod method = integrator::IntegrationMethod::RK4)
+      integrator::IntegrationMethod method = integrator::IntegrationMethod::RK4,
+      bool constant_gain = false)
     {
       this->dt = dt;
       this->ell = ell;
 
       this->intg_method = method;
 
+      this->constant_gain = constant_gain; // not used
       
       reset();
     }
@@ -39,7 +41,17 @@ namespace sdu_estimators::regressor_extensions
     {
       auto get_dphifdt = [=](Eigen::Matrix<T, DIM_P, DIM_P> phi_f_)
       {
-        Eigen::Matrix<T, DIM_P, DIM_P> dphi_f = -ell * phi_f_ + phi * phi.transpose();
+        Eigen::Matrix<T, DIM_P, DIM_P> dphi_f;
+        // if (constant_gain)
+        // {
+        //   // dphi_f = -ell * phi_f_ + ell * phi * phi.transpose();
+        //   dphi_f = -ell * phi_f_ + phi * phi.transpose();
+        // }
+        // else
+        // {
+        dphi_f = -ell * phi_f_ + phi * phi.transpose();
+        // }
+
         return dphi_f;
       };
 
@@ -52,7 +64,17 @@ namespace sdu_estimators::regressor_extensions
 
       auto get_dyfdt = [=](Eigen::Matrix<T, DIM_P, 1> y_f_)
       {
-        Eigen::Matrix<T, DIM_P, 1> dy_f = -ell * y_f_ + phi * y;
+        Eigen::Matrix<T, DIM_P, 1> dy_f;
+        // if (constant_gain)
+        // {
+        //   // dy_f = -ell * y_f_ + ell * phi * y;
+        //   dy_f = -ell * y_f_ + phi * y;
+        // }
+        // else
+        // {
+        dy_f = -ell * y_f_ + phi * y;
+        // }
+
         return dy_f;
       };
 
@@ -63,6 +85,25 @@ namespace sdu_estimators::regressor_extensions
         intg_method
       );
     }
+
+    // Eigen::Matrix<T, DIM_P, 1> getY()
+    // {
+    //   Eigen::Matrix<T, DIM_P, 1> tmp = RegressorExtension<T, DIM_N, DIM_P>::getY();
+    //   if (constant_gain)
+    //     tmp = tmp / ell;
+
+    //   return tmp;
+    // }
+
+    // // get filtered states
+    // Eigen::Matrix<T, DIM_P, DIM_P> getPhi()
+    // {
+    //   Eigen::Matrix<T, DIM_P, DIM_P> tmp = RegressorExtension<T, DIM_N, DIM_P>::getPhi();
+    //   if (constant_gain)
+    //     tmp = tmp / ell;
+
+    //   return tmp;
+    // };
 
     // Eigen::VectorXd getY() override; // get filtered states
     // Eigen::MatrixXd getPhi() override; // get filtered states
@@ -76,6 +117,7 @@ namespace sdu_estimators::regressor_extensions
   private:
     float dt;
     float ell;
+    bool constant_gain;
 
     integrator::IntegrationMethod intg_method;
 

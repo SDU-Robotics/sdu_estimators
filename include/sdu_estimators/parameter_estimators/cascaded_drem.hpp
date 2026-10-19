@@ -29,11 +29,12 @@ namespace sdu_estimators::parameter_estimators
     {
     public:
         CascadedDREM(float dt, float a,
-            integrator::IntegrationMethod method = integrator::IntegrationMethod::RK4) :
-                dt(dt), a(a), intg_method(method)
+            integrator::IntegrationMethod method = integrator::IntegrationMethod::RK4,
+            bool constant_gain = false) :
+                dt(dt), a(a), intg_method(method), constant_gain(constant_gain)
         {
-            reg_ext_second = new regressor_extensions::Kreisselmeier<T, DIM_N, DIM_P>(dt, a, intg_method);
-            reg_ext_first = new regressor_extensions::Kreisselmeier<T, 2*DIM_N, 2*DIM_P>(dt, a, intg_method);
+            reg_ext_second = new regressor_extensions::Kreisselmeier<T, DIM_N, DIM_P>(dt, a, intg_method, constant_gain);
+            reg_ext_first = new regressor_extensions::Kreisselmeier<T, 2*DIM_N, 2*DIM_P>(dt, a, intg_method, constant_gain);
             
             phi_ext.setZero();
             Hc_state.setZero();
@@ -95,7 +96,10 @@ namespace sdu_estimators::parameter_estimators
 
             auto get_dHc_state = [=](Eigen::Matrix<T, DIM_P, 1> Hc_state_)
             {
-                Eigen::Matrix<T, DIM_P, 1> dHc_state = -a * Hc_state + phi_f * dtheta_ext;
+                Eigen::Matrix<T, DIM_P, 1> dHc_state;
+
+                dHc_state = -a * Hc_state + phi_f * dtheta_ext;
+
                 return dHc_state;
             };
             
@@ -105,8 +109,9 @@ namespace sdu_estimators::parameter_estimators
                 dt,
                 intg_method
             );
+            
             Hc_out = -Hc_state;
-
+            
             // adj(phi_f) = Delta * phi_f^{-1}
             Yvar = lu.solve(Delta * y_f);  // To compute phi_f^{-1} * Delta * y_f.
             Vvar_est = lu.solve(Delta * Hc_out);
@@ -162,6 +167,8 @@ namespace sdu_estimators::parameter_estimators
 
         float dt;
         float a;
+
+        bool constant_gain;
 
         integrator::IntegrationMethod intg_method;
 
